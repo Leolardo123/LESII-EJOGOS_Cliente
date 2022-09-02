@@ -1,12 +1,11 @@
 import Domain from "@modules/models/users/Domain";
-import User from "@modules/models/users/User";
 import { DAOUser } from "@modules/repositories/DAOUser";
 import { IDAO } from "@modules/repositories/interfaces/IDAO";
 import AppError from "@shared/errors/AppError";
 import IHash from "@shared/interfaces/IHash";
 import { IFacade } from "./IFacade";
 
-export class Facade<T extends Domain> implements IFacade {
+export class Facade implements IFacade {
 	private daos: IHash<IDAO>
 
 	constructor(){
