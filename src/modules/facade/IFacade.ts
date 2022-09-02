@@ -1,8 +1,8 @@
 import Domain from "@modules/models/users/Domain";
 
 export interface IFacade {
-    create(entity: Domain): string;
-	update(entity: Domain): string;
-	delete(entity: Domain): string;
+    create(entity: Domain): void;
+	update(entity: Domain): void;
+	delete(entity: Domain): void;
 	query(entity: Domain): Domain[];
 }

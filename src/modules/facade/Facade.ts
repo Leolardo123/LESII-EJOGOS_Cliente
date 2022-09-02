@@ -1,42 +1,57 @@
 import Domain from "@modules/models/users/Domain";
 import User from "@modules/models/users/User";
-import { UserDAO } from "@modules/repositories/UserDAO";
+import { DAOUser } from "@modules/repositories/DAOUser";
+import { IDAO } from "@modules/repositories/interfaces/IDAO";
+import AppError from "@shared/errors/AppError";
+import IHash from "@shared/interfaces/IHash";
 import { IFacade } from "./IFacade";
 
-export class Facade implements IFacade {
-	create(entity: Domain): string {
-		const user = entity as User;
+export class Facade<T extends Domain> implements IFacade {
+	private daos: IHash<IDAO>
 
-		user.validate();
-		
-		const userDAO = new UserDAO();
-		userDAO.insert(user);
-		return "Cadastrado com sucesso";
+	constructor(){
+		this.daos = {
+			"user": new DAOUser(),
+		}
 	}
-	update(entity: Domain): string {
-		const user = entity as User;
 
-		user.validate();
-		
-		const userDAO = new UserDAO();
-		userDAO.update(user);
-		return "Atualizado com sucesso";
+	create(entity: Domain): void {
+		const entityName = entity.constructor.name;
+		if(this.daos[entityName]){
+			entity.validate()
+			const daoInstance = this.daos[entityName]
+			daoInstance.insert(entity);
+		}
+		return;
 	}
-	delete(entity: Domain): string {
-		const user = entity as User;
+	
+	update(entity: Domain): void {
+		const entityName = entity.constructor.name;
+		if(this.daos[entityName]){
+			entity.validate()
+			const daoInstance = this.daos[entityName]
+			daoInstance.update(entity);
+		}
+		return;
+	}
+	
+	delete(entity: Domain): void {
+		const entityName = entity.constructor.name;
+		if(this.daos[entityName]){
+			entity.validate()
+			const daoInstance = this.daos[entityName]
+			daoInstance.remove(entity);
+		}
+		return;
+	}
 
-		user.validate();
-		
-		const userDAO = new UserDAO();
-		userDAO.insert(user);
-		return "Removido com sucesso";
-	}
 	query(entity: Domain): Domain[] {
-		const user = entity as User;
-
-		user.validate();
-		
-		const userDAO = new UserDAO();
-		return userDAO.find(user);
+		const entityName = entity.constructor.name;
+		if(this.daos[entityName]){
+			entity.validate()
+			const daoInstance = this.daos[entityName]
+			return daoInstance.find(entity);
+		}
+		throw new AppError('Falha ao consultar.')
 	}
 }

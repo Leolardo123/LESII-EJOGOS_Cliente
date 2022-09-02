@@ -2,7 +2,7 @@ import User from "@modules/models/users/User";
 import { Connection } from "@shared/utils/connection";
 import { IDAO } from "./interfaces/IDAO";
 
-export class UserDAO implements IDAO {
+export class DAOUser implements IDAO {
     private connection: any;
 
     insert(entity: User): void {

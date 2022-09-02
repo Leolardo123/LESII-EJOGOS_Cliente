@@ -3,7 +3,7 @@ import Person from "@modules/models/users/Person";
 import { Connection } from "@shared/utils/connection";
 import { IDAO } from "./interfaces/IDAO";
 
-export class PersonDAO implements IDAO {
+export class DAOPerson implements IDAO {
     private connection: any;
 
     insert(entity: Person): void {
