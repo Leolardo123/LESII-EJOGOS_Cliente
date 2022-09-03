@@ -1,4 +1,4 @@
-import Domain from "@modules/models/users/Domain";
+import Domain from "@modules/models/Domain";
 
 export interface IFacade {
     create(entity: Domain): void;

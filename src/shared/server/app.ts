@@ -2,7 +2,6 @@ import express, { json, Request } from 'express';
 import cors from 'cors';
 import 'express-async-errors';
 import 'reflect-metadata';
-import '../container';
 import { uploadConfig } from '@config/upload';
 import { globalErrorHandler } from '../middleware/globalErrorHandler';
 import { router } from './routes';

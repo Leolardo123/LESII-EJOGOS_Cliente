@@ -1,4 +1,4 @@
-import Domain from "./Domain";
+import Domain from "../Domain";
 
 class Gender extends Domain {
     private _name: string;

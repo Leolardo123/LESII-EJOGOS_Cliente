@@ -1,4 +1,4 @@
-import Domain from "../users/Domain";
+import Domain from "../Domain";
 
 class PlaceType extends Domain {
     private _name: string;
@@ -11,6 +11,12 @@ class PlaceType extends Domain {
         super();
         this._description = description;
         this._name = name;
+    }
+
+    public validate(): void {
+        if(!this.name){
+            throw new Error('Nome é um campo  obrigatório (Tipo de Logradouro).')
+        }
     }
 
     public get name(): string {

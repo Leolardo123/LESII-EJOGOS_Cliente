@@ -1,55 +1,50 @@
 
-import Person from "@modules/models/users/Person";
+import AddressType from "@modules/models/address/AddressType";
 import { Connection } from "@shared/utils/connection";
 import { IDAO } from "./interfaces/IDAO";
 
-export class DAOPerson implements IDAO {
+export class DAOAddressType implements IDAO {
     private connection: any;
 
-    insert(entity: Person): void {
+    insert(entity: AddressType): void {
         this.connection = new Connection().getConnectionPostgres();
         this.connection.connect();
         this.connection.query(`
-            INSERT INTO tb_persons (name, cpf, birth_date) VALUES (
+            INSERT INTO tb_address_types (name) VALUES (
                 '${entity.name}', 
-                '${entity.cpf}', 
-                '${entity.birth_date}'
             )`
         );
         this.connection.end();
     }
 
-    find(entity: Person): Person[] {
+    find(entity: AddressType): AddressType[] {
         this.connection = new Connection().getConnectionPostgres();
         this.connection.connect();
         const where = entity.id ? `WHERE id = ${entity.id}` : "";
         const result = this.connection.query(
-            `SELECT * FROM tb_persons ${where}`
+            `SELECT * FROM tb_address_types ${where}`
         );
         this.connection.end();
         return result.rows;
     }
 
-    update(entity: Person): void {
+    update(entity: AddressType): void {
         this.connection = new Connection().getConnectionPostgres();
         this.connection.connect();
         this.connection.query(`
-            UPDATE tb_persons SET
+            UPDATE tb_address_types SET
                 name = '${entity.name}',
-                cpf = '${entity.cpf}',
-                birth_date = '${entity.birth_date}'
             WHERE id = ${entity.id}
         `);
         this.connection.end();
     }
 
-    remove(entity: Person): void {
+    remove(entity: AddressType): void {
         this.connection = new Connection().getConnectionPostgres();
         this.connection.connect();
         this.connection.query(`
-            DELETE FROM tb_persons WHERE id = ${entity.id}
+            DELETE FROM tb_address_types WHERE id = ${entity.id}
         `);
         this.connection.end();
     }
-
 }

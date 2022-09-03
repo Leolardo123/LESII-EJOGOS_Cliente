@@ -1,4 +1,4 @@
-import Domain from "./Domain";
+import Domain from "../Domain";
 import Person from "./Person";
 
 class User extends Domain {
@@ -9,19 +9,10 @@ class User extends Domain {
     private _person: Person;
 
     constructor(
-        role: string,
-        email: string,
-        password: string,
-        person?: Person,
+        user: Partial<User>
     ) {
         super();
-        this._email = email;
-        this._password = password;
-        this._role = role;
-
-        if (person) {
-            this._person = person;
-        }
+        Object.assign(this, user)
     }
 
     public get email(): string {

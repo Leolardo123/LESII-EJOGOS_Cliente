@@ -17,8 +17,6 @@ class Domain {
     public set created_at(value: Date) {
         this._created_at = value;
     }
-
-    public validate(){}
 }
 
 export default Domain;

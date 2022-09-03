@@ -1,4 +1,4 @@
-import Domain from "../users/Domain";
+import Domain from "../Domain";
 
 class AddressType extends Domain {
     private _name: string;

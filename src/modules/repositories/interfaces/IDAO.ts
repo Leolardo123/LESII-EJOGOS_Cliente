@@ -1,4 +1,4 @@
-import Domain from "@modules/models/users/Domain";
+import Domain from "@modules/models/Domain";
 
 export interface IDAO {
   insert(entity: Domain): void;

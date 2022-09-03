@@ -1,27 +1,21 @@
-import Domain from "./Domain";
+import Address from "../address/Address";
+import Domain from "../Domain";
 import Gender from "./Gender";
-import User from "./User";
+import Phone from "./Phone";
 
 class Person extends Domain {
     private _name: string;
     private _cpf: string;
-    private _cellphone: string;
     private _birth_date: Date;
+    private _phone: Phone;
     private _gender: Gender;
+    private _addresses: Address[];
 
     constructor(
-        name: string,
-        cpf: string,
-        cellphone: string,
-        birth_date: Date,
-        gender: Gender,
+        person: Partial<Person>
     ) {
         super();
-        this._name = name;
-        this._cpf = cpf;
-        this._cellphone = cellphone;
-        this._birth_date = birth_date;
-        this._gender = gender;
+        Object.assign(this, person)
     }
 
     public get name(): string {
@@ -40,12 +34,12 @@ class Person extends Domain {
         this._cpf = value;
     }
 
-    public get cellphone(): string {
-        return this._cellphone;
+    public get phone(): Phone {
+        return this._phone;
     }
 
-    public set cellphone(value: string) {
-        this._cellphone = value;
+    public set phone(value: Phone) {
+        this._phone = value;
     }
 
     public get birth_date(): Date {
@@ -62,6 +56,14 @@ class Person extends Domain {
 
     public set gender(value: Gender) {
         this._gender = value;
+    }
+
+    public get addresses(): Address[] {
+        return this._addresses;
+    }
+
+    public set addresses(value: Address[]) {
+        this._addresses = value;
     }
 }
 

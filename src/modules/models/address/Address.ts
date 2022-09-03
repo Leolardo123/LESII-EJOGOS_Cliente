@@ -1,5 +1,4 @@
-import { Entity } from "typeorm";
-import Domain from "../users/Domain";
+import Domain from "../Domain";
 import AddressType from "./AddressType";
 import PlaceType from "./PlaceType";
 
@@ -16,30 +15,12 @@ class Address extends Domain {
     private _place_type: PlaceType;
 
     constructor(
-        cep: string,
-        number: number,
-        city: string,
-        state: string,
-        country: string,
-        complement: string,
-        neighborhood: string,
-        place: string,
-        address_type: AddressType,
-        place_type: PlaceType,
-    ){
+        address: Partial<Address>
+    ) {
         super();
-        this._cep = cep;
-        this._number = number;
-        this._city = city;
-        this._state = state;
-        this._country = country;
-        this._complement = complement;
-        this._neighborhood = neighborhood;
-        this._place = place;
-        this._address_type =  address_type;
-        this._place_type = place_type;
+        Object.assign(this, address)
     }
-
+    
     public get cep(): string {
         return this._cep;
     }
