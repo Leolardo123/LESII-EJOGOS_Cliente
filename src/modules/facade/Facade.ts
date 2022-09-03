@@ -38,41 +38,47 @@ export class Facade implements IFacade {
 		this.validators.address = validateUser;
 	}
 
-	create(entity: Domain): void {
-		const entityName = entity.constructor.name;
+	async create(entity: Domain): Promise<string> {
+		const entityName = entity.constructor.name.toLowerCase();
 		if(this.daos[entityName]){
+			const validatorInstance = this.validators[entityName];
+			validatorInstance.validate(entity);
+
 			const daoInstance = this.daos[entityName]
-			daoInstance.insert(entity);
-			return;
+			await daoInstance.insert(entity);
+			return 'Cadastrado com sucesso';
 		}
 		throw new Error('Falha ao cadastrar, tipo do pedido não existe.')
 	}
 	
-	update(entity: Domain): void {
-		const entityName = entity.constructor.name;
+	async update(entity: Domain): Promise<string> {
+		const entityName = entity.constructor.name.toLowerCase();
 		if(this.daos[entityName]){
+			const validatorInstance = this.validators[entityName];
+			validatorInstance.validate(entity);
+
 			const daoInstance = this.daos[entityName]
-			daoInstance.update(entity);
-			return;
+			await daoInstance.update(entity);
+			return 'Atualizado com sucesso';
 		}
 		throw new Error('Falha ao atualizar, tipo do pedido não existe.')
 	}
 	
-	delete(entity: Domain): void {
-		const entityName = entity.constructor.name;
+	async delete(entity: Domain): Promise<string> {
+		const entityName = entity.constructor.name.toLowerCase();
 		if(this.daos[entityName]){
 			const daoInstance = this.daos[entityName]
-			daoInstance.remove(entity);
-			return;
+			await daoInstance.remove(entity);
+			return 'Deletado com sucesso';
 		}
 		throw new Error('Falha ao excluir, tipo do pedido não existe.')
 	}
 
-	query(entity: Domain): Domain[] {
-		const entityName = entity.constructor.name;
+	async query(entity: Domain): Promise<Domain[]> {
+		const entityName = entity.constructor.name.toLowerCase();
 		if(this.daos[entityName]){
 			const daoInstance = this.daos[entityName]
-			return daoInstance.find(entity);
+			return await daoInstance.find(entity);
 		}
 		throw new Error('Falha ao consultar, tipo do pedido não existe.')
 	}

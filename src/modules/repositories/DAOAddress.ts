@@ -4,12 +4,10 @@ import { Connection } from "@shared/utils/connection";
 import { IDAO } from "./interfaces/IDAO";
 
 export class DAOAddress implements IDAO {
-    private connection: any;
-
-    insert(entity: Address): void {
-        this.connection = new Connection().getConnectionPostgres();
-        this.connection.connect();
-        this.connection.query(`
+    async insert(entity: Address): Promise<void> {
+        const connection = new Connection().getConnectionPostgres();
+        await connection.connect();
+        await connection.query(`
             INSERT INTO tb_addresses (
                 cep,
                 number,
@@ -34,24 +32,24 @@ export class DAOAddress implements IDAO {
                 ${entity.place_type.id},
             )`
         );
-        this.connection.end();
+        await connection.end();
     }
 
-    find(entity: Address): Address[] {
-        this.connection = new Connection().getConnectionPostgres();
-        this.connection.connect();
+    async find(entity: Address): Promise<Address[]> {
+        const connection = new Connection().getConnectionPostgres();
+        await connection.connect();
         const where = entity.id ? `WHERE id = ${entity.id}` : "";
-        const result = this.connection.query(
+        const result = await connection.query(
             `SELECT * FROM tb_addresses ${where}`
         );
-        this.connection.end();
+        connection.end();
         return result.rows;
     }
 
-    update(entity: Address): void {
-        this.connection = new Connection().getConnectionPostgres();
-        this.connection.connect();
-        this.connection.query(`
+    async update(entity: Address): Promise<void> {
+        const connection = new Connection().getConnectionPostgres();
+        await connection.connect();
+        await connection.query(`
             UPDATE tb_addresses SET
                 cep = ${entity.cep},
                 number = ${entity.number},
@@ -65,15 +63,15 @@ export class DAOAddress implements IDAO {
                 place_type_id = ${entity.place_type.id},
             WHERE id = ${entity.id}
         `);
-        this.connection.end();
+        await connection.end();
     }
 
-    remove(entity: Address): void {
-        this.connection = new Connection().getConnectionPostgres();
-        this.connection.connect();
-        this.connection.query(`
+    async remove(entity: Address): Promise<void> {
+        const connection = new Connection().getConnectionPostgres();
+        await connection.connect();
+        await connection.query(`
             DELETE FROM tb_addresses WHERE id = ${entity.id}
         `);
-        this.connection.end();
+        await connection.end();
     }
 }

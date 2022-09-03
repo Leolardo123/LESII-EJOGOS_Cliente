@@ -1,16 +1,9 @@
+import { Facade } from "@modules/facade/Facade";
 import { IFacade } from "@modules/facade/IFacade";
-import Person from "@modules/models/users/Person";
 import User from "@modules/models/users/User";
 import { Request, Response } from "express";
-
-export class UserController{
-    private facade:IFacade;
-    
-    constructor(facade: IFacade){
-        this.facade = facade;
-    }
-
-    create(req: Request, res: Response){
+class UserController{
+    async create(req: Request, res: Response){
         const {
             role,
             email,
@@ -23,14 +16,16 @@ export class UserController{
                 role,
                 email,
                 password,
+                person,
             }
         )
+        
+        const facade = new Facade();
+        const msg = await facade.create(user);
 
-        user.person = new Person(person);
-
-        this.facade.create(user)
+        return res.json({ msg })
     }
-    update(req: Request, res: Response){
+    async update(req: Request, res: Response){
         const {
             role,
             email,
@@ -48,10 +43,13 @@ export class UserController{
                 person,
             }
         )
+        
+        const facade = new Facade();
+        const msg = await facade.update(user);
 
-        this.facade.update(user)
+        return res.json({ msg })
     }
-    delete(req: Request, res: Response){
+    async delete(req: Request, res: Response){
         const {
             role,
             email,
@@ -69,10 +67,13 @@ export class UserController{
                 person,
             }
         )
+        
+        const facade = new Facade();
+        const msg = await facade.delete(user);
 
-        this.facade.delete(user);
+        return res.json({ msg })
     }
-    get(req: Request, res: Response){
+    async get(req: Request, res: Response){
         const {
             role,
             email,
@@ -91,7 +92,12 @@ export class UserController{
                 person,
             }
         )
+        
+        const facade = new Facade();
+        const msg = await facade.query(user);
 
-        this.facade.query(user);
+        return res.json({ msg })
     }
 }
+
+export { UserController }

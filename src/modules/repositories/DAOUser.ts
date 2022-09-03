@@ -5,10 +5,10 @@ import { IDAO } from "./interfaces/IDAO";
 export class DAOUser implements IDAO {
     private connection: any;
 
-    insert(entity: User): void {
-        this.connection = new Connection().getConnectionPostgres();
-        this.connection.connect();
-        this.connection.query(`
+    async insert(entity: User): Promise<void> {
+        const connection = new Connection().getConnectionPostgres();
+        await connection.connect();
+        await connection.query(`
             INSERT INTO tb_users (email, password, role, isActive) VALUES (
                 '${entity.email}', 
                 '${entity.password}', 
@@ -16,24 +16,24 @@ export class DAOUser implements IDAO {
                 '${entity.isActive}'
             )`
         );
-        this.connection.end();
+        await connection.end();
     }
 
-    find(entity: User): User[] {
-        this.connection = new Connection().getConnectionPostgres();
-        this.connection.connect();
+    async find(entity: User): Promise<User[]> {
+        const connection = new Connection().getConnectionPostgres();
+        await connection.connect();
         const where = entity.id ? `WHERE id = ${entity.id}` : "";
-        const result = this.connection.query(
+        const result = await connection.query(
             `SELECT * FROM tb_users ${where}`
         );
-        this.connection.end();
+        await connection.end();
         return result.rows;
     }
 
-    update(entity: User): void {
-        this.connection = new Connection().getConnectionPostgres();
-        this.connection.connect();
-        this.connection.query(`
+    async update(entity: User): Promise<void> {
+        const connection = new Connection().getConnectionPostgres();
+        await connection.connect();
+        await connection.query(`
             UPDATE tb_users SET
                 email = '${entity.email}',
                 password = '${entity.password}',
@@ -41,15 +41,15 @@ export class DAOUser implements IDAO {
                 isActive = ${entity.isActive}
             WHERE id = ${entity.id}
         `);
-        this.connection.end();
+        await connection.end();
     }
 
-    remove(entity: User): void {
-        this.connection = new Connection().getConnectionPostgres();
-        this.connection.connect();
-        this.connection.query(`
+    async remove(entity: User): Promise<void> {
+        const connection = new Connection().getConnectionPostgres();
+        await connection.connect();
+        await connection.query(`
             DELETE FROM tb_users WHERE id = ${entity.id}
         `);
-        this.connection.end();
+        await connection.end();
     }
 }

@@ -3,47 +3,45 @@ import { Connection } from "@shared/utils/connection";
 import { IDAO } from "./interfaces/IDAO";
 
 export class DAOGender implements IDAO {
-    private connection: any;
-
-    insert(entity: Gender): void {
-        this.connection = new Connection().getConnectionPostgres();
-        this.connection.connect();
-        this.connection.query(`
+    async insert(entity: Gender): Promise<void> {
+        const connection = new Connection().getConnectionPostgres();
+        await connection.connect();
+        await connection.query(`
             INSERT INTO tb_genders (name) VALUES (
                 '${entity.name}', 
             )`
         );
-        this.connection.end();
+        await connection.end();
     }
 
-    find(entity: Gender): Gender[] {
-        this.connection = new Connection().getConnectionPostgres();
-        this.connection.connect();
+    async find(entity: Gender): Promise<Gender[]> {
+        const connection = new Connection().getConnectionPostgres();
+        await connection.connect();
         const where = entity.id ? `WHERE id = ${entity.id}` : "";
-        const result = this.connection.query(
+        const result = await connection.query(
             `SELECT * FROM tb_genders ${where}`
         );
-        this.connection.end();
+        await connection.end();
         return result.rows;
     }
 
-    update(entity: Gender): void {
-        this.connection = new Connection().getConnectionPostgres();
-        this.connection.connect();
-        this.connection.query(`
+    async update(entity: Gender): Promise<void> {
+        const connection = new Connection().getConnectionPostgres();
+        await connection.connect();
+        await connection.query(`
             UPDATE tb_genders SET
                 name = '${entity.name}',
             WHERE id = ${entity.id}
         `);
-        this.connection.end();
+        await connection.end();
     }
 
-    remove(entity: Gender): void {
-        this.connection = new Connection().getConnectionPostgres();
-        this.connection.connect();
-        this.connection.query(`
+    async remove(entity: Gender): Promise<void> {
+        const connection = new Connection().getConnectionPostgres();
+        await connection.connect();
+        await connection.query(`
             DELETE FROM tb_genders WHERE id = ${entity.id}
         `);
-        this.connection.end();
+        await connection.end();
     }
 }

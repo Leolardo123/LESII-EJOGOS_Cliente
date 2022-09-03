@@ -4,47 +4,45 @@ import { Connection } from "@shared/utils/connection";
 import { IDAO } from "./interfaces/IDAO";
 
 export class DAOAddressType implements IDAO {
-    private connection: any;
-
-    insert(entity: AddressType): void {
-        this.connection = new Connection().getConnectionPostgres();
-        this.connection.connect();
-        this.connection.query(`
+    async insert(entity: AddressType): Promise<void> {
+        const connection = new Connection().getConnectionPostgres();
+        await connection.connect();
+        await connection.query(`
             INSERT INTO tb_address_types (name) VALUES (
                 '${entity.name}', 
             )`
         );
-        this.connection.end();
+        await connection.end();
     }
 
-    find(entity: AddressType): AddressType[] {
-        this.connection = new Connection().getConnectionPostgres();
-        this.connection.connect();
+    async find(entity: AddressType): Promise<AddressType[]> {
+        const connection = new Connection().getConnectionPostgres();
+        await connection.connect();
         const where = entity.id ? `WHERE id = ${entity.id}` : "";
-        const result = this.connection.query(
+        const result = await connection.query(
             `SELECT * FROM tb_address_types ${where}`
         );
-        this.connection.end();
+        await connection.end();
         return result.rows;
     }
 
-    update(entity: AddressType): void {
-        this.connection = new Connection().getConnectionPostgres();
-        this.connection.connect();
-        this.connection.query(`
+    async update(entity: AddressType): Promise<void> {
+        const connection = new Connection().getConnectionPostgres();
+        await connection.connect();
+        await connection.query(`
             UPDATE tb_address_types SET
                 name = '${entity.name}',
             WHERE id = ${entity.id}
         `);
-        this.connection.end();
+        await connection.end();
     }
 
-    remove(entity: AddressType): void {
-        this.connection = new Connection().getConnectionPostgres();
-        this.connection.connect();
-        this.connection.query(`
+    async remove(entity: AddressType): Promise<void> {
+        const connection = new Connection().getConnectionPostgres();
+        await connection.connect();
+        await connection.query(`
             DELETE FROM tb_address_types WHERE id = ${entity.id}
         `);
-        this.connection.end();
+        await connection.end();
     }
 }

@@ -7,10 +7,10 @@ export async function globalErrorHandler(
   response: Response,
   _: NextFunction,
 ): Promise<Response<any>> {
-
+  console.log(err)
 
   return response.status(500).json({
     status: 'error',
-    message: 'Server error',
+    message: err.message || 'erro interno',
   });
 }
