@@ -159,8 +159,7 @@ ALTER TABLE public.tb_phones OWNER TO postgres;
 CREATE TABLE public.tb_places_types (
     id integer NOT NULL,
     name character varying NOT NULL,
-    description character varying,
-    person_id integer NOT NULL
+    description character varying
 );
 
 ALTER TABLE public.tb_places_types OWNER TO postgres;
