@@ -59,11 +59,22 @@ export class DAOUser extends DAOAbstract {
         const result = await this.client.query(
             `SELECT 
                 tb_users.*, 
-                to_json(tb_persons.*) as person
+                to_json(tb_persons.*) as person,
+                to_json(array_agg(tb_addresses.*)) as addresses
             FROM 
                 ${this.table}
-            LEFT JOIN tb_persons ON tb_users.id = tb_persons.user_id
-            ${where}`
+            LEFT JOIN 
+                tb_persons 
+                ON tb_users.id = tb_persons.user_id
+            LEFT JOIN 
+                tb_person_addresses 
+                ON tb_persons.id = tb_person_addresses.person_id
+            LEFT JOIN 
+                (SELECT * FROM tb_addresses) as tb_addresses 
+                ON tb_person_addresses.address_id = tb_addresses.id
+            ${where}
+            GROUP BY
+                tb_users.id, tb_persons.*`
         );
         this.client.release();
         this.closeConnection();
