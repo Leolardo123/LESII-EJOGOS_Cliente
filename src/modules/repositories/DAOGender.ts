@@ -22,24 +22,15 @@ export class DAOGender extends DAOAbstract {
         } catch(err){
             await this.client.query('ROLLBACK');
             this.client.release();
+            this.closeConnection();
             throw Error(err as string);
         } finally {
             if(this.ctrlTransaction){
                 await this.client.query('COMMIT');
                 this.client.release();
+                this.closeConnection();
             }
         }
-    }
-
-    find = async (where: string): Promise<Gender[]>  => {
-        if(!this.client){
-            this.client = await pool.connect();
-        }
-        const result = await this.client.query(
-            `SELECT * FROM ${this.table} ${where}`
-        );
-        this.client.release();
-        return result.rows;
     }
 
     update = async (entity: Gender): Promise<void>  => {
@@ -56,11 +47,13 @@ export class DAOGender extends DAOAbstract {
         } catch(err){
             await this.client.query('ROLLBACK');
             this.client.release();
+            this.closeConnection();
             throw Error(err as string);
         } finally {
             if(this.ctrlTransaction){
                 await this.client.query('COMMIT');
                 this.client.release();
+                this.closeConnection();
             }
         }
     }

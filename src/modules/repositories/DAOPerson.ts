@@ -3,6 +3,7 @@ import Person from "@modules/models/users/Person";
 import User from "@modules/models/users/User";
 import { pool } from "@shared/utils/connection";
 import { DAOAbstract } from "./abstract/DAOAbstract";
+import { DAOAddress } from "./DAOAddress";
 
 export class DAOPerson extends DAOAbstract {
     constructor(
@@ -16,9 +17,9 @@ export class DAOPerson extends DAOAbstract {
         const { person } = entity;
         if(!this.client){
             this.client = await pool.connect();
+            await this.client.query('BEGIN');
         }
         try{
-            await this.client.query('BEGIN');
             await this.client.query(`
                 INSERT INTO tb_persons (name, cpf, birth_date, gender_id,  user_id) VALUES (
                     '${person.name}', 
@@ -28,28 +29,25 @@ export class DAOPerson extends DAOAbstract {
                     '${entity.id}'
                 )`
             );
+            if(person.addresses){
+                const daoAddress = new DAOAddress(false);
+                await daoAddress.setConnection(this.client);
+                person.addresses.map(async (address) => {
+                    await daoAddress.insert(address);
+                })
+            }
         } catch(err){
             await this.client.query('ROLLBACK');
+            this.client.release();
+            this.closeConnection();
             throw Error(err as string);
         } finally {
             if(this.ctrlTransaction){
                 await this.client.query('COMMIT');
                 this.client.release();
+                this.closeConnection();
             }
         }
-    }
-
-    find = async (where: string): Promise<Person[]> =>{
-        if(!this.client){
-            this.client = await pool.connect();
-        }
-        const result = await this.client.query(
-            `SELECT * FROM tb_persons 
-            LEFT JOIN tb_genders ON  tb_persons.gender_id = tb_genders.id
-            ${where}`
-        );
-        this.client.release();
-        return result.rows;
     }
 
     update = async (entity: Person): Promise<void> => {
@@ -69,11 +67,13 @@ export class DAOPerson extends DAOAbstract {
         } catch(err){
             await this.client.query('ROLLBACK');
             this.client.release();
+            this.closeConnection();
             throw Error(err as string);
         } finally {
             if(this.ctrlTransaction){
                 await this.client.query('COMMIT');
                 this.client.release();
+                this.closeConnection();
             }
         }
     }

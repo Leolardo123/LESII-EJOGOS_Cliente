@@ -21,24 +21,16 @@ export class DAOPlaceType extends DAOAbstract {
             );
         } catch(err){
             await this.client.query('ROLLBACK');
+            this.client.release();
+            this.closeConnection();
             throw Error(err as string);
         } finally {
             if(this.ctrlTransaction){
                 await this.client.query('COMMIT');
                 this.client.release();
+                this.closeConnection();
             }
         }
-    }
-
-    find = async (where: string): Promise<PlaceType[]> => {
-        if(!this.client){
-            this.client = await pool.connect();
-        }
-        const result = await this.client.query(
-            `SELECT * FROM ${this.table} ${where}`
-        );
-        this.client.release();
-        return result.rows;
     }
 
     update = async (entity: PlaceType): Promise<void> => {
@@ -55,10 +47,12 @@ export class DAOPlaceType extends DAOAbstract {
         } catch(err){
             await this.client.query('ROLLBACK');
             this.client.release();
+            this.closeConnection();
         } finally {
             if(this.ctrlTransaction){
                 await this.client.query('COMMIT');
                 this.client.release();
+                this.closeConnection();
             }
         }
     }

@@ -1,14 +1,18 @@
 import { Controller } from '@modules/controller/Controller';
+import { SessionController } from '@modules/controller/SessionController';
 import { Facade } from '@modules/facade/Facade';
 import { Router, Request, Response, NextFunction } from 'express';
 
 const router = Router();
 const facade = new Facade();
 const controller = new Controller(facade);
+const sessionController = new SessionController();
 
 router.get('/', (request: Request, response: Response) =>
   response.send('LES - EJOGOS - 0.0.1'),
 );
+
+router.post('/users/auth', sessionController.create);
 
 router.get('/:route', controller.get);
 

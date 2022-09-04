@@ -6,7 +6,7 @@ import { IDAO } from "../interfaces/IDAO";
 export abstract class DAOAbstract implements IDAO {
     protected table: string;
     protected ctrlTransaction: boolean;
-    protected client: PoolClient;
+    protected client: PoolClient | undefined;
 
     constructor(
         ctrlTransaction?: boolean
@@ -19,6 +19,10 @@ export abstract class DAOAbstract implements IDAO {
         this.client = client;
     }
 
+    closeConnection = () => {
+        this.client = undefined;
+    }
+
     insert(entity: Domain): Promise<void> {
         throw new Error('Serviço indisponível.')
     }
@@ -27,16 +31,24 @@ export abstract class DAOAbstract implements IDAO {
         throw new Error('Serviço indisponível.')
     }
 
-    find(where: string): Promise<Domain[]> {
-        throw new Error('Serviço indisponível.')
+    find = async  (where: string): Promise<Domain[]> => {
+        if(!this.client){
+            this.client = await pool.connect();
+        }
+        const result = await this.client.query(
+            `SELECT * FROM ${this.table} ${where}`
+        );
+        this.client.release();
+        this.closeConnection();
+        return result.rows;
     }
 
     async remove(entity: Domain): Promise<void> {
-        try{
-            if(!this.client){
+        if(!this.client){
             this.client = await pool.connect();
-        }
             await this.client.query('BEGIN');
+        }
+        try{
             await this.client.query(`
                 DELETE FROM ${this.table} WHERE id = ${entity.id}
             `);
