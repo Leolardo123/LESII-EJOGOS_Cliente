@@ -1,13 +1,23 @@
 
 import Address from "@modules/models/address/Address";
-import { Connection } from "@shared/utils/connection";
-import { IDAO } from "./interfaces/IDAO";
+import { pool } from "@shared/utils/connection";
+import { DAOAbstract } from "./abstract/DAOAbstract";
 
-export class DAOAddress implements IDAO {
-    async insert(entity: Address): Promise<void> {
-        const connection = new Connection().getConnectionPostgres();
-        await connection.connect();
-        await connection.query(`
+export class DAOAddress extends DAOAbstract {
+    constructor(
+        transaction?: boolean,
+    ){
+        super(transaction);
+        this.table = 'tb_addresses';
+    }
+
+    insert = async (entity: Address): Promise<void> => {
+        if(!this.client){
+            this.client = await pool.connect();
+        }
+        try{
+            await this.client.query('BEGIN');
+            await this.client.query(`
             INSERT INTO tb_addresses (
                 cep,
                 number,
@@ -32,46 +42,59 @@ export class DAOAddress implements IDAO {
                 ${entity.place_type.id},
             )`
         );
-        await connection.end();
+        } catch(err){
+            await this.client.query('ROLLBACK');
+            this.client.release();
+            throw Error(err as string);
+        } finally {
+            if(this.ctrlTransaction){
+                await this.client.query('COMMIT');
+                this.client.release();
+            }
+        }
     }
 
-    async find(entity: Address): Promise<Address[]> {
-        const connection = new Connection().getConnectionPostgres();
-        await connection.connect();
+    find = async (entity: Address): Promise<Address[]> => {
+        if(!this.client){
+            this.client = await pool.connect();
+        }
         const where = entity.id ? `WHERE id = ${entity.id}` : "";
-        const result = await connection.query(
+        const result = await this.client.query(
             `SELECT * FROM tb_addresses ${where}`
         );
-        connection.end();
+        this.client.release();
         return result.rows;
     }
 
-    async update(entity: Address): Promise<void> {
-        const connection = new Connection().getConnectionPostgres();
-        await connection.connect();
-        await connection.query(`
-            UPDATE tb_addresses SET
-                cep = ${entity.cep},
-                number = ${entity.number},
-                city = ${entity.city},
-                state = ${entity.state},
-                country = ${entity.country},
-                complement = ${entity.complement},
-                neighborhood = ${entity.neighborhood},
-                place = ${entity.place},
-                address_type_id = ${entity.address_type.id},
-                place_type_id = ${entity.place_type.id},
-            WHERE id = ${entity.id}
-        `);
-        await connection.end();
-    }
-
-    async remove(entity: Address): Promise<void> {
-        const connection = new Connection().getConnectionPostgres();
-        await connection.connect();
-        await connection.query(`
-            DELETE FROM tb_addresses WHERE id = ${entity.id}
-        `);
-        await connection.end();
+    update = async (entity: Address): Promise<void> => {
+        if(!this.client){
+            this.client = await pool.connect();
+        }
+        try{
+            this.client.query('BEGIN');
+            await this.client.query(`
+                UPDATE tb_addresses SET
+                    cep = ${entity.cep},
+                    number = ${entity.number},
+                    city = ${entity.city},
+                    state = ${entity.state},
+                    country = ${entity.country},
+                    complement = ${entity.complement},
+                    neighborhood = ${entity.neighborhood},
+                    place = ${entity.place},
+                    address_type_id = ${entity.address_type.id},
+                    place_type_id = ${entity.place_type.id},
+                WHERE id = ${entity.id}
+            `);
+        } catch(err){
+            await this.client.query('ROLLBACK');
+            this.client.release();
+            throw Error(err as string);
+        } finally {
+            if(this.ctrlTransaction){
+                await this.client.query('COMMIT');
+                this.client.release();
+            }
+        }
     }
 }

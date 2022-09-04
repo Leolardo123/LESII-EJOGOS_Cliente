@@ -1,11 +1,13 @@
 import Domain from "@modules/models/Domain";
 import { DAOAddress } from "@modules/repositories/DAOAddress";
+import { DAOGender } from "@modules/repositories/DAOGender";
 import { DAOPerson } from "@modules/repositories/DAOPerson";
 import { DAOUser } from "@modules/repositories/DAOUser";
 import { IDAO } from "@modules/repositories/interfaces/IDAO";
 import { IValidate } from "@modules/validators/IValidate";
 import { ValidateAddress } from "@modules/validators/ValidateAddress";
 import { ValidateCPF } from "@modules/validators/ValidateCPF";
+import { ValidateGender } from "@modules/validators/ValidateGender";
 import { ValidatePerson } from "@modules/validators/ValidatePerson";
 import { ValidatePhone } from "@modules/validators/ValidatePhone";
 import { ValidateUser } from "@modules/validators/ValidateUser";
@@ -23,6 +25,7 @@ export class Facade implements IFacade {
 		const validateAddress = new ValidateAddress();
 		const validatePhone = new ValidatePhone();
 		const validateCPF = new ValidateCPF();
+		const validateGender = new ValidateGender();
 		const validatePerson = new ValidatePerson(
 			validateAddress, 
 			validatePhone,
@@ -31,14 +34,19 @@ export class Facade implements IFacade {
 		const validateUser = new ValidateUser(validatePerson);
 		//*
 
-		this.daos.user = new DAOUser();
-		this.validators.user = validateUser;
+		this.daos.gender = new DAOGender();
+
+		this.daos.address = new DAOAddress();
+		this.validators.address = validateAddress;
 
 		this.daos.person = new DAOPerson();
 		this.validators.person = validatePerson;
 
-		this.daos.address = new DAOAddress();
-		this.validators.address = validateUser;
+		this.daos.user = new DAOUser();
+		this.validators.user = validateUser;
+
+		this.daos.gender = new DAOGender();
+		this.validators.gender = validateGender;
 	}
 
 	async create(entity: Domain): Promise<string> {

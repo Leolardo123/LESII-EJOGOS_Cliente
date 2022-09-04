@@ -17,7 +17,7 @@ export class VHUser implements IViewHelper {
         } = req.body;
         const { id } = req.params;
 
-        const addressesInstances = addresses.map((address: any) => {
+        const addressesInstances = addresses ? addresses.map((address: any) => {
             const addressInstance = new Address();
 
             if(address.place_type_id){
@@ -29,7 +29,7 @@ export class VHUser implements IViewHelper {
             Object.assign(addressInstance, address);
 
             return addressInstance;
-        })
+        }) : []
 
         const personInstance = new Person();
         Object.assign(personInstance, person);

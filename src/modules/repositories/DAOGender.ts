@@ -1,47 +1,68 @@
 import Gender from "@modules/models/users/Gender";
-import { Connection } from "@shared/utils/connection";
-import { IDAO } from "./interfaces/IDAO";
+import { pool } from "@shared/utils/connection";
+import { DAOAbstract } from "./abstract/DAOAbstract";
 
-export class DAOGender implements IDAO {
-    async insert(entity: Gender): Promise<void> {
-        const connection = new Connection().getConnectionPostgres();
-        await connection.connect();
-        await connection.query(`
-            INSERT INTO tb_genders (name) VALUES (
-                '${entity.name}', 
-            )`
-        );
-        await connection.end();
+export class DAOGender extends DAOAbstract {
+    constructor(transaction?: boolean){
+        super(transaction);
+        this.table = 'tb_genders';
     }
 
-    async find(entity: Gender): Promise<Gender[]> {
-        const connection = new Connection().getConnectionPostgres();
-        await connection.connect();
+    insert = async (entity: Gender): Promise<void>  => {
+        if(!this.client){
+            this.client = await pool.connect();
+        }
+        try{
+            await this.client.query('BEGIN');
+            await this.client.query(`
+                INSERT INTO ${this.table} (name) VALUES (
+                    '${entity.name}', 
+                )`
+            );
+        } catch(err){
+            await this.client.query('ROLLBACK');
+            this.client.release();
+            throw Error(err as string);
+        } finally {
+            if(this.ctrlTransaction){
+                await this.client.query('COMMIT');
+                this.client.release();
+            }
+        }
+    }
+
+    find = async (entity: Gender): Promise<Gender[]>  => {
+        if(!this.client){
+            this.client = await pool.connect();
+        }
         const where = entity.id ? `WHERE id = ${entity.id}` : "";
-        const result = await connection.query(
-            `SELECT * FROM tb_genders ${where}`
+        const result = await this.client.query(
+            `SELECT * FROM ${this.table} ${where}`
         );
-        await connection.end();
+        this.client.release();
         return result.rows;
     }
 
-    async update(entity: Gender): Promise<void> {
-        const connection = new Connection().getConnectionPostgres();
-        await connection.connect();
-        await connection.query(`
-            UPDATE tb_genders SET
-                name = '${entity.name}',
-            WHERE id = ${entity.id}
-        `);
-        await connection.end();
-    }
-
-    async remove(entity: Gender): Promise<void> {
-        const connection = new Connection().getConnectionPostgres();
-        await connection.connect();
-        await connection.query(`
-            DELETE FROM tb_genders WHERE id = ${entity.id}
-        `);
-        await connection.end();
+    update = async (entity: Gender): Promise<void>  => {
+        if(!this.client){
+            this.client = await pool.connect();
+        }
+        try{
+            await this.client.query('BEGIN');
+            await this.client.query(`
+                UPDATE ${this.table} SET
+                    name = '${entity.name}',
+                WHERE id = ${entity.id}
+            `);
+        } catch(err){
+            await this.client.query('ROLLBACK');
+            this.client.release();
+            throw Error(err as string);
+        } finally {
+            if(this.ctrlTransaction){
+                await this.client.query('COMMIT');
+                this.client.release();
+            }
+        }
     }
 }

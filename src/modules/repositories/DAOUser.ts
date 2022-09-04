@@ -1,55 +1,88 @@
 import User from "@modules/models/users/User";
-import { Connection } from "@shared/utils/connection";
-import { IDAO } from "./interfaces/IDAO";
+import { pool } from "@shared/utils/connection";
+import { DAOAbstract } from "./abstract/DAOAbstract";
+import { DAOPerson } from "./DAOPerson";
 
-export class DAOUser implements IDAO {
-    private connection: any;
-
-    async insert(entity: User): Promise<void> {
-        const connection = new Connection().getConnectionPostgres();
-        await connection.connect();
-        await connection.query(`
-            INSERT INTO tb_users (email, password, role, is_active) VALUES (
-                '${entity.email}', 
-                '${entity.password}', 
-                '${entity.role}', 
-                'true'
-            )`
-        );
-        await connection.end();
+export class DAOUser extends DAOAbstract {
+    constructor(
+        transaction?: boolean,
+    ){
+        super(transaction);
+        this.table = 'tb_users';
     }
 
-    async find(entity: User): Promise<User[]> {
-        const connection = new Connection().getConnectionPostgres();
-        await connection.connect();
+    insert = async  (entity: User): Promise<void> => {
+        if(!this.client){
+            this.client = await pool.connect();
+        }
+        try{
+            await this.client.query('BEGIN');
+            const { rows: [ item ] } = await this.client.query(`
+                INSERT INTO ${this.table} (email, password, role, is_active) VALUES (
+                    '${entity.email}', 
+                    '${entity.password}', 
+                    '${entity.role}', 
+                    'true'
+                ) RETURNING id` 
+            );
+            entity.id = Number(item.id)
+            if(entity.person){
+                const daoPerson = new DAOPerson(
+                    false
+                );
+                daoPerson.setConnection(this.client);
+                await daoPerson.insert(entity)
+            }
+        } catch(err){
+            await this.client.query('ROLLBACK');
+            this.client.release();
+            throw Error(err as string);
+        } finally {
+            if(this.ctrlTransaction){
+                await this.client.query('COMMIT');
+                this.client.release();
+            }
+        }
+    }
+
+    find = async  (entity: User): Promise<User[]> => {
+        if(!this.client){
+            this.client = await pool.connect();
+        }
         const where = entity.id ? `WHERE id = ${entity.id}` : "";
-        const result = await connection.query(
-            `SELECT * FROM tb_users ${where}`
+        const result = await this.client.query(
+            `SELECT * FROM ${this.table} ${where}`
         );
-        await connection.end();
+        this.client.release();
         return result.rows;
     }
 
-    async update(entity: User): Promise<void> {
-        const connection = new Connection().getConnectionPostgres();
-        await connection.connect();
-        await connection.query(`
-            UPDATE tb_users SET
-                email = '${entity.email}',
-                password = '${entity.password}',
-                role = '${entity.role}'
-                isActive = ${entity.isActive}
-            WHERE id = ${entity.id}
-        `);
-        await connection.end();
-    }
-
-    async remove(entity: User): Promise<void> {
-        const connection = new Connection().getConnectionPostgres();
-        await connection.connect();
-        await connection.query(`
-            DELETE FROM tb_users WHERE id = ${entity.id}
-        `);
-        await connection.end();
+    update = async  (entity: User): Promise<void> => {
+        if(!this.client){
+            this.client = await pool.connect();
+        }
+        try{
+            await this.client.query('BEGIN');
+            await this.client.query(`
+                UPDATE ${this.table} SET
+                    email = '${entity.email}',
+                    password = '${entity.password}',
+                    role = '${entity.role}'
+                    isActive = ${entity.isActive}
+                WHERE id = ${entity.id}
+            `);
+            if(entity.person){
+                const daoPerson = new DAOPerson(false);
+                await daoPerson.update(entity.person)
+            }
+        } catch(err){
+            await this.client.query('ROLLBACK');
+            this.client.release();
+        } finally {
+            if(this.ctrlTransaction){
+                await this.client.query('COMMIT');
+                this.client.release();
+            }
+        }
     }
 }

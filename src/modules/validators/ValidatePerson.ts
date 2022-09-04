@@ -2,6 +2,7 @@ import Person from "../models/users/Person";
 import { IValidate } from "./IValidate";
 import { ValidateAddress } from "./ValidateAddress";
 import { ValidateCPF } from "./ValidateCPF";
+import { ValidateGender } from "./ValidateGender";
 import { ValidatePhone } from "./ValidatePhone";
 
 export class ValidatePerson implements IValidate{
@@ -22,7 +23,7 @@ export class ValidatePerson implements IValidate{
         } else {
             this.validateCPF.validate(entity);
         }
-        if(!entity.gender){
+        if(!entity.gender || !entity.gender.id){
             throw new Error('Gênero é um campo obrigatório (Pessoa).');
         }
         if(!entity.phone){

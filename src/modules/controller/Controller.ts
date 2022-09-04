@@ -12,11 +12,13 @@ import { VHUser } from "./viewhelper/VHUser";
 class Controller{
     private vhs: IHash<IViewHelper> = {};
     constructor(private facade: IFacade){
-        this.vhs.users = new VHUser();
-        this.vhs.address = new VHAddress();
-        this.vhs.addresstype = new VHAddressType();
-        this.vhs.gender = new VHGender();
-        this.vhs.placetype = new VHPlaceType();
+       this.vhs = {
+            "users": new VHUser(),
+            "addresses": new VHAddress(),
+            "addresses-types": new VHAddressType(),
+            "genders": new VHGender(),
+            "places-types": new VHPlaceType(),
+       }
     }
 
      create = async (req: Request, res: Response) => {
@@ -66,9 +68,9 @@ class Controller{
         }
         
         const entity = this.vhs[route].getEntity(req);
-        const msg = await this.facade.query(entity);
+        const result = await this.facade.query(entity);
 
-        return res.json({ msg })
+        return res.json({ result })
     }
 }
 

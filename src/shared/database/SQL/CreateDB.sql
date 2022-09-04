@@ -106,7 +106,6 @@ CREATE TABLE public.tb_persons (
     id serial NOT NULL,
     name character varying NOT NULL,
     cpf character varying NOT NULL,
-    cellphone character varying NOT NULL,
     birth_date timestamp without time zone NOT NULL,
     gender_id integer NOT NULL,
     user_id integer NOT NULL

@@ -24,10 +24,10 @@ export class ValidateAddress implements IValidate{
         if(!entity.place){
             throw new Error('Logradouro é um campo obrigatório (Endereço).')
         }
-        if(!entity.address_type){
+        if(!entity.address_type || !entity.address_type.id){
             throw new Error('Bairro é um campo obrigatório (Endereço).')
         }
-        if(!entity.place_type){
+        if(!entity.place_type || !entity.place_type.id){
             throw new Error('Tipo de Lougradouro é um campo obrigatório (Endereço).')
         }
     }
