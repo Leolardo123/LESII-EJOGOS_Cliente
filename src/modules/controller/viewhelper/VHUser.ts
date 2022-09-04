@@ -18,35 +18,38 @@ export class VHUser implements IViewHelper {
         } = req.body;
         const { id } = req.params;
 
-        const addressesInstances = addresses ? addresses.map((address: any) => {
-            const addressInstance = new Address();
-
-            if(address.place_type_id){
-                addressInstance.place_type = new PlaceType({ id: address.place_type_id })
-            }
-            if(address.address_type_id){
-                addressInstance.address_type = new AddressType({ id: address.address_type_id })
-            }
-            Object.assign(addressInstance, address);
-
-            return addressInstance;
-        }) : []
-
-        const personInstance = new Person();
-        Object.assign(personInstance, person);
-        if(person.gender_id){
-            const genderInstance = new Gender({ id: person.gender_id });
-            personInstance.gender = genderInstance;
-        }
-        if(person.phone){
-            const phoneInstance = new Phone(person.phone);
-            personInstance.phone = phoneInstance;
-        }
-        personInstance.addresses = addressesInstances;
-
+        
         const userInstance = new User({ id: id ? Number(id) : undefined });
         Object.assign(userInstance, user);
-        userInstance.person = personInstance;
+
+        if(person){
+            const addressesInstances = addresses ? addresses.map((address: any) => {
+                const addressInstance = new Address();
+    
+                if(address.place_type_id){
+                    addressInstance.place_type = new PlaceType({ id: address.place_type_id })
+                }
+                if(address.address_type_id){
+                    addressInstance.address_type = new AddressType({ id: address.address_type_id })
+                }
+                Object.assign(addressInstance, address);
+    
+                return addressInstance;
+            }) : []
+
+            const personInstance = new Person();
+            Object.assign(personInstance, person);
+            if(person.gender_id){
+                const genderInstance = new Gender({ id: person.gender_id });
+                personInstance.gender = genderInstance;
+            }
+            if(person.phone){
+                const phoneInstance = new Phone(person.phone);
+                personInstance.phone = phoneInstance;
+            }
+            personInstance.addresses = addressesInstances;
+            userInstance.person = personInstance;
+        }
 
         return userInstance;
     }

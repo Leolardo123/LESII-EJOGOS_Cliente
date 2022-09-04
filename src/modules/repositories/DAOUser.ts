@@ -13,6 +13,10 @@ export class DAOUser extends DAOAbstract {
     }
 
     insert = async  (entity: User): Promise<void> => {
+        if(await this.find(`WHERE email = '${entity.email}'`)){
+            throw new Error('Email já está cadastrado.')
+        }
+
         if(!this.client){
             this.client = await pool.connect();
             await this.client.query('BEGIN');
@@ -47,9 +51,14 @@ export class DAOUser extends DAOAbstract {
     }
 
     update = async  (entity: User): Promise<void> => {
+        if(await this.find(`WHERE email = '${entity.email}' AND id != '${entity.id}'`)){
+            throw new Error('Email já está cadastrado.')
+        }
+
         if(!this.client){
             this.client = await pool.connect();
         }
+
         try{
             await this.client.query('BEGIN');
             await this.client.query(`

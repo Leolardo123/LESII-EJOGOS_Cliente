@@ -20,9 +20,9 @@ router.get('/:route/:id', controller.get);
 
 router.post('/:route', controller.create);
 
-router.put('/:route', controller.update);
+router.put('/:route/:id', controller.update);
 
-router.delete('/:route', controller.delete);
+router.delete('/:route/:id', controller.delete);
 
 router.use((request: Request, response: Response, next: NextFunction) => {
   if (!request.route)

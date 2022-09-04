@@ -52,13 +52,17 @@ export abstract class DAOAbstract implements IDAO {
             await this.client.query(`
                 DELETE FROM ${this.table} WHERE id = ${entity.id}
             `);
-            this.client.release();
         } catch (err) {
             await this.client.query('ROLLBACK');
+            this.client.release();
+            this.closeConnection();
             throw new Error(err as string)
         } finally {
             await this.client.query('COMMIT');
+            if(this.ctrlTransaction) {
+                this.client.release();
+                this.closeConnection();
+            }
         }
-        if(this.ctrlTransaction) this.client.release()
     }
 }
