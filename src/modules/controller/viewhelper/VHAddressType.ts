@@ -11,10 +11,10 @@ export class VHAddressType implements IViewHelper {
         } = req.body;
         const { id } = req.params;
 
-        const placeTypeInstance = new AddressType({ id: id ? Number(id) : undefined });
-        Object.assign(placeTypeInstance, { name });
+        const addressTypeInstance = new AddressType({ id: id ? Number(id) : undefined });
+        Object.assign(addressTypeInstance, { name });
 
-        return placeTypeInstance;
+        return addressTypeInstance;
     }
 
     getQuery(req: Request): IGetQuery {

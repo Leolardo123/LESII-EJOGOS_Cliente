@@ -25,7 +25,7 @@ export class ValidateAddress implements IValidate{
             throw new Error('Logradouro é um campo obrigatório (Endereço).')
         }
         if(!entity.address_type || !entity.address_type.id){
-            throw new Error('Bairro é um campo obrigatório (Endereço).')
+            throw new Error('Tipo de Endereço é um campo obrigatório (Endereço).')
         }
         if(!entity.place_type || !entity.place_type.id){
             throw new Error('Tipo de Lougradouro é um campo obrigatório (Endereço).')
