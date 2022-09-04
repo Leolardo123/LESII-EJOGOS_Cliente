@@ -18,6 +18,8 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(json());
 
+app.use(json());
+
 app.use('/files', express.static(uploadConfig.uploadsFolder));
 
 app.use(router);

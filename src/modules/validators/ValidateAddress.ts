@@ -4,7 +4,7 @@ import { IValidate } from "./IValidate";
 export class ValidateAddress implements IValidate{
     validate(entity: Address): void {
         if(!entity.cep){
-            throw new Error('CEP é um campo obrigatório (Endereço).')
+            throw new Error('CEP é um campo obrigatório endereço.')
         }
         if(!entity.number){
             throw new Error('Número é um campo obrigatório (Endereço).')

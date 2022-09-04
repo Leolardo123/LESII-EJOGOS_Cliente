@@ -5,14 +5,11 @@ class PlaceType extends Domain {
     private _description: string;
 
     constructor(
-        name: string,
-        description: string,
-    ){
-        super();
-        this._description = description;
-        this._name = name;
-    }
-
+        type?: Partial<PlaceType>
+     ) {
+         super();
+         Object.assign(this, type)
+     }
     public validate(): void {
         if(!this.name){
             throw new Error('Nome é um campo  obrigatório (Tipo de Logradouro).')

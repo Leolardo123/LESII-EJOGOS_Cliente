@@ -4,10 +4,10 @@ class Gender extends Domain {
     private _name: string;
 
     constructor(
-        name: string,
+       gender?: Partial<Gender>
     ) {
         super();
-        this._name = name;
+        Object.assign(this, gender)
     }
 
     public get name(): string {

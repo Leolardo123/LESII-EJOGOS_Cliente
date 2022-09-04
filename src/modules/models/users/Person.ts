@@ -12,7 +12,7 @@ class Person extends Domain {
     private _addresses: Address[];
 
     constructor(
-        person: Partial<Person>
+        person?: Partial<Person>
     ) {
         super();
         Object.assign(this, person)

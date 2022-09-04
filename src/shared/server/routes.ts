@@ -1,13 +1,24 @@
-import { userRouter } from '@modules/routes/user.routes';
+import { Controller } from '@modules/controller/Controller';
+import { Facade } from '@modules/facade/Facade';
 import { Router, Request, Response, NextFunction } from 'express';
 
 const router = Router();
+const facade = new Facade();
+const controller = new Controller(facade);
 
 router.get('/', (request: Request, response: Response) =>
   response.send('LES - EJOGOS - 0.0.1'),
 );
 
-router.use('/users', userRouter);
+router.get('/:route', controller.get);
+
+router.get('/:route/:id', controller.get);
+
+router.post('/:route', controller.create);
+
+router.put('/:route', controller.update);
+
+router.delete('/:route', controller.delete);
 
 router.use((request: Request, response: Response, next: NextFunction) => {
   if (!request.route)

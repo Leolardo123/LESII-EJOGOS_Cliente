@@ -9,11 +9,11 @@ export class DAOUser implements IDAO {
         const connection = new Connection().getConnectionPostgres();
         await connection.connect();
         await connection.query(`
-            INSERT INTO tb_users (email, password, role, isActive) VALUES (
+            INSERT INTO tb_users (email, password, role, is_active) VALUES (
                 '${entity.email}', 
                 '${entity.password}', 
                 '${entity.role}', 
-                '${entity.isActive}'
+                'true'
             )`
         );
         await connection.end();

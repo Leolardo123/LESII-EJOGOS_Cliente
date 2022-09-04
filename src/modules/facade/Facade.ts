@@ -5,6 +5,7 @@ import { DAOUser } from "@modules/repositories/DAOUser";
 import { IDAO } from "@modules/repositories/interfaces/IDAO";
 import { IValidate } from "@modules/validators/IValidate";
 import { ValidateAddress } from "@modules/validators/ValidateAddress";
+import { ValidateCPF } from "@modules/validators/ValidateCPF";
 import { ValidatePerson } from "@modules/validators/ValidatePerson";
 import { ValidatePhone } from "@modules/validators/ValidatePhone";
 import { ValidateUser } from "@modules/validators/ValidateUser";
@@ -21,9 +22,11 @@ export class Facade implements IFacade {
 		 */
 		const validateAddress = new ValidateAddress();
 		const validatePhone = new ValidatePhone();
+		const validateCPF = new ValidateCPF();
 		const validatePerson = new ValidatePerson(
 			validateAddress, 
-			validatePhone
+			validatePhone,
+			validateCPF
 		);
 		const validateUser = new ValidateUser(validatePerson);
 		//*

@@ -9,7 +9,7 @@ class User extends Domain {
     private _person: Person;
 
     constructor(
-        user: Partial<User>
+        user?: Partial<User>
     ) {
         super();
         Object.assign(this, user)

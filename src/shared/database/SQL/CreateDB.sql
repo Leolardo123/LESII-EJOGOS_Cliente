@@ -14,16 +14,15 @@ SET default_tablespace = '';
 SET default_with_oids = false;
 
 CREATE TABLE public.coupom (
-    id integer NOT NULL,
+    id serial NOT NULL,
     code character varying NOT NULL,
     value integer DEFAULT 0 NOT NULL,
     type character varying DEFAULT 'return_product'::character varying NOT NULL
 );
-
 ALTER TABLE public.coupom OWNER TO postgres;
 
 CREATE TABLE public.refresh_tokens (
-    id integer NOT NULL,
+    id serial NOT NULL,
     access_token character varying NOT NULL,
     refresh_token character varying NOT NULL,
     user_id integer NOT NULL,
@@ -32,11 +31,10 @@ CREATE TABLE public.refresh_tokens (
     created_at timestamp without time zone DEFAULT now() NOT NULL,
     updated_at timestamp without time zone DEFAULT now() NOT NULL
 );
-
 ALTER TABLE public.refresh_tokens OWNER TO postgres;
 
 CREATE TABLE public.tb_addresses (
-    id integer NOT NULL,
+    id serial NOT NULL,
     cep character varying NOT NULL,
     number integer NOT NULL,
     address_type_id integer NOT NULL,
@@ -48,95 +46,64 @@ CREATE TABLE public.tb_addresses (
     place character varying NOT NULL,
     place_type_id integer NOT NULL
 );
-
 ALTER TABLE public.tb_addresses OWNER TO postgres;
 
 CREATE TABLE public.tb_addresses_types (
-    id integer NOT NULL,
+    id serial NOT NULL,
     name character varying NOT NULL,
     description character varying
 );
-
 ALTER TABLE public.tb_addresses_types OWNER TO postgres;
 
-CREATE SEQUENCE public.tb_addresses_types_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-ALTER TABLE public.tb_addresses_types_id_seq OWNER TO postgres;
-
-ALTER SEQUENCE public.tb_addresses_types_id_seq OWNED BY public.tb_addresses_types.id;
-
 CREATE TABLE public.tb_brand (
-    id integer NOT NULL,
+    id serial NOT NULL,
     name character varying NOT NULL,
     image character varying NOT NULL
 );
-
 ALTER TABLE public.tb_brand OWNER TO postgres;
 
 CREATE TABLE public.tb_cards (
-    id integer NOT NULL,
+    id serial NOT NULL,
     owner_name character varying NOT NULL,
     number character varying NOT NULL,
     brand_id integer NOT NULL,
     person_id integer NOT NULL,
     security_code character varying NOT NULL
 );
-
 ALTER TABLE public.tb_cards OWNER TO postgres;
 
 CREATE TABLE public.tb_carts_items (
-    id integer NOT NULL,
+    id serial NOT NULL,
     quantity integer NOT NULL,
     price integer NOT NULL,
     cart_id integer NOT NULL,
     product_id integer NOT NULL
 );
-
-
 ALTER TABLE public.tb_carts_items OWNER TO postgres;
 
 CREATE TABLE public.tb_genders (
-    id integer NOT NULL,
+    id serial NOT NULL,
     name character varying NOT NULL
 );
-
 ALTER TABLE public.tb_genders OWNER TO postgres;
 
-CREATE SEQUENCE public.tb_genders_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-ALTER TABLE public.tb_genders_id_seq OWNER TO postgres;
-
-ALTER SEQUENCE public.tb_genders_id_seq OWNED BY public.tb_genders.id;
-
 CREATE TABLE public.tb_item_carts (
-    id integer NOT NULL,
+    id serial NOT NULL,
     total_price integer NOT NULL,
     person_id integer NOT NULL,
     status character varying DEFAULT 'open'::character varying NOT NULL
 );
-
 ALTER TABLE public.tb_item_carts OWNER TO postgres;
 
 CREATE TABLE public.tb_person_addresses (
-    id integer NOT NULL,
+    id serial NOT NULL,
     person_id integer NOT NULL,
     address_id integer NOT NULL
 );
-
 ALTER TABLE public.tb_person_addresses OWNER TO postgres;
 
 CREATE TABLE public.tb_persons (
-    id integer NOT NULL,
+    id serial NOT NULL,
     name character varying NOT NULL,
     cpf character varying NOT NULL,
     cellphone character varying NOT NULL,
@@ -144,39 +111,25 @@ CREATE TABLE public.tb_persons (
     gender_id integer NOT NULL,
     user_id integer NOT NULL
 );
-
 ALTER TABLE public.tb_persons OWNER TO postgres;
 
 CREATE TABLE public.tb_phones (
-    id integer NOT NULL,
+    id serial NOT NULL,
     number character varying NOT NULL,
     ddd integer NOT NULL,
     person_id integer NOT NULL
 );
-
 ALTER TABLE public.tb_phones OWNER TO postgres;
 
 CREATE TABLE public.tb_places_types (
-    id integer NOT NULL,
+    id serial NOT NULL,
     name character varying NOT NULL,
     description character varying
 );
-
 ALTER TABLE public.tb_places_types OWNER TO postgres;
 
-CREATE SEQUENCE public.tb_places_types_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-ALTER TABLE public.tb_places_types_id_seq OWNER TO postgres;
-
-ALTER SEQUENCE public.tb_places_types_id_seq OWNED BY public.tb_places_types.id;
-
 CREATE TABLE public.tb_products (
-    id integer NOT NULL,
+    id serial NOT NULL,
     is_active boolean DEFAULT true NOT NULL,
     name character varying NOT NULL,
     description character varying NOT NULL,
@@ -190,30 +143,27 @@ CREATE TABLE public.tb_products (
     release_date character varying NOT NULL,
     image character varying NOT NULL
 );
-
 ALTER TABLE public.tb_products OWNER TO postgres;
 
 CREATE TABLE public.tb_purchases (
-    id integer NOT NULL,
+    id serial NOT NULL,
     total_price integer NOT NULL,
     cart_id integer NOT NULL,
     payment_id integer NOT NULL,
     person_id integer NOT NULL,
     status character varying DEFAULT 'pending'::character varying NOT NULL
 );
-
 ALTER TABLE public.tb_purchases OWNER TO postgres;
 
 CREATE TABLE public.tb_purchases_coupons (
-    id integer NOT NULL,
+    id serial NOT NULL,
     coupon_id integer NOT NULL,
     purchase_id integer NOT NULL
 );
-
 ALTER TABLE public.tb_purchases_coupons OWNER TO postgres;
 
 CREATE TABLE public.tb_users (
-    id integer NOT NULL,
+    id serial NOT NULL,
     is_active boolean DEFAULT true NOT NULL,
     email character varying NOT NULL,
     password character varying NOT NULL,
@@ -221,12 +171,6 @@ CREATE TABLE public.tb_users (
 );
 
 ALTER TABLE public.tb_users OWNER TO postgres;
-
-ALTER TABLE ONLY public.tb_addresses_types ALTER COLUMN id SET DEFAULT nextval('public.tb_addresses_types_id_seq'::regclass);
-
-ALTER TABLE ONLY public.tb_genders ALTER COLUMN id SET DEFAULT nextval('public.tb_genders_id_seq'::regclass);
-
-ALTER TABLE ONLY public.tb_places_types ALTER COLUMN id SET DEFAULT nextval('public.tb_places_types_id_seq'::regclass);
 
 ALTER TABLE ONLY public.tb_products
     ADD CONSTRAINT "PK_26292104cb895b49349b5353003" PRIMARY KEY (id);

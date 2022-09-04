@@ -8,7 +8,7 @@ export class ValidateUser implements IValidate{
     ){}
     validate(entity: User): void {
         if(!(entity instanceof User)){
-            throw new Error('Entidade inválida, esperava usuário (Usuário).');
+            throw new Error('Entidade inválida, esperava usuário.');
         }
         if(!entity.email){
             throw new Error('Email é um campo obrigatório (Usuário).');

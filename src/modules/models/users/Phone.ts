@@ -5,7 +5,7 @@ class Phone extends Domain {
     private _number: string;
 
     constructor(
-        phone: Partial<Phone>
+        phone?: Partial<Phone>
     ) {
         super();
         Object.assign(this, phone)

@@ -5,13 +5,11 @@ class AddressType extends Domain {
     private _description: string;
 
     constructor(
-        name: string,
-        description: string,
-    ){
-        super();
-        this._description = description;
-        this._name = name;
-    }
+        type?: Partial<AddressType>
+     ) {
+         super();
+         Object.assign(this, type)
+     }
 
     public get name(): string {
         return this._name;

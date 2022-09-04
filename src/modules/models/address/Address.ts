@@ -15,7 +15,7 @@ class Address extends Domain {
     private _place_type: PlaceType;
 
     constructor(
-        address: Partial<Address>
+        address?: Partial<Address>
     ) {
         super();
         Object.assign(this, address)
