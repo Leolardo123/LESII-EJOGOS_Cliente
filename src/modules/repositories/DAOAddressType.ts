@@ -9,7 +9,7 @@ export class DAOAddressType extends DAOAbstract {
         this.table = 'tb_addresses_types';
     }
 
-    insert = async (entity: AddressType): Promise<void> => {
+    insert = async (entity: AddressType): Promise<AddressType> => {
         if(!this.client){
             this.client = await pool.connect();
             this.client.query('BEGIN');
@@ -20,21 +20,27 @@ export class DAOAddressType extends DAOAbstract {
                     '${entity.name}', 
                 )`
             );
+            return entity;
         } catch(err){
             await this.client.query('ROLLBACK');
-            this.client.release();
             this.closeConnection();
             throw Error(err as string);
         } finally {
             if(this.ctrlTransaction){
-                await this.client.query('COMMIT');
-                this.client.release();
-                this.closeConnection();
+                try{
+                    await this.client.query('COMMIT');
+                    this.client.release();
+                    this.closeConnection()
+                } catch(err){
+                    await this.client.query('ROLLBACK');
+                    this.closeConnection();
+                    throw Error(err as string);
+                }
             }
         }
     }
 
-    update = async (entity: AddressType): Promise<void> => {
+    update = async (entity: AddressType): Promise<AddressType> => {
         if(!this.client){
             this.client = await pool.connect();
             this.client.query('BEGIN');
@@ -46,6 +52,7 @@ export class DAOAddressType extends DAOAbstract {
                     name = '${entity.name}',
                 WHERE id = ${entity.id}
             `);
+            return entity;
         } catch(err){
             await this.client.query('ROLLBACK');
             this.client.release();

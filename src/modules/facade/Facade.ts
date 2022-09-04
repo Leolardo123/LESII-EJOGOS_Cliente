@@ -53,7 +53,7 @@ export class Facade implements IFacade {
 		const entityName = entity.constructor.name.toLowerCase();
 		if(this.daos[entityName]){
 			const validatorInstance = this.validators[entityName];
-			validatorInstance.validate(entity);
+			await validatorInstance.validate(entity);
 
 			const daoInstance = this.daos[entityName]
 			await daoInstance.insert(entity);
@@ -66,7 +66,7 @@ export class Facade implements IFacade {
 		const entityName = entity.constructor.name.toLowerCase();
 		if(this.daos[entityName]){
 			const validatorInstance = this.validators[entityName];
-			validatorInstance.validate(entity);
+			await validatorInstance.validate(entity);
 
 			const daoInstance = this.daos[entityName]
 			await daoInstance.update(entity);

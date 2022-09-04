@@ -2,7 +2,7 @@ import Phone from "../models/users/Phone";
 import { IValidate } from "./IValidate";
 
 export class ValidatePhone implements IValidate{
-    validate(entity: Phone): void {
+    async validate(entity: Phone): Promise<void> {
         if(!(entity instanceof Phone)){
             throw new Error('Entidade inválida, esperava telefone.');
         }

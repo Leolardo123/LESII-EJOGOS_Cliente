@@ -13,7 +13,7 @@ export class ValidatePerson implements IValidate{
         private validatePhone: ValidatePhone,
         private validateCPF: ValidateCPF,
     ){}
-    validate(entity: Person): void {
+    async validate(entity: Person): Promise<void> {
         if(!(entity instanceof Person)){
             throw new Error('Entidade inválida, esperava pessoa.');
         }

@@ -23,11 +23,11 @@ export abstract class DAOAbstract implements IDAO {
         this.client = undefined;
     }
 
-    insert(entity: Domain): Promise<void> {
+    insert(entity: Domain): Promise<Domain> {
         throw new Error('Serviço indisponível.')
     }
 
-    update(entity: Domain): Promise<void> {
+    update(entity: Domain): Promise<Domain> {
         throw new Error('Serviço indisponível.')
     }
 

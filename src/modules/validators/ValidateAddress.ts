@@ -2,7 +2,7 @@ import Address from "@modules/models/address/Address";
 import { IValidate } from "./IValidate";
 
 export class ValidateAddress implements IValidate{
-    validate(entity: Address): void {
+    async validate(entity: Address): Promise<void> {
         if(!entity.cep){
             throw new Error('CEP é um campo obrigatório endereço.')
         }

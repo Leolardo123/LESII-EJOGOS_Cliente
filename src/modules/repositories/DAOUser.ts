@@ -12,11 +12,7 @@ export class DAOUser extends DAOAbstract {
         this.table = 'tb_users';
     }
 
-    insert = async  (entity: User): Promise<void> => {
-        if(await this.find(`WHERE email = '${entity.email}'`)){
-            throw new Error('Email já está cadastrado.')
-        }
-
+    insert = async  (entity: User): Promise<User> => {
         if(!this.client){
             this.client = await pool.connect();
             await this.client.query('BEGIN');
@@ -36,25 +32,46 @@ export class DAOUser extends DAOAbstract {
                 await daoPerson.setConnection(this.client);
                 await daoPerson.insert(entity)
             }
+            return entity;
         } catch(err){
             await this.client.query('ROLLBACK');
-            this.client.release();
             this.closeConnection();
             throw Error(err as string);
         } finally {
             if(this.ctrlTransaction){
-                await this.client.query('COMMIT');
-                this.client.release();
-                this.closeConnection()
+                try{
+                    await this.client.query('COMMIT');
+                    this.client.release();
+                    this.closeConnection()
+                } catch(err){
+                    await this.client.query('ROLLBACK');
+                    this.closeConnection();
+                    throw Error(err as string);
+                }
             }
         }
     }
-
-    update = async  (entity: User): Promise<void> => {
-        if(await this.find(`WHERE email = '${entity.email}' AND id != '${entity.id}'`)){
-            throw new Error('Email já está cadastrado.')
+    
+    find = async  (where: string): Promise<User[]> => {
+        if(!this.client){
+            this.client = await pool.connect();
         }
+        const result = await this.client.query(
+            `SELECT 
+                tb_users.*, 
+                to_json(tb_persons.*) as person
+            FROM 
+                ${this.table}
+            LEFT JOIN tb_persons ON tb_users.id = tb_persons.user_id
+            ${where}`
+        );
+        this.client.release();
+        this.closeConnection();
+        return result.rows;
+    }
 
+
+    update = async  (entity: User): Promise<User> => {
         if(!this.client){
             this.client = await pool.connect();
         }
@@ -73,6 +90,7 @@ export class DAOUser extends DAOAbstract {
                 const daoPerson = new DAOPerson(false);
                 await daoPerson.update(entity.person)
             }
+            return entity;
         } catch(err){
             await this.client.query('ROLLBACK');
             this.client.release();

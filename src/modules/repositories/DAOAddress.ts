@@ -11,52 +11,59 @@ export class DAOAddress extends DAOAbstract {
         this.table = 'tb_addresses';
     }
 
-    insert = async (entity: Address): Promise<void> => {
+    insert = async (entity: Address): Promise<Address> => {
         if(!this.client){
             this.client = await pool.connect();
             await this.client.query('BEGIN');
         }
         try{
-            await this.client.query(`
-            INSERT INTO tb_addresses (
-                cep,
-                number,
-                city,
-                state,
-                country,
-                complement,
-                neighborhood,
-                place,
-                address_type_id,
-                place_type_id
-            ) VALUES (
-                '${entity.cep}',
-                '${entity.number}',
-                '${entity.city}',
-                '${entity.state}',
-                '${entity.country}',
-                '${entity.complement}',
-                '${entity.neighborhood}',
-                '${entity.place}',
-                '${entity.address_type.id}',
-                '${entity.place_type.id}'
-            )`
-        );
+            const { rows: [ item ] } = await this.client.query(`
+                INSERT INTO tb_addresses (
+                    cep,
+                    number,
+                    city,
+                    state,
+                    country,
+                    complement,
+                    neighborhood,
+                    place,
+                    address_type_id,
+                    place_type_id
+                ) VALUES (
+                    '${entity.cep}',
+                    '${entity.number}',
+                    '${entity.city}',
+                    '${entity.state}',
+                    '${entity.country}',
+                    '${entity.complement}',
+                    '${entity.neighborhood}',
+                    '${entity.place}',
+                    '${entity.address_type.id}',
+                    '${entity.place_type.id}'
+                ) RETURNING id`
+            );
+            entity.id = Number(item.id)
+            return entity;
         } catch(err){
             await this.client.query('ROLLBACK');
-            this.client.release();
             this.closeConnection();
             throw Error(err as string);
         } finally {
             if(this.ctrlTransaction){
-                await this.client.query('COMMIT');
-                this.client.release();
-                this.closeConnection();
+                try{
+                    await this.client.query('COMMIT');
+                    this.client.release();
+                    this.closeConnection()
+                } catch(err){
+                    await this.client.query('ROLLBACK');
+                    this.closeConnection();
+                    throw Error(err as string);
+                }
             }
         }
     }
 
-    update = async (entity: Address): Promise<void> => {
+    update = async (entity: Address): Promise<Address> => {
         if(!this.client){
             this.client = await pool.connect();
             this.client.query('BEGIN');
@@ -76,6 +83,7 @@ export class DAOAddress extends DAOAbstract {
                     place_type_id = ${entity.place_type.id},
                 WHERE id = ${entity.id}
             `);
+            return entity;
         } catch(err){
             await this.client.query('ROLLBACK');
             this.client.release();

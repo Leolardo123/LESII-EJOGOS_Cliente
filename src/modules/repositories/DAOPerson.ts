@@ -3,7 +3,7 @@ import Person from "@modules/models/users/Person";
 import User from "@modules/models/users/User";
 import { pool } from "@shared/utils/connection";
 import { DAOAbstract } from "./abstract/DAOAbstract";
-import { DAOAddress } from "./DAOAddress";
+import { DAOPersonAddress } from "./DAOPersonAddress";
 
 export class DAOPerson extends DAOAbstract {
     constructor(
@@ -13,44 +13,49 @@ export class DAOPerson extends DAOAbstract {
         this.table = 'tb_persons';
     }
 
-    insert = async (entity: User): Promise<void> =>  {
+    insert = async (entity: User): Promise<Person> =>  {
         const { person } = entity;
         if(!this.client){
             this.client = await pool.connect();
             await this.client.query('BEGIN');
         }
         try{
-            await this.client.query(`
+            const { rows: [ item ] } = await this.client.query(`
                 INSERT INTO tb_persons (name, cpf, birth_date, gender_id,  user_id) VALUES (
                     '${person.name}', 
                     '${person.cpf}', 
                     '${person.birth_date}',
                     '${person.gender.id}',
                     '${entity.id}'
-                )`
+                ) RETURNING id`
             );
+            person.id = Number(item.id);
             if(person.addresses){
-                const daoAddress = new DAOAddress(false);
-                await daoAddress.setConnection(this.client);
-                person.addresses.map(async (address) => {
-                    await daoAddress.insert(address);
-                })
+                const daoPersonAddress = new DAOPersonAddress(false);
+                await daoPersonAddress.setConnection(this.client);
+                await daoPersonAddress.insert(person);
             }
+            return person;
         } catch(err){
             await this.client.query('ROLLBACK');
-            this.client.release();
             this.closeConnection();
             throw Error(err as string);
         } finally {
             if(this.ctrlTransaction){
-                await this.client.query('COMMIT');
-                this.client.release();
-                this.closeConnection();
+                try{
+                    await this.client.query('COMMIT');
+                    this.client.release();
+                    this.closeConnection()
+                } catch(err){
+                    await this.client.query('ROLLBACK');
+                    this.closeConnection();
+                    throw Error(err as string);
+                }
             }
         }
     }
 
-    update = async (entity: Person): Promise<void> => {
+    update = async (entity: Person): Promise<Person> => {
         if(!this.client){
             this.client = await pool.connect();
         }
@@ -64,6 +69,7 @@ export class DAOPerson extends DAOAbstract {
                     gender_id = '${entity.gender.id}'
                 WHERE id = ${entity.id}
             `);
+            return entity;
         } catch(err){
             await this.client.query('ROLLBACK');
             this.client.release();

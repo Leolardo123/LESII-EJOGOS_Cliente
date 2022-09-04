@@ -8,7 +8,7 @@ export class DAOPlaceType extends DAOAbstract {
         super(transaction);
         this.table = 'tb_persons';
     }
-    insert = async (entity: PlaceType): Promise<void> => {
+    insert = async (entity: PlaceType): Promise<PlaceType> => {
         if(!this.client){
             this.client = await pool.connect();
         }
@@ -19,21 +19,27 @@ export class DAOPlaceType extends DAOAbstract {
                     '${entity.name}', 
                 )`
             );
+            return entity;
         } catch(err){
             await this.client.query('ROLLBACK');
-            this.client.release();
             this.closeConnection();
             throw Error(err as string);
         } finally {
             if(this.ctrlTransaction){
-                await this.client.query('COMMIT');
-                this.client.release();
-                this.closeConnection();
+                try{
+                    await this.client.query('COMMIT');
+                    this.client.release();
+                    this.closeConnection()
+                } catch(err){
+                    await this.client.query('ROLLBACK');
+                    this.closeConnection();
+                    throw Error(err as string);
+                }
             }
         }
     }
 
-    update = async (entity: PlaceType): Promise<void> => {
+    update = async (entity: PlaceType): Promise<PlaceType> => {
         if(!this.client){
             this.client = await pool.connect();
         }
@@ -44,15 +50,22 @@ export class DAOPlaceType extends DAOAbstract {
                     name = '${entity.name}',
                 WHERE id = ${entity.id}
             `);
+            return entity;
         } catch(err){
             await this.client.query('ROLLBACK');
-            this.client.release();
             this.closeConnection();
+            throw Error(err as string);
         } finally {
             if(this.ctrlTransaction){
-                await this.client.query('COMMIT');
-                this.client.release();
-                this.closeConnection();
+                try{
+                    await this.client.query('COMMIT');
+                    this.client.release();
+                    this.closeConnection()
+                } catch(err){
+                    await this.client.query('ROLLBACK');
+                    this.closeConnection();
+                    throw Error(err as string);
+                }
             }
         }
     }

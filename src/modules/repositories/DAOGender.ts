@@ -8,7 +8,7 @@ export class DAOGender extends DAOAbstract {
         this.table = 'tb_genders';
     }
 
-    insert = async (entity: Gender): Promise<void>  => {
+    insert = async (entity: Gender): Promise<Gender>  => {
         if(!this.client){
             this.client = await pool.connect();
         }
@@ -19,21 +19,27 @@ export class DAOGender extends DAOAbstract {
                     '${entity.name}', 
                 )`
             );
+            return entity;
         } catch(err){
             await this.client.query('ROLLBACK');
-            this.client.release();
             this.closeConnection();
             throw Error(err as string);
         } finally {
             if(this.ctrlTransaction){
-                await this.client.query('COMMIT');
-                this.client.release();
-                this.closeConnection();
+                try{
+                    await this.client.query('COMMIT');
+                    this.client.release();
+                    this.closeConnection()
+                } catch(err){
+                    await this.client.query('ROLLBACK');
+                    this.closeConnection();
+                    throw Error(err as string);
+                }
             }
         }
     }
 
-    update = async (entity: Gender): Promise<void>  => {
+    update = async (entity: Gender): Promise<Gender>  => {
         if(!this.client){
             this.client = await pool.connect();
         }
@@ -44,6 +50,7 @@ export class DAOGender extends DAOAbstract {
                     name = '${entity.name}',
                 WHERE id = ${entity.id}
             `);
+            return entity;
         } catch(err){
             await this.client.query('ROLLBACK');
             this.client.release();

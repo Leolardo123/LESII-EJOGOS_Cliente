@@ -4,7 +4,7 @@ import { IValidate } from "./IValidate";
 export class ValidateCPF implements IValidate{
     constructor(
     ){}
-    validate(entity: Person): void {
+    async validate(entity: Person): Promise<void> {
         if(!entity.cpf){
             throw new Error('CPF é obrigatório (CPF).');
         }
