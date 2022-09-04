@@ -30,11 +30,10 @@ export class DAOPlaceType extends DAOAbstract {
         }
     }
 
-    find = async (entity: PlaceType): Promise<PlaceType[]> => {
+    find = async (where: string): Promise<PlaceType[]> => {
         if(!this.client){
             this.client = await pool.connect();
         }
-        const where = entity.id ? `WHERE id = ${entity.id}` : "";
         const result = await this.client.query(
             `SELECT * FROM ${this.table} ${where}`
         );

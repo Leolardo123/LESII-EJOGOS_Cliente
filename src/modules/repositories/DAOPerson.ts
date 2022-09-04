@@ -20,7 +20,7 @@ export class DAOPerson extends DAOAbstract {
         try{
             await this.client.query('BEGIN');
             await this.client.query(`
-                INSERT INTO tb_persons (name, cpf, birth_date, gender_id, user_id) VALUES (
+                INSERT INTO tb_persons (name, cpf, birth_date, gender_id,  user_id) VALUES (
                     '${person.name}', 
                     '${person.cpf}', 
                     '${person.birth_date}',
@@ -39,11 +39,10 @@ export class DAOPerson extends DAOAbstract {
         }
     }
 
-    find = async (entity: Person): Promise<Person[]> =>{
+    find = async (where: string): Promise<Person[]> =>{
         if(!this.client){
             this.client = await pool.connect();
         }
-        const where = entity.id ? `WHERE id = ${entity.id}` : "";
         const result = await this.client.query(
             `SELECT * FROM tb_persons 
             LEFT JOIN tb_genders ON  tb_persons.gender_id = tb_genders.id

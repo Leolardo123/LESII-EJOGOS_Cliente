@@ -5,8 +5,9 @@ import Gender from "@modules/models/users/Gender";
 import Person from "@modules/models/users/Person";
 import Phone from "@modules/models/users/Phone";
 import User from "@modules/models/users/User";
+import whereBuilder from "@shared/utils/whereBuilder";
 import { Request } from "express";
-import { IViewHelper } from "./IViewHelper";
+import { IGetQuery, IViewHelper } from "./IViewHelper";
 
 export class VHUser implements IViewHelper {
     getEntity(req: Request): User {
@@ -48,5 +49,28 @@ export class VHUser implements IViewHelper {
         userInstance.person = personInstance;
 
         return userInstance;
+    }
+
+    getQuery(req: Request): IGetQuery {
+        const {
+            ...filters
+        } = req.body;
+        const { id } = req.params;
+
+        const entity = new User()
+
+        const where = whereBuilder({
+            parameters: [
+                {
+                    column: 'id',
+                    value: id
+                },
+            ]
+        })
+
+        return { 
+            entity,
+            where,
+        }
     }
 }

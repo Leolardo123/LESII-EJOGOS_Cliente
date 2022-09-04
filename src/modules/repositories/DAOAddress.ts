@@ -54,11 +54,10 @@ export class DAOAddress extends DAOAbstract {
         }
     }
 
-    find = async (entity: Address): Promise<Address[]> => {
+    find = async (where: string): Promise<Address[]> => {
         if(!this.client){
             this.client = await pool.connect();
         }
-        const where = entity.id ? `WHERE id = ${entity.id}` : "";
         const result = await this.client.query(
             `SELECT * FROM tb_addresses ${where}`
         );

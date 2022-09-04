@@ -32,9 +32,8 @@ export class DAOAddressType extends DAOAbstract {
         }
     }
 
-    find = async (entity: AddressType): Promise<AddressType[]> => {
+    find = async (where: string): Promise<AddressType[]> => {
         await this.client.connect();
-        const where = entity.id ? `WHERE id = ${entity.id}` : "";
         const result = await this.client.query(
             `SELECT * FROM ${this.table} ${where}`
         );

@@ -1,6 +1,5 @@
 
 import { IFacade } from "@modules/facade/IFacade";
-import AppError from "@shared/errors/AppError";
 import IHash from "@shared/interfaces/IHash";
 import { Request, Response } from "express";
 import { IViewHelper } from "./viewhelper/IViewHelper";
@@ -67,8 +66,8 @@ class Controller{
             throw new Error(`${route} não existe.`)
         }
         
-        const entity = this.vhs[route].getEntity(req);
-        const result = await this.facade.query(entity);
+        const { entity, where } = this.vhs[route].getQuery(req);
+        const result = await this.facade.query(entity, where);
 
         return res.json({ result })
     }

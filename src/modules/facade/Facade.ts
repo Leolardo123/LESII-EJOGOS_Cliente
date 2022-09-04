@@ -85,11 +85,11 @@ export class Facade implements IFacade {
 		throw new Error('Falha ao excluir, tipo do pedido não existe.')
 	}
 
-	async query(entity: Domain): Promise<Domain[]> {
+	async query(entity: Domain, where: string): Promise<Domain[]> {
 		const entityName = entity.constructor.name.toLowerCase();
 		if(this.daos[entityName]){
 			const daoInstance = this.daos[entityName]
-			return await daoInstance.find(entity);
+			return await daoInstance.find(where);
 		}
 		throw new Error('Falha ao consultar, tipo do pedido não existe.')
 	}

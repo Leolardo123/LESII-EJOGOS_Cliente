@@ -31,11 +31,10 @@ export class DAOGender extends DAOAbstract {
         }
     }
 
-    find = async (entity: Gender): Promise<Gender[]>  => {
+    find = async (where: string): Promise<Gender[]>  => {
         if(!this.client){
             this.client = await pool.connect();
         }
-        const where = entity.id ? `WHERE id = ${entity.id}` : "";
         const result = await this.client.query(
             `SELECT * FROM ${this.table} ${where}`
         );

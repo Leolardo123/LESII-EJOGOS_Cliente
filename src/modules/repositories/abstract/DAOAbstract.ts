@@ -27,7 +27,7 @@ export abstract class DAOAbstract implements IDAO {
         throw new Error('Serviço indisponível.')
     }
 
-    find(entity: Domain): Promise<Domain[]> {
+    find(where: string): Promise<Domain[]> {
         throw new Error('Serviço indisponível.')
     }
 

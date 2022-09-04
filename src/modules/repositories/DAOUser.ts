@@ -1,3 +1,4 @@
+import { UserRolesEnum } from "@modules/models/users/enum/UserRolesEnum";
 import User from "@modules/models/users/User";
 import { pool } from "@shared/utils/connection";
 import { DAOAbstract } from "./abstract/DAOAbstract";
@@ -21,7 +22,7 @@ export class DAOUser extends DAOAbstract {
                 INSERT INTO ${this.table} (email, password, role, is_active) VALUES (
                     '${entity.email}', 
                     '${entity.password}', 
-                    '${entity.role}', 
+                    '${UserRolesEnum.default}', 
                     'true'
                 ) RETURNING id` 
             );
@@ -45,13 +46,12 @@ export class DAOUser extends DAOAbstract {
         }
     }
 
-    find = async  (entity: User): Promise<User[]> => {
+    find = async  (where: string): Promise<User[]> => {
         if(!this.client){
             this.client = await pool.connect();
         }
-        const where = entity.id ? `WHERE id = ${entity.id}` : "";
         const result = await this.client.query(
-            `SELECT * FROM ${this.table} ${where}`
+            `SELECT * FROM ${this.table} WHERE ${where}`
         );
         this.client.release();
         return result.rows;

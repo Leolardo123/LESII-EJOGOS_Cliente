@@ -4,5 +4,5 @@ export interface IFacade {
     create(entity: Domain): Promise<string>;
 	update(entity: Domain): Promise<string>;
 	delete(entity: Domain): Promise<string>;
-	query(entity: Domain): Promise<Domain[]>;
+	query(wntity: Domain, where: string): Promise<Domain[]>;
 }
