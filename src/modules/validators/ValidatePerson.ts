@@ -1,3 +1,5 @@
+import { AddressTypesEnum } from "@modules/models/address/enum/AddressTypesEnum";
+import AppError from "@shared/errors/AppError";
 import Person from "../models/users/Person";
 import { IValidate } from "./IValidate";
 import { ValidateAddress } from "./ValidateAddress";
@@ -32,14 +34,38 @@ export class ValidatePerson implements IValidate{
         if(entity.phone){
             this.validatePhone.validate(entity.phone);
         }
+        if(!entity.addresses || entity.addresses.length <= 0) {
+            throw new AppError('Pelo menos um endereço deve ser cadastrado')
+        }
         if(entity.addresses){
+            let hasDelivery = false;
+            let hasPayment = false;
             entity.addresses.map((address, index)=>{
                 try {
                     this.validateAddress.validate(address);
+                    hasDelivery = !hasDelivery ? 
+                    (AddressTypesEnum.both == address.address_type.id) ||
+                    (AddressTypesEnum.delivery == address.address_type.id)
+                    : false;
+
+                    hasPayment = !hasPayment ? 
+                    (AddressTypesEnum.both == address.address_type.id) ||
+                    (AddressTypesEnum.payment == address.address_type.id)
+                    : false;
                 } catch(err: any){
                     throw new Error(`Endereço ${index+1} ${err}`)
                 }  
             })
+            let addressTypesError;
+            if(!hasDelivery){
+                addressTypesError = 'Pelo menos um endereço de entrega deve ser cadastrado.'
+            }
+            if(!hasPayment){
+                addressTypesError = 'Pelo menos um endereço de cobrança deve ser cadastrado.'
+            }
+            if(addressTypesError){
+                throw new Error(addressTypesError);
+            }
         }
     }
 }
