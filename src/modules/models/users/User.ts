@@ -1,4 +1,4 @@
-import { hash as BCHash, compare as BCCompare } from "bcrypt";
+import { hashSync as BCHash, compareSync as BCCompare } from "bcrypt";
 import Domain from "../Domain";
 import Person from "./Person";
 
@@ -31,11 +31,11 @@ class User extends Domain {
     }
 
     public set password(value: string) {
-        this._password = value;
+        this._password = BCHash(value, 8);
     }
 
-    public async isSamePass(value: string): Promise<boolean> {
-        return await BCCompare(this._password, await BCHash(value, 8));
+    public isSamePass(value: string): boolean {
+        return BCCompare(this._password, BCHash(value, 8));
     }
 
     public get isActive(): boolean {
