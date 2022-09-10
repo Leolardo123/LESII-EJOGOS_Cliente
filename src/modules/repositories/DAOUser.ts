@@ -55,6 +55,7 @@ export class DAOUser extends DAOAbstract {
     find = async  (where: string): Promise<User[]> => {
         if(!this.client){
             this.client = await pool.connect();
+            await this.client.query('BEGIN');
         }
         const result = await this.client.query(
             `SELECT 
@@ -83,36 +84,36 @@ export class DAOUser extends DAOAbstract {
 
 
     update = async  (entity: User): Promise<User> => {
-        if(!this.client){
-            this.client = await pool.connect();
-        }
-
-        try{
-            await this.client.query('BEGIN');
-            await this.client.query(`
-                UPDATE ${this.table} SET
-                    email = '${entity.email}',
-                    password = '${entity.password}',
-                    role = '${entity.role}'
-                    isActive = ${entity.isActive}
-                WHERE id = ${entity.id}
-            `);
-            if(entity.person){
-                const daoPerson = new DAOPerson(false);
-                await daoPerson.update(entity.person)
+            if(!this.client){
+                this.client = await pool.connect();
+                await this.client.query('BEGIN');
             }
-            return entity;
-        } catch(err){
-            await this.client.query('ROLLBACK');
-            this.client.release();
-            this.closeConnection();
-            throw new Error(err as string);
-        } finally {
-            if(this.ctrlTransaction){
-                await this.client.query('COMMIT');
-                this.client.release();
-                this.closeConnection()
+            try{
+                await this.client.query(`
+                    UPDATE ${this.table} SET
+                        email = '${entity.email}',
+                        password = '${entity.password}',
+                        role = '${entity.role}',
+                        is_active = ${entity.isActive}
+                    WHERE id = '${entity.id}'
+                `);
+                return entity;
+            } catch(err){
+                await this.client.query('ROLLBACK');
+                this.closeConnection();
+                throw Error(err as string);
+            } finally {
+                if(this.ctrlTransaction){
+                    try{
+                        await this.client.query('COMMIT');
+                        this.client.release();
+                        this.closeConnection()
+                    } catch(err){
+                        await this.client.query('ROLLBACK');
+                        this.closeConnection();
+                        throw Error(err as string);
+                    }
+                }
             }
-        }
     }
 }

@@ -8,6 +8,7 @@ import { IValidate } from "@modules/validators/IValidate";
 import { ValidateAddress } from "@modules/validators/ValidateAddress";
 import { ValidateCPF } from "@modules/validators/ValidateCPF";
 import { ValidateGender } from "@modules/validators/ValidateGender";
+import { ValidatePassword } from "@modules/validators/ValidatePassword";
 import { ValidatePerson } from "@modules/validators/ValidatePerson";
 import { ValidatePhone } from "@modules/validators/ValidatePhone";
 import { ValidateUser } from "@modules/validators/ValidateUser";
@@ -31,7 +32,11 @@ export class Facade implements IFacade {
 			validatePhone,
 			validateCPF
 		);
-		const validateUser = new ValidateUser(validatePerson);
+		const validatePassword = new ValidatePassword();
+		const validateUser = new ValidateUser(
+			validatePerson, 
+			validatePassword
+		);
 		//*
 
 		this.daos.gender = new DAOGender();

@@ -1,10 +1,9 @@
 import { AddressTypesEnum } from "@modules/models/address/enum/AddressTypesEnum";
-import AppError from "@shared/errors/AppError";
+import { DAOGender } from "@modules/repositories/DAOGender";
 import Person from "../models/users/Person";
 import { IValidate } from "./IValidate";
 import { ValidateAddress } from "./ValidateAddress";
 import { ValidateCPF } from "./ValidateCPF";
-import { ValidateGender } from "./ValidateGender";
 import { ValidatePhone } from "./ValidatePhone";
 
 export class ValidatePerson implements IValidate{
@@ -23,39 +22,50 @@ export class ValidatePerson implements IValidate{
         if(!entity.cpf){
             throw new Error('CPF é um campo obrigatório (Pessoa).');
         } else {
-            this.validateCPF.validate(entity);
+            await this.validateCPF.validate(entity);
         }
         if(!entity.gender || !entity.gender.id){
             throw new Error('Gênero é um campo obrigatório (Pessoa).');
+        }else {
+            const DAOgen =  new DAOGender();
+            const genderExists = await DAOgen.find(`WHERE id = '${entity.gender.id}'`)
+            if(!genderExists){
+                throw new Error('Gênero escolhido não é válido (Pessoa).');
+            }
         }
         if(!entity.phone){
             throw new Error('Telefone é um campo obrigatório (Pessoa).');
         }
         if(entity.phone){
-            this.validatePhone.validate(entity.phone);
+            await this.validatePhone.validate(entity.phone);
         }
         if(!entity.addresses || entity.addresses.length <= 0) {
-            throw new AppError('Pelo menos um endereço deve ser cadastrado')
+            throw new Error('Pelo menos um endereço deve ser cadastrado')
         }
         if(entity.addresses){
             let hasDelivery = false;
             let hasPayment = false;
-            entity.addresses.map((address, index)=>{
+            const promise = entity.addresses.map(async (address, index)=>{
                 try {
-                    this.validateAddress.validate(address);
-                    hasDelivery = !hasDelivery ? 
-                    (AddressTypesEnum.both == address.address_type.id) ||
-                    (AddressTypesEnum.delivery == address.address_type.id)
-                    : false;
+                    await this.validateAddress.validate(address);
+                    if(
+                        (AddressTypesEnum.both == address.address_type.id) ||
+                        (AddressTypesEnum.delivery == address.address_type.id)
+                    ){
+                        hasDelivery = true
+                    }
 
-                    hasPayment = !hasPayment ? 
-                    (AddressTypesEnum.both == address.address_type.id) ||
-                    (AddressTypesEnum.payment == address.address_type.id)
-                    : false;
+                    if(
+                        (AddressTypesEnum.both == address.address_type.id) ||
+                        (AddressTypesEnum.payment == address.address_type.id)
+                    ){
+                        hasPayment = true
+                    }
                 } catch(err: any){
                     throw new Error(`Endereço ${index+1} ${err}`)
                 }  
             })
+            await Promise.all(promise);
             let addressTypesError;
             if(!hasDelivery){
                 addressTypesError = 'Pelo menos um endereço de entrega deve ser cadastrado.'

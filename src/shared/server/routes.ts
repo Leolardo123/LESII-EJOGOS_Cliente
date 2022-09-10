@@ -1,6 +1,7 @@
 import { Controller } from '@modules/controller/Controller';
 import { SessionController } from '@modules/controller/SessionController';
 import { Facade } from '@modules/facade/Facade';
+import ensureAuthorized from '@shared/middleware/ensureAuthorized';
 import { Router, Request, Response, NextFunction } from 'express';
 
 const router = Router();

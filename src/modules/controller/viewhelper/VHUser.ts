@@ -18,7 +18,6 @@ export class VHUser implements IViewHelper {
         } = req.body;
         const { id } = req.params;
 
-        
         const userInstance = new User({ id: id ? Number(id) : undefined });
         Object.assign(userInstance, user);
 
@@ -65,7 +64,7 @@ export class VHUser implements IViewHelper {
         const where = whereBuilder({
             parameters: [
                 {
-                    column: 'id',
+                    column: 'tb_users.id',
                     value: id
                 },
             ]

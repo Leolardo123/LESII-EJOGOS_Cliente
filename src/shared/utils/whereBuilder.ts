@@ -1,5 +1,3 @@
-import AppError from '@shared/errors/AppError';
-
 interface IParameter {
   column: string;
   value: any;
@@ -31,7 +29,7 @@ export default function whereBuilder({
     let { value } = parameter;
 
     if (parameter.isIn && parameter.isLike) {
-      throw new AppError(
+      throw new Error(
         'Não é possível filtrar um parâmetro por isIn e isLike',
       );
     }
@@ -47,7 +45,7 @@ export default function whereBuilder({
 
       if (parameter.isBetweenDate) {
         if (parameter.value.length !== 0) {
-          whereString += `${parameter.column} BETWEEN to_timestamp(:value1) AND to_timestamp(:value2)`;
+          whereString += `${parameter.column} BETWEEN to_timestamp(value1) AND to_timestamp(value2)`;
           valuesObject.value1 = `${parameter.value[0]}`;
           valuesObject.value2 = `${parameter.value[1]}`;
         }
@@ -60,11 +58,11 @@ export default function whereBuilder({
       }
 
       if (parameter.isIn) {
-        whereString += `:${parameter.value} IN (${parameter.column})`;
+        whereString += `${parameter.value} IN (${parameter.column})`;
       } else if (parameter.any) {
-        whereString += `${parameter.column} = ANY(:${parameter.value})`;
+        whereString += `${parameter.column} = ANY(${parameter.value})`;
       } else if (parameter.isLike) {
-        whereString += `LOWER(${parameter.column}) LIKE LOWER(:${parameter.value})`;
+        whereString += `LOWER(${parameter.column}) LIKE LOWER(${parameter.value})`;
       } else if (parameter.isDate) {
         whereString += `
         ${parameter.column} 
@@ -72,7 +70,7 @@ export default function whereBuilder({
         AND to_timestamp(${parameter.value[1]})`;
 
       } else {
-        whereString += `${parameter.column} = :${parameter.value} `;
+        whereString += `${parameter.column} = ${parameter.value} `;
       }
 
       valuesObject[parameter.value] = parameter.isLike

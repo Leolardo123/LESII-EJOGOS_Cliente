@@ -1,5 +1,4 @@
 import { jwt_config } from '@config/auth';
-import { AppError } from '@shared/error/AppError';
 import { Request, Response, NextFunction } from 'express';
 import { JwtPayload, verify } from 'jsonwebtoken';
 
@@ -8,7 +7,7 @@ export default function ensureAuthorized(roles: number[]): any {
     const authHeader = request.headers.authorization;
 
     if (!authHeader) {
-      throw new AppError('Token JWT inexistente!', 404);
+      throw new Error('Token JWT inexistente!');
     }
 
     const [, token] = authHeader.split(' ');
@@ -16,7 +15,7 @@ export default function ensureAuthorized(roles: number[]): any {
     if (roles.length) {
 
       if (!request.headers.authorization) {
-        throw new AppError('Usúario não autorizado', 401);
+        throw new Error('Usúario não autorizado');
       }
       let tokenData = verify(token, jwt_config.secret as string) as JwtPayload;
 
@@ -24,7 +23,7 @@ export default function ensureAuthorized(roles: number[]): any {
         !tokenData.role_id ||
         !roles.some(item => tokenData.role_id == item)
       ) {
-        throw new AppError('Usúario não autorizado', 401);
+        throw new Error('Usúario não autorizado');
       }
     }
 
