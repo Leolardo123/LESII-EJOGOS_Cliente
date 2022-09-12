@@ -7,9 +7,10 @@ import Phone from "@modules/models/users/Phone";
 import User from "@modules/models/users/User";
 import whereBuilder from "@shared/utils/whereBuilder";
 import { Request } from "express";
-import { IGetQuery, IViewHelper } from "./IViewHelper";
+import { VHAbstract } from "./VHAbstract";
+import { IGetQuery } from "./interface/IViewHelper";
 
-export class VHUser implements IViewHelper {
+export class VHUser extends VHAbstract {
     getEntity(req: Request): User {
         const {
             user,
@@ -74,5 +75,10 @@ export class VHUser implements IViewHelper {
             entity,
             where,
         }
+    }
+
+    setView(req: Request, res: any, result: User): void {
+        const { password: _, ...userWithoutPassword } = result;
+        res.json(userWithoutPassword);
     }
 }

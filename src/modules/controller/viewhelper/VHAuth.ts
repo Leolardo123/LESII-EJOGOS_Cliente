@@ -1,9 +1,10 @@
 import User from "@modules/models/users/User";
 import whereBuilder from "@shared/utils/whereBuilder";
 import { Request } from "express";
-import { IGetQuery, IViewHelper } from "./IViewHelper";
+import { VHAbstract } from "./VHAbstract";
+import { IGetQuery } from "./interface/IViewHelper";
 
-export class VHAuth implements IViewHelper {
+export class VHAuth extends VHAbstract {
     getEntity(req: Request): User {
         const {
             email,

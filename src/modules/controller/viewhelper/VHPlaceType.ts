@@ -1,9 +1,10 @@
 import PlaceType from "@modules/models/address/PlaceType";
 import whereBuilder from "@shared/utils/whereBuilder";
 import { Request } from "express";
-import { IGetQuery, IViewHelper } from "./IViewHelper";
+import { VHAbstract } from "./VHAbstract";
+import { IGetQuery } from "./interface/IViewHelper";
 
-export class VHPlaceType implements IViewHelper {
+export class VHPlaceType extends VHAbstract {
     getEntity(req: Request): PlaceType {
         const {
             name

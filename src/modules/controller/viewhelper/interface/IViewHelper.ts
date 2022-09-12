@@ -8,4 +8,5 @@ export interface IGetQuery{
 export interface IViewHelper{
     getEntity(req: Request): Domain;
     getQuery(req: Request): IGetQuery;
+    setView(req: Request, res: any, result: any): void;
 }

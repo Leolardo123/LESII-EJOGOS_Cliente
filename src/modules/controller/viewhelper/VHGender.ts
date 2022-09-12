@@ -1,9 +1,10 @@
 import Gender from "@modules/models/users/Gender";
 import whereBuilder from "@shared/utils/whereBuilder";
 import { Request } from "express";
-import { IGetQuery, IViewHelper } from "./IViewHelper";
+import { VHAbstract } from "./VHAbstract";
+import { IGetQuery} from "./interface/IViewHelper";
 
-export class VHGender implements IViewHelper {
+export class VHGender extends VHAbstract {
     getEntity(req: Request): Gender {
         const {
             name

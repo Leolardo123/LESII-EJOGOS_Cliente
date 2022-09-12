@@ -3,9 +3,10 @@ import AddressType from "@modules/models/address/AddressType";
 import PlaceType from "@modules/models/address/PlaceType";
 import whereBuilder from "@shared/utils/whereBuilder";
 import { Request } from "express";
-import { IGetQuery, IViewHelper } from "./IViewHelper";
+import { VHAbstract } from "./VHAbstract";
+import { IGetQuery, IViewHelper } from "./interface/IViewHelper";
 
-export class VHAddress implements IViewHelper {
+export class VHAddress extends VHAbstract {
     getEntity(req: Request): Address {
         const {
            address: {
