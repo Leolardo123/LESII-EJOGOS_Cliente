@@ -1,7 +1,7 @@
-import { Request, Response, NextFunction } from 'express';
-import { verify } from 'jsonwebtoken';
+import { Request } from "express";
+import { verify } from "jsonwebtoken";
 
-import { jwt_config } from '@config/auth';
+import { jwt_config } from "@config/auth";
 
 interface ITokenPayload {
   iat: number;
@@ -10,32 +10,31 @@ interface ITokenPayload {
   role_id: number;
 }
 
-function ensureAuthenticated(
-  request: Request,
-  response: Response,
-  next: NextFunction,
-): void {
+interface IRequestUser {
+  id: string;
+  role_id: number;
+}
+
+function ensureAuthenticated(request: Request): IRequestUser {
   const authHeader = request.headers.authorization;
 
   if (!authHeader) {
-    throw new Error('Token JWT inexistente!');
+    throw new Error("Token JWT inexistente!");
   }
 
-  const [, token] = authHeader.split(' ');
+  const [, token] = authHeader.split(" ");
 
   try {
     const decoded = verify(token, jwt_config.secret as string);
 
     const { sub, role_id } = decoded as ITokenPayload;
 
-    request.user = {
+    return {
       id: sub,
       role_id,
     };
-
-    return next();
   } catch (error) {
-    throw new Error('Token Inválido');
+    throw new Error("Token Inválido");
   }
 }
 

@@ -47,10 +47,10 @@ class Address extends Domain {
     })
     place_type: PlaceType;
 
-    @ManyToMany(() => Person, person => person.address, {
+    @ManyToMany(() => Person, person => person.addresses, {
         onDelete: 'CASCADE', onUpdate: 'CASCADE'
     })
-    person: Person;
+    persons: Person[];
 
     constructor(
         address?: Partial<Address>

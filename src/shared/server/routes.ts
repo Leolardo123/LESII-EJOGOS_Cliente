@@ -1,7 +1,6 @@
 import { Controller } from '@modules/controller/Controller';
 import { SessionController } from '@modules/controller/SessionController';
 import { Facade } from '@modules/facade/Facade';
-import ensureAuthorized from '@shared/middleware/ensureAuthorized';
 import { Router, Request, Response, NextFunction } from 'express';
 
 const router = Router();
@@ -10,12 +9,12 @@ const controller = new Controller(facade);
 const sessionController = new SessionController();
 
 router.get('/', (request: Request, response: Response) =>
-  response.send('LES - EJOGOS - 0.0.1'),
+response.send('LES - EJOGOS - 0.0.1'),
 );
 
 router.post('/users/auth', sessionController.create);
 
-router.get('/:route', controller.get);
+router.get('/:route', controller.index);
 
 router.get('/:route/:id', controller.get);
 

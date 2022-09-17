@@ -6,6 +6,7 @@ import { IViewHelper } from "./viewhelper/interface/IViewHelper";
 import { VHAddress } from "./viewhelper/VHAddress";
 import { VHAddressType } from "./viewhelper/VHAddressType";
 import { VHGender } from "./viewhelper/VHGender";
+import { VHPerson } from "./viewhelper/VHPerson";
 import { VHPlaceType } from "./viewhelper/VHPlaceType";
 import { VHUser } from "./viewhelper/VHUser";
 class Controller{
@@ -13,6 +14,7 @@ class Controller{
     constructor(private facade: IFacade){
        this.vhs = {
             "users": new VHUser(),
+            "persons": new VHPerson(),
             "addresses": new VHAddress(),
             "addresses-types": new VHAddressType(),
             "genders": new VHGender(),
@@ -54,6 +56,7 @@ class Controller{
         }
         
         const entity = this.vhs[route].getEntity(req);
+        console.log("🚀 ~ file: Controller.ts ~ line 59 ~ Controller ~ delete ~ entity", entity)
         const msg = await this.facade.delete(entity);
 
         return this.vhs[route].setView(req, res, msg);
@@ -66,10 +69,23 @@ class Controller{
             throw new Error(`${route} não existe.`)
         }
         
-        const { entity, where } = this.vhs[route].getQuery(req);
-        const result = await this.facade.query(entity, where);
+        const entity = this.vhs[route].getEntity(req);
+        const result = await this.facade.findOne(entity, []);
 
-        return this.vhs[route].setView(req, res, result);
+        return res.json(result);
+    }
+
+    index = async (req: Request, res: Response) => {
+        const { route } = req.params
+
+        if(!this.vhs[route]){
+            throw new Error(`${route} não existe.`)
+        }
+        
+        const entity = this.vhs[route].getEntity(req);
+        const result = await this.facade.findMany(entity, []);
+
+        return res.json(result);
     }
 }
 

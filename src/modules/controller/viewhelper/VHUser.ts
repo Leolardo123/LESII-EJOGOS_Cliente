@@ -5,10 +5,9 @@ import Gender from "@modules/models/users/Gender";
 import Person from "@modules/models/users/Person";
 import Phone from "@modules/models/users/Phone";
 import User from "@modules/models/users/User";
-import whereBuilder from "@shared/utils/whereBuilder";
 import { Request } from "express";
 import { VHAbstract } from "./VHAbstract";
-import { IGetQuery } from "./interface/IViewHelper";
+import { ensureAuthenticated } from "@shared/middleware/ensureAuthenticated";
 
 export class VHUser extends VHAbstract {
     getEntity(req: Request): User {
@@ -19,8 +18,13 @@ export class VHUser extends VHAbstract {
         } = req.body;
         const { id } = req.params;
 
-        const userInstance = new User({ id: id ? Number(id) : undefined });
+        const userInstance = new User();
         Object.assign(userInstance, user);
+
+        if(id) {
+            ensureAuthenticated(req);
+            Object.assign(userInstance, { id: Number(id) });
+        }
 
         if(person){
             const addressesInstances = addresses ? addresses.map((address: any) => {
@@ -52,33 +56,5 @@ export class VHUser extends VHAbstract {
         }
 
         return userInstance;
-    }
-
-    getQuery(req: Request): IGetQuery {
-        const {
-            ...filters
-        } = req.body;
-        const { id } = req.params;
-
-        const entity = new User()
-
-        const where = whereBuilder({
-            parameters: [
-                {
-                    column: 'tb_users.id',
-                    value: id
-                },
-            ]
-        })
-
-        return { 
-            entity,
-            where,
-        }
-    }
-
-    setView(req: Request, res: any, result: User[] | string): void {
-        const { password: _, ...userWithoutPassword } = result;
-        res.json(userWithoutPassword);
     }
 }

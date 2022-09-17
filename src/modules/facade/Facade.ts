@@ -1,9 +1,5 @@
 import Domain from "@modules/models/Domain";
-import { DAOAddress } from "@modules/repositories/DAOAddress";
-import { DAOGender } from "@modules/repositories/DAOGender";
-import { DAOPerson } from "@modules/repositories/DAOPerson";
-import { DAOUser } from "@modules/repositories/DAOUser";
-import { IDAO } from "@modules/repositories/interfaces/IDAO";
+import { DAOFactory } from "@modules/repositories/factory/DAOFactory";
 import { IValidate } from "@modules/validators/IValidate";
 import { ValidateAddress } from "@modules/validators/ValidateAddress";
 import { ValidateCPF } from "@modules/validators/ValidateCPF";
@@ -16,7 +12,6 @@ import IHash from "@shared/interfaces/IHash";
 import { IFacade } from "./IFacade";
 
 export class Facade implements IFacade {
-	private daos: IHash<IDAO> = {};
 	private validators: IHash<IValidate> = {};
 
 	constructor(){
@@ -39,72 +34,65 @@ export class Facade implements IFacade {
 		);
 		//*
 
-		this.daos.gender = new DAOGender();
-
-		this.daos.address = new DAOAddress();
 		this.validators.address = validateAddress;
-
-		this.daos.person = new DAOPerson();
 		this.validators.person = validatePerson;
-
-		this.daos.user = new DAOUser();
 		this.validators.user = validateUser;
-
-		this.daos.gender = new DAOGender();
 		this.validators.gender = validateGender;
+	}
+
+	async getInstance(entity: Domain): Promise<Domain> {
+		const entityName = entity.constructor.name.toLowerCase();
+		const daoInstance = DAOFactory.getDAO(entityName);
+		return daoInstance.create(entity);;
 	}
 
 	async create(entity: Domain): Promise<string> {
 		const entityName = entity.constructor.name.toLowerCase();
-		if(this.daos[entityName]){
-			const validatorInstance = this.validators[entityName];
-			await validatorInstance.validate(entity);
+		const validatorInstance = this.validators[entityName];
+		await validatorInstance.validate(entity);
 
-			const daoInstance = this.daos[entityName]
-			await daoInstance.save(entity);
-			return 'Cadastrado com sucesso';
-		}
-		throw new Error('Falha ao cadastrar, tipo do pedido não existe.')
+		const daoInstance = DAOFactory.getDAO(entityName);
+		await daoInstance.save(entity);
+
+		return 'Cadastrado com sucesso';
 	}
 	
 	async update(entity: Domain): Promise<string> {
 		const entityName = entity.constructor.name.toLowerCase();
-		if(this.daos[entityName]){
-			const validatorInstance = this.validators[entityName];
-			await validatorInstance.validate(entity);
+		const validatorInstance = this.validators[entityName];
+		await validatorInstance.validate(entity);
 
-			const daoInstance = this.daos[entityName]
-			await daoInstance.save(entity);
-			return 'Atualizado com sucesso';
-		}
-		throw new Error('Falha ao atualizar, tipo do pedido não existe.')
+		const daoInstance = DAOFactory.getDAO(entityName);
+		const entityExists = await daoInstance.findOne({ where: { id: entity.id } });
+
+		if(!entityExists) throw new Error('Não encontrado');
+		Object.assign(entityExists, entity);
+		await daoInstance.save(entity);
+
+		return 'Atualizado com sucesso';
 	}
 	
 	async delete(entity: Domain): Promise<string> {
 		const entityName = entity.constructor.name.toLowerCase();
-		if(this.daos[entityName]){
-			const daoInstance = this.daos[entityName]
-			daoInstance.remove(entity);
-			return 'Deletado com sucesso';
-		}
-		throw new Error('Falha ao excluir, tipo do pedido não existe.')
+
+		const daoInstance = DAOFactory.getDAO(entityName);
+		const createdEntity = daoInstance.create(entity);
+		await daoInstance.remove(createdEntity);
+
+		return 'Removido com sucesso';
 	}
 
-	async findOne(entity: Domain, relations: []): Promise<Domain | undefined> {
+	async findOne(entity: Domain, relations: string[]): Promise<Domain | undefined | null> {
 		const entityName = entity.constructor.name.toLowerCase();
-		if(this.daos[entityName]){
-			const daoInstance = this.daos[entityName]
-			return await daoInstance.findOne({ where: entity, relations });
-		}
-		throw new Error('Falha ao consultar, tipo do pedido não existe.')
+
+		const daoInstance = DAOFactory.getDAO(entityName);
+		return await daoInstance.findOne({ where: entity, relations});
 	}
 
-	async findMany(entity: Domain, relations: []): Promise<Domain[]> {
+	async findMany(entity: Domain, relations: string[]): Promise<Domain[]> {
 		const entityName = entity.constructor.name.toLowerCase();
-		if(this.daos[entityName]){
-			const daoInstance = this.daos[entityName]
-			return await daoInstance.findAll({ where: entity, relations });
-		}
-		throw new Error('Falha ao consultar, tipo do pedido não existe.')
+
+		const daoInstance = DAOFactory.getDAO(entityName);
+		return await daoInstance.findMany({ where: entity, relations });
 	}
 }

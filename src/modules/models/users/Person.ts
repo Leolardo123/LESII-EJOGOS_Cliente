@@ -6,7 +6,9 @@ import { ManyToMany } from "typeorm/decorator/relations/ManyToMany";
 import { OneToMany } from "typeorm/decorator/relations/OneToMany";
 import { OneToOne } from "typeorm/decorator/relations/OneToOne";
 import Address from "../address/Address";
+import Card from "../cards/Card";
 import Domain from "../Domain";
+import Cart from "../sales/models/Cart";
 import Gender from "./Gender";
 import Phone from "./Phone";
 import User from "./User";
@@ -23,7 +25,7 @@ class Person extends Domain {
     cellphone: string;
 
     @Column()
-    birth_date: Date;
+    birth_date: string;
 
     @Column()
     gender_id: number;
@@ -31,14 +33,14 @@ class Person extends Domain {
     @Column()
     user_id: string;
 
-    @JoinTable()
-    @ManyToMany(() => Address, address => address.person, {
+    @JoinTable({ name: 'tb_persons_addresses' })
+    @ManyToMany(() => Address, address => address.persons, {
         cascade: true, eager: true
     })
     addresses: Address[];
 
     @JoinColumn({ name: 'gender_id' })
-    @OneToMany(() => Gender, gender => gender.persons, {
+    @OneToOne(() => Gender, gender => gender.persons, {
         cascade: true, onDelete: 'RESTRICT', onUpdate: 'CASCADE'
     })
     gender: Gender;

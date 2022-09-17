@@ -16,33 +16,44 @@ export class ValidatePerson implements IValidate{
         if(!(entity instanceof Person)){
             throw new Error('Entidade inválida, esperava pessoa.');
         }
-        if(!entity.name){
-            throw new Error('Nome é um campo obrigatório (Pessoa).');
-        }
-        if(!entity.cpf){
-            throw new Error('CPF é um campo obrigatório (Pessoa).');
-        } else {
-            await this.validateCPF.validate(entity);
-        }
-        if(!entity.gender || !entity.gender.id){
-            throw new Error('Gênero é um campo obrigatório (Pessoa).');
-        }else {
-            const DAOgen =  new DAOGender();
-            const genderExists = await DAOgen.find(`WHERE id = '${entity.gender.id}'`)
-            if(!genderExists){
-                throw new Error('Gênero escolhido não é válido (Pessoa).');
+
+        if(!entity.id){
+            if(!entity.name){
+                throw new Error('Nome é um campo obrigatório (Pessoa).');
+            }
+            if(!entity.cellphone){
+                throw new Error('Celular é obrigatório (Pessoa).');
+            }
+            if(!entity.cpf){
+                throw new Error('CPF é um campo obrigatório (Pessoa).');
+            }
+            if(!entity.gender || !entity.gender.id){
+                throw new Error('Gênero é um campo obrigatório (Pessoa).');
+            }else {
+                const DAOgen =  new DAOGender();
+                const genderExists = await DAOgen.findOne({ where: { id: entity.gender.id }});
+                if(!genderExists){
+                    throw new Error('Gênero escolhido não é válido (Pessoa).');
+                }
+            }
+            if(!entity.phone){
+                throw new Error('Telefone é um campo obrigatório (Pessoa).');
+            }
+            if(!entity.addresses){
+                throw new Error('Endereço é um campo obrigatório (Pessoa).');
             }
         }
-        if(!entity.phone){
-            throw new Error('Telefone é um campo obrigatório (Pessoa).');
+
+        if(entity.cpf){
+            await this.validateCPF.validate(entity);
         }
         if(entity.phone){
             await this.validatePhone.validate(entity.phone);
         }
-        if(!entity.addresses || entity.addresses.length <= 0) {
-            throw new Error('Pelo menos um endereço deve ser cadastrado')
-        }
         if(entity.addresses){
+            if (entity.addresses.length <= 0) {
+                throw new Error('Pelo menos um endereço deve ser cadastrado')
+            }
             let hasDelivery = false;
             let hasPayment = false;
             const promise = entity.addresses.map(async (address, index)=>{

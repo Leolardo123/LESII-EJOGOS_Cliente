@@ -16,27 +16,4 @@ export class VHPlaceType extends VHAbstract {
 
         return placeTypeInstance;
     }
-
-    getQuery(req: Request): IGetQuery {
-        const {
-            ...filters
-        } = req.body;
-        const { id } = req.params;
-
-        const entity = new PlaceType()
-
-        const where = whereBuilder({
-            parameters: [
-                {
-                    column: 'id',
-                    value: id
-                },
-            ]
-        })
-
-        return { 
-            entity,
-            where,
-        }
-    }
 }

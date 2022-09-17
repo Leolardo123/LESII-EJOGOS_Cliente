@@ -1,6 +1,9 @@
-/* eslint-disable no-console */
 import { createConnections } from 'typeorm';
 
+console.log('[BANCO DE DADOS 🎲] Tentando conectar.');
+
 createConnections()
-  .then(() => console.log('📖 Successfully connected with database'))
-  .catch(error => console.log(`😧 error connected with database: ${error}`));
+.then(() => {
+  console.log('[BANCO DE DADOS 🎲] Conectado com sucesso!');
+})
+.catch(err => console.log(err));

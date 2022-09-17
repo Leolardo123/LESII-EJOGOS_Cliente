@@ -1,6 +1,7 @@
 import { Column } from "typeorm/decorator/columns/Column";
-import { Entity } from "typeorm/decorator/entity/Entity";
+import { Entity, OneToOne, JoinColumn } from "typeorm";
 import Domain from "../Domain";
+import Person from "./Person";
 
 @Entity('tb_phones')
 class Phone extends Domain {
@@ -12,6 +13,12 @@ class Phone extends Domain {
 
     @Column()
     person_id: string;
+
+    @JoinColumn({ name: 'person_id' })
+    @OneToOne(() => Person, person => person.phone, {
+        onDelete: 'CASCADE', onUpdate: 'CASCADE'
+    })
+    person: Person;
 
     constructor(
         phone?: Partial<Phone>

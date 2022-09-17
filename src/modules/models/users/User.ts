@@ -1,11 +1,11 @@
-import { Column } from "typeorm/decorator/columns/Column";
-import { OneToOne } from "typeorm/decorator/relations/OneToOne";
 import Domain from "../Domain";
 import { UserRolesEnum } from "./enum/UserRolesEnum";
+import { Column, Entity, OneToOne } from "typeorm";
 import Person from "./Person";
 
+@Entity('tb_users')
 class User extends Domain {
-    @Column()
+    @Column({ unique: true })
     email: string;
 
     @Column()

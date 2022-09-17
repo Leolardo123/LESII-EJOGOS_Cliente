@@ -8,17 +8,18 @@ class SessionController{
     create = async (req: Request, res: Response) => {
         const { email, password } = req.body;
 
-        const user = (await new DAOUser().find(`WHERE email = '${email}'`))[0];
+        const daoUser = new DAOUser();
+        const userExists = await daoUser.findOne({ where: { email } });
 
-        if(!user || password != user.password){
-            return res.status(401).json({message: 'Email ou senha inválidos.'});
+        if(!userExists|| password !=  userExists.password){
+            throw new Error('Email ou senha incorretos.');
         }
 
-        const jwToken = sign({ sub: user.id, isMaster: user.role === UserRolesEnum.admin }, jwt_config.secret, {
+        const jwToken = sign({ sub:  userExists.id, isMaster:  userExists.role === UserRolesEnum.admin }, jwt_config.secret, {
             expiresIn: jwt_config.expiresIn,
         });
 
-        const { password: _, ...userWithoutPassword } = user;
+        const { password: _, ...userWithoutPassword } =  userExists;
 
         res.json({ userWithoutPassword, access_token: jwToken });
     }

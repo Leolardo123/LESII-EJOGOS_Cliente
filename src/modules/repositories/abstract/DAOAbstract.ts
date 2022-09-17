@@ -2,24 +2,22 @@ import Domain from "@modules/models/Domain";
 import { IFilter } from "@shared/interfaces/DAO/IFilter";
 import { IFilterPaginated } from "@shared/interfaces/DAO/IFilterPaginated";
 import IPaginatedResponse from "@shared/interfaces/IPaginatedResponse";
-import { connection } from "@shared/utils/connection";
-import { EntityTarget, Repository } from "typeorm";
-import { DeepPartial } from "typeorm/common/DeepPartial";
+import { EntityTarget, Repository, DeepPartial, getRepository } from "typeorm";
 import { IDAO } from "../interfaces/IDAO";
 
 
-export abstract class DAOAbstract implements IDAO {
-    private repository: Repository<Domain>;
+export abstract class DAOAbstract<T extends Domain> implements IDAO {
+    private repository: Repository<T>;
 
-    constructor(entity: EntityTarget<Domain>) {
-      this.repository = connection.getRepository(entity);
+    constructor(entity: EntityTarget<T>) {
+      this.repository = getRepository(entity);
     }
   
     public async index({
       page = 1,
       limit = 10,
       findParams,
-    }: IFilterPaginated<Domain>): Promise<IPaginatedResponse<Domain>> {
+    }: IFilterPaginated<T>): Promise<IPaginatedResponse<T>> {
       const [results, total] = findParams?.where ?
         await this.repository.findAndCount({
           skip: (page - 1) * limit,
@@ -32,29 +30,29 @@ export abstract class DAOAbstract implements IDAO {
       return { results, total, limit, page }
     }
   
-    public create(entity: DeepPartial<Domain>): Domain {
+    public create(entity: DeepPartial<T>): T {
       return this.repository.create(entity)
     }
   
-    public async findOne({ where, relations }: IFilter<Domain>): Promise<Domain | null> {
+    public async findOne({ where, relations }: IFilter<T>): Promise<T | undefined | null> {
       return await this.repository.findOne({
         where,
         relations
       })
     }
   
-    public async findAll({ where, relations }: IFilter<Domain>): Promise<Domain[]> {
+    public async findMany({ where, relations }: IFilter<T>): Promise<T[]> {
       return await this.repository.find({
         where,
         relations
       })
     }
   
-    public async save(entity: DeepPartial<Domain>): Promise<DeepPartial<Domain>> {
+    public async save(entity: DeepPartial<T>): Promise<DeepPartial<T>> {
       return await this.repository.save(entity);
     }
   
-    public async remove(entity: Domain): Promise<void> {
+    public async remove(entity: T): Promise<void> {
       await this.repository.remove(entity);
     }
 }

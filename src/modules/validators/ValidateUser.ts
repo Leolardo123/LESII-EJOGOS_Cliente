@@ -13,9 +13,28 @@ export class ValidateUser implements IValidate{
         if(!(entity instanceof User)){
             throw new Error('Entidade inválida, esperava usuário.');
         }
-        if(!entity.email){
-            throw new Error('Email é um campo obrigatório (Usuário).');
+        
+        if(!entity.id){
+            if(!entity.email){
+                throw new Error('Email é um campo obrigatório (Usuário).');
+            }
+            if(!entity.password){
+                throw new Error('Senha é um campo obrigatório (Usuário).');
+            }
+            if(!entity.person){
+                throw new Error('Pessoa é um campo obrigatório (Usuário).');
+            }
         }
+
+        if(entity.email){
+            const daoUser = new DAOUser();
+            const userExists = await daoUser.findOne({ where: { email: entity.email } });
+    
+            if(userExists && userExists.id !== entity.id){
+                throw new Error('Email já cadastrado.')
+            }
+        }
+
         if(entity.person){
             if(!this.validatePerson){
                 throw new Error('Não foi possível validar dados pessoais (Usuário).')
@@ -29,13 +48,6 @@ export class ValidateUser implements IValidate{
             await this.validatePassword.validate(entity);
         } else {
             throw new Error('Senha é obrigatória (Usuário).');
-        }
-
-        const daoUser = new DAOUser();
-        const userExists = await daoUser.find(`WHERE email = '${entity.email}'`)
-
-        if(userExists.length > 0  && userExists[0].id != entity.id){
-            throw new Error('Email já cadastrado.')
         }
     }
 }
