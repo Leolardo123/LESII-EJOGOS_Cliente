@@ -1,8 +1,20 @@
 import Domain from "../Domain";
+import { Column, Entity, OneToMany } from 'typeorm'
+import Address from "./Address";
 
+@Entity('tb_addresses_types')
 class AddressType extends Domain {
-    private _name: string;
-    private _description: string;
+    @Column()
+    name: string;
+
+    @Column({ nullable: true })
+    description: string;
+
+    @OneToMany(() => Address, address => address.address_type, {
+        onDelete: 'RESTRICT', onUpdate: 'CASCADE'
+    })
+    address: Address
+
 
     constructor(
         type?: Partial<AddressType>
@@ -10,21 +22,6 @@ class AddressType extends Domain {
          super();
          Object.assign(this, type)
      }
-
-    public get name(): string {
-        return this._name;
-    }
-    public set name(value: string) {
-        this._name = value;
-    }
-
-    public get description(): string {
-        return this._description;
-    }
-
-    public set description(value: string) {
-        this._description = value;
-    }
 }
 
 export default AddressType;

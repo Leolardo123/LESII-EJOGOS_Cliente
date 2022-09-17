@@ -1,12 +1,23 @@
+import { Column } from "typeorm/decorator/columns/Column";
+import { OneToOne } from "typeorm/decorator/relations/OneToOne";
 import Domain from "../Domain";
+import { UserRolesEnum } from "./enum/UserRolesEnum";
 import Person from "./Person";
 
 class User extends Domain {
-    private _email: string;
-    private _password: string;
-    private _role: string;
-    private _isActive: boolean;
-    private _person: Person;
+    @Column()
+    email: string;
+
+    @Column()
+    password: string;
+
+    @Column({ default: UserRolesEnum.default })
+    role: string;
+
+    @OneToOne(() => Person, person => person.user, {
+        cascade: true, eager: true, onDelete: 'CASCADE', onUpdate: 'CASCADE'
+    })
+    person: Person;
 
     constructor(
         user?: Partial<User>
@@ -15,46 +26,6 @@ class User extends Domain {
         Object.assign(this, {
             ...user,
         })
-    }
-
-    public get email(): string {
-        return this._email;
-    }
-
-    public set email(value: string) {
-        this._email = value;
-    }
-
-    public get password(): string {
-        return this._password;
-    }
-
-    public set password(value: string) {
-        this._password = value;
-    }
-
-    public get isActive(): boolean {
-        return this._isActive;
-    }
-
-    public set isActive(value: boolean) {
-        this._isActive = value;
-    }
-
-    public get role(): string {
-        return this._role;
-    }
-
-    public set role(value: string) {
-        this._role = value;
-    }
-
-    public get person(): Person {
-        return this._person;
-    }
-
-    public set person(value: Person) {
-        this._person = value;
     }
 
 }

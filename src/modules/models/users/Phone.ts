@@ -1,30 +1,23 @@
+import { Column } from "typeorm/decorator/columns/Column";
+import { Entity } from "typeorm/decorator/entity/Entity";
 import Domain from "../Domain";
 
+@Entity('tb_phones')
 class Phone extends Domain {
-    private _ddd: string;
-    private _number: string;
+    @Column()
+    number: string;
+
+    @Column()
+    ddd: number;
+
+    @Column()
+    person_id: string;
 
     constructor(
         phone?: Partial<Phone>
     ) {
         super();
         Object.assign(this, phone)
-    }
-
-    public get ddd(): string {
-        return this._ddd;
-    }
-
-    public set ddd(value: string) {
-        this._ddd = value;
-    }
-
-    public get number(): string {
-        return this._number;
-    }
-
-    public set number(value: string) {
-        this._number = value;
     }
 }
 

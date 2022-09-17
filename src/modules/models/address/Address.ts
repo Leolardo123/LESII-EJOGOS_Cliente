@@ -1,104 +1,62 @@
 import Domain from "../Domain";
 import AddressType from "./AddressType";
 import PlaceType from "./PlaceType";
-
+import { Column, Entity, JoinColumn, ManyToOne, ManyToMany } from 'typeorm'
+import Person from "../users/Person";
+@Entity('tb_addresses')
 class Address extends Domain {
-    private _cep: string;
-    private _number: number;
-    private _city: string;
-    private _state: string;
-    private _country: string;
-    private _complement: string;
-    private _neighborhood: string;
-    private _place: string;
-    private _address_type: AddressType;
-    private _place_type: PlaceType;
+    @Column()
+    cep: string;
+
+    @Column()
+    number: number;
+
+    @Column()
+    address_type_id: number;
+
+    @Column()
+    city: string;
+
+    @Column()
+    state: string;
+
+    @Column()
+    country: string;
+
+    @Column({ nullable: true })
+    complement?: string;
+
+    @Column()
+    neighborhood: string;
+
+    @Column()
+    place: string;
+
+    @Column()
+    place_type_id: number;
+
+    @JoinColumn({ name: 'address_type_id' })
+    @ManyToOne(() => AddressType, atype => atype.address, {
+        onDelete: 'RESTRICT', onUpdate: 'CASCADE'
+    })
+    address_type: AddressType;
+
+    @JoinColumn({ name: 'place_type_id' })
+    @ManyToOne(() => PlaceType, ptype => ptype.address, {
+        onDelete: 'RESTRICT', onUpdate: 'CASCADE'
+    })
+    place_type: PlaceType;
+
+    @ManyToMany(() => Person, person => person.address, {
+        onDelete: 'CASCADE', onUpdate: 'CASCADE'
+    })
+    person: Person;
 
     constructor(
         address?: Partial<Address>
     ) {
         super();
         Object.assign(this, address)
-    }
-    
-    public get cep(): string {
-        return this._cep;
-    }
-
-    public set cep(value: string) {
-        this._cep = value;
-    }
-
-    public get number(): number {
-        return this._number;
-    }
-
-    public set number(value: number) {
-        this._number = value;
-    }
-
-    public get city(): string {
-        return this._city;
-    }
-
-    public set city(value: string) {
-        this._city = value;
-    }
-
-    public get state(): string {
-        return this._state;
-    }
-
-    public set state(value: string) {
-        this._state = value;
-    }
-
-    public get country(): string {
-        return this._country;
-    }
-
-    public set country(value: string) {
-        this._country = value;
-    }
-
-    public get complement(): string {
-        return this._complement;
-    }
-
-    public set complement(value: string) {
-        this._complement = value;
-    }
-
-    public get neighborhood(): string {
-        return this._neighborhood;
-    }
-
-    public set neighborhood(value: string) {
-        this._neighborhood = value;
-    }
-
-    public get place(): string {
-        return this._place;
-    }
-
-    public set place(value: string) {
-        this._place = value;
-    }
-
-    public get address_type(): AddressType {
-        return this._address_type;
-    }
-
-    public set address_type(value: AddressType) {
-        this._address_type = value;
-    }
-
-    public get place_type(): PlaceType {
-        return this._place_type;
-    }
-
-    public set place_type(value: PlaceType) {
-        this._place_type = value;
     }
 }
 

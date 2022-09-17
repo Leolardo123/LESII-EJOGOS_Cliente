@@ -1,8 +1,21 @@
+import { Column } from "typeorm/decorator/columns/Column";
+import { Entity } from "typeorm/decorator/entity/Entity";
+import { OneToMany } from "typeorm/decorator/relations/OneToMany";
 import Domain from "../Domain";
+import Address from "./Address";
 
+@Entity('tb_places_types')
 class PlaceType extends Domain {
-    private _name: string;
-    private _description: string;
+    @Column()
+    name: string;
+
+    @Column({ nullable: true })
+    description: string;
+
+    @OneToMany(() => Address, address => address.place_type, {
+        onDelete: 'RESTRICT', onUpdate: 'CASCADE'
+    })
+    address: Address
 
     constructor(
         type?: Partial<PlaceType>
@@ -14,21 +27,6 @@ class PlaceType extends Domain {
         if(!this.name){
             throw new Error('Nome é um campo  obrigatório (Tipo de Logradouro).')
         }
-    }
-
-    public get name(): string {
-        return this._name;
-    }
-    public set name(value: string) {
-        this._name = value;
-    }
-
-    public get description(): string {
-        return this._description;
-    }
-
-    public set description(value: string) {
-        this._description = value;
     }
 }
 

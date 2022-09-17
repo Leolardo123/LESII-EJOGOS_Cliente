@@ -1,9 +1,10 @@
-import IWhereParams from "./IWhereParams";
+import Domain from "@modules/models/Domain";
+import { DeepPartial } from "typeorm";
 
-interface IPaginatedtRequest {
+interface IPaginatedtRequest<T extends Domain> {
   page?: number;
   limit?: number;
-  whereParams?: IWhereParams;
+  filters?: DeepPartial<T>;
 }
 
 export default IPaginatedtRequest;

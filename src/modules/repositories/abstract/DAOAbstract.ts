@@ -1,68 +1,60 @@
 import Domain from "@modules/models/Domain";
-import { pool } from "@shared/utils/connection";
-import { PoolClient } from "pg";
+import { IFilter } from "@shared/interfaces/DAO/IFilter";
+import { IFilterPaginated } from "@shared/interfaces/DAO/IFilterPaginated";
+import IPaginatedResponse from "@shared/interfaces/IPaginatedResponse";
+import { connection } from "@shared/utils/connection";
+import { EntityTarget, Repository } from "typeorm";
+import { DeepPartial } from "typeorm/common/DeepPartial";
 import { IDAO } from "../interfaces/IDAO";
 
+
 export abstract class DAOAbstract implements IDAO {
-    protected table: string;
-    protected ctrlTransaction: boolean;
-    protected client: PoolClient | undefined;
+    private repository: Repository<Domain>;
 
-    constructor(
-        ctrlTransaction?: boolean
-    ){
-        this.ctrlTransaction = ctrlTransaction !== undefined 
-                             ? ctrlTransaction : true;
+    constructor(entity: EntityTarget<Domain>) {
+      this.repository = connection.getRepository(entity);
     }
-
-    setConnection = async (client: PoolClient) => {
-        this.client = client;
+  
+    public async index({
+      page = 1,
+      limit = 10,
+      findParams,
+    }: IFilterPaginated<Domain>): Promise<IPaginatedResponse<Domain>> {
+      const [results, total] = findParams?.where ?
+        await this.repository.findAndCount({
+          skip: (page - 1) * limit,
+          take: limit,
+          where: findParams.where
+        }) : await this.repository.findAndCount({
+          skip: (page - 1) * limit,
+          take: limit,
+        })
+      return { results, total, limit, page }
     }
-
-    closeConnection = () => {
-        this.client = undefined;
+  
+    public create(entity: DeepPartial<Domain>): Domain {
+      return this.repository.create(entity)
     }
-
-    insert(entity: Domain): Promise<Domain> {
-        throw new Error('Serviço indisponível.')
+  
+    public async findOne({ where, relations }: IFilter<Domain>): Promise<Domain | null> {
+      return await this.repository.findOne({
+        where,
+        relations
+      })
     }
-
-    update(entity: Domain): Promise<Domain> {
-        throw new Error('Serviço indisponível.')
+  
+    public async findAll({ where, relations }: IFilter<Domain>): Promise<Domain[]> {
+      return await this.repository.find({
+        where,
+        relations
+      })
     }
-
-    find = async  (where: string): Promise<Domain[]> => {
-        if(!this.client){
-            this.client = await pool.connect();
-        }
-        const result = await this.client.query(
-            `SELECT * FROM ${this.table} ${where}`
-        );
-        this.client.release();
-        this.closeConnection();
-        return result.rows;
+  
+    public async save(entity: DeepPartial<Domain>): Promise<DeepPartial<Domain>> {
+      return await this.repository.save(entity);
     }
-
-    async remove(entity: Domain): Promise<void> {
-        if(!this.client){
-            this.client = await pool.connect();
-            await this.client.query('BEGIN');
-        }
-        try{
-            await this.client.query(`
-                DELETE FROM ${this.table} WHERE id = ${entity.id}
-            `);
-        } catch (err) {
-            await this.client.query('ROLLBACK');
-            this.client.release();
-            this.closeConnection();
-            throw new Error(err as string)
-        } finally {
-            await this.client.query('COMMIT');
-            if(this.ctrlTransaction) {
-                this.client.release();
-                this.closeConnection();
-            }
-        }
+  
+    public async remove(entity: Domain): Promise<void> {
+      await this.repository.remove(entity);
     }
 }

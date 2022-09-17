@@ -1,69 +1,74 @@
+import { Column } from "typeorm/decorator/columns/Column";
+import { Entity } from "typeorm/decorator/entity/Entity";
+import { JoinColumn } from "typeorm/decorator/relations/JoinColumn";
+import { JoinTable } from "typeorm/decorator/relations/JoinTable";
+import { ManyToMany } from "typeorm/decorator/relations/ManyToMany";
+import { OneToMany } from "typeorm/decorator/relations/OneToMany";
+import { OneToOne } from "typeorm/decorator/relations/OneToOne";
 import Address from "../address/Address";
 import Domain from "../Domain";
 import Gender from "./Gender";
 import Phone from "./Phone";
+import User from "./User";
 
+@Entity('tb_persons')
 class Person extends Domain {
-    private _name: string;
-    private _cpf: string;
-    private _birth_date: Date;
-    private _phone: Phone;
-    private _gender: Gender;
-    private _addresses: Address[];
+    @Column()
+    name: string;
+
+    @Column()
+    cpf: string;
+
+    @Column()
+    cellphone: string;
+
+    @Column()
+    birth_date: Date;
+
+    @Column()
+    gender_id: number;
+
+    @Column()
+    user_id: string;
+
+    @JoinTable()
+    @ManyToMany(() => Address, address => address.person, {
+        cascade: true, eager: true
+    })
+    addresses: Address[];
+
+    @JoinColumn({ name: 'gender_id' })
+    @OneToMany(() => Gender, gender => gender.persons, {
+        cascade: true, onDelete: 'RESTRICT', onUpdate: 'CASCADE'
+    })
+    gender: Gender;
+
+    @OneToMany(() => Card, card => card.person, {
+        cascade: true, eager: true
+    })
+    cards: Card[];
+
+    @OneToMany(() => Cart, cart => cart.person, {
+        onDelete: 'CASCADE', onUpdate: 'CASCADE'
+    })
+    carts: Cart[];
+
+    @OneToOne(() => Phone, phone => phone.person, {
+        cascade: true, eager: true, onDelete: 'CASCADE', onUpdate: 'CASCADE'
+    })
+    phone: Phone;
+
+    @JoinColumn({ name: 'user_id' })
+    @OneToOne(() => User, user => user.person, {
+        onDelete: 'CASCADE', onUpdate: 'CASCADE'
+    })
+    user: User;
 
     constructor(
         person?: Partial<Person>
     ) {
         super();
         Object.assign(this, person)
-    }
-
-    public get name(): string {
-        return this._name;
-    }
-
-    public set name(value: string) {
-        this._name = value;
-    }
-
-    public get cpf(): string {
-        return this._cpf;
-    }
-
-    public set cpf(value: string) {
-        this._cpf = value;
-    }
-
-    public get phone(): Phone {
-        return this._phone;
-    }
-
-    public set phone(value: Phone) {
-        this._phone = value;
-    }
-
-    public get birth_date(): Date {
-        return this._birth_date;
-    }
-
-    public set birth_date(value: Date) {
-        this._birth_date = value;
-    }
-
-    public get gender(): Gender {
-        return this._gender;
-    }
-
-    public set gender(value: Gender) {
-        this._gender = value;
-    }
-
-    public get addresses(): Address[] {
-        return this._addresses;
-    }
-
-    public set addresses(value: Address[]) {
-        this._addresses = value;
     }
 }
 

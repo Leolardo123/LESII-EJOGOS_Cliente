@@ -9,10 +9,10 @@ export interface IGetQuery{
 export abstract class VHAbstract{
     abstract getEntity(req: Request): Domain;
     abstract getQuery(req: Request): IGetQuery;
-    setView(req: Request, res: any, result: Domain | string): void {
-        if(typeof result === 'string'){
+    setView(req: Request, res: any, result: Domain[] | string): void {
+        if (typeof result === 'string') {
             res.status(200).json({ message: result });
-        }else{
+        } else {
             res.status(200).json(result);
         }
     }

@@ -61,7 +61,7 @@ export class Facade implements IFacade {
 			await validatorInstance.validate(entity);
 
 			const daoInstance = this.daos[entityName]
-			await daoInstance.insert(entity);
+			await daoInstance.save(entity);
 			return 'Cadastrado com sucesso';
 		}
 		throw new Error('Falha ao cadastrar, tipo do pedido não existe.')
@@ -74,7 +74,7 @@ export class Facade implements IFacade {
 			await validatorInstance.validate(entity);
 
 			const daoInstance = this.daos[entityName]
-			await daoInstance.update(entity);
+			await daoInstance.save(entity);
 			return 'Atualizado com sucesso';
 		}
 		throw new Error('Falha ao atualizar, tipo do pedido não existe.')
@@ -84,17 +84,26 @@ export class Facade implements IFacade {
 		const entityName = entity.constructor.name.toLowerCase();
 		if(this.daos[entityName]){
 			const daoInstance = this.daos[entityName]
-			await daoInstance.remove(entity);
+			daoInstance.remove(entity);
 			return 'Deletado com sucesso';
 		}
 		throw new Error('Falha ao excluir, tipo do pedido não existe.')
 	}
 
-	async query(entity: Domain, where: string): Promise<Domain[]> {
+	async findOne(entity: Domain, relations: []): Promise<Domain | undefined> {
 		const entityName = entity.constructor.name.toLowerCase();
 		if(this.daos[entityName]){
 			const daoInstance = this.daos[entityName]
-			return await daoInstance.find(where);
+			return await daoInstance.findOne({ where: entity, relations });
+		}
+		throw new Error('Falha ao consultar, tipo do pedido não existe.')
+	}
+
+	async findMany(entity: Domain, relations: []): Promise<Domain[]> {
+		const entityName = entity.constructor.name.toLowerCase();
+		if(this.daos[entityName]){
+			const daoInstance = this.daos[entityName]
+			return await daoInstance.findAll({ where: entity, relations });
 		}
 		throw new Error('Falha ao consultar, tipo do pedido não existe.')
 	}

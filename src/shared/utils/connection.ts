@@ -1,14 +1,12 @@
-import { Pool } from 'pg'
-const pool = new Pool({
-    user: process.env.DB_USERNAME,
+import { DataSource } from 'typeorm'
+
+const connection = new DataSource({
+    type: 'postgres',
+    username: process.env.DB_USERNAME,
     host: process.env.DB_HOST,
     database: process.env.DB_NAME,
     password: process.env.DB_PASSWORD,
     port: Number(process.env.DB_PORT || 5432),
 });
 
-pool.on('error', (err, client) => {
-    console.error('Unexpected error on idle client', err)
-})
-
-export { pool }
+export { connection }

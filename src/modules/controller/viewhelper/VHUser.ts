@@ -77,7 +77,7 @@ export class VHUser extends VHAbstract {
         }
     }
 
-    setView(req: Request, res: any, result: User): void {
+    setView(req: Request, res: any, result: User[] | string): void {
         const { password: _, ...userWithoutPassword } = result;
         res.json(userWithoutPassword);
     }
