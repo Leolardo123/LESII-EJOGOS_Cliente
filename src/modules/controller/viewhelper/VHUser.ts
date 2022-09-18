@@ -7,7 +7,7 @@ import Phone from "@modules/models/users/Phone";
 import User from "@modules/models/users/User";
 import { Request } from "express";
 import { VHAbstract } from "./VHAbstract";
-import { ensureAuthenticated } from "@shared/middleware/ensureAuthenticated";
+import { ensureAuthenticated } from "@shared/utils/ensureAuthenticated";
 
 export class VHUser extends VHAbstract {
     getEntity(req: Request): User {

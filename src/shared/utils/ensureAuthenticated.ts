@@ -7,11 +7,13 @@ interface ITokenPayload {
   iat: number;
   exp: number;
   sub: string;
+  person?: string;
   role_id: number;
 }
 
 interface IRequestUser {
   id: string;
+  person?: string;
   role_id: number;
 }
 
@@ -27,11 +29,12 @@ function ensureAuthenticated(request: Request): IRequestUser {
   try {
     const decoded = verify(token, jwt_config.secret as string);
 
-    const { sub, role_id } = decoded as ITokenPayload;
+    const { sub, role_id, person } = decoded as ITokenPayload;
 
     return {
       id: sub,
       role_id,
+      person,
     };
   } catch (error) {
     throw new Error("Token Inválido");

@@ -3,7 +3,7 @@ import Person from "@modules/models/users/Person";
 import Phone from "@modules/models/users/Phone";
 import { Request } from "express";
 import { VHAbstract } from "./VHAbstract";
-import { ensureAuthenticated } from "@shared/middleware/ensureAuthenticated";
+import { ensureAuthenticated } from "@shared/utils/ensureAuthenticated";
 
 export class VHPerson extends VHAbstract {
     getEntity(req: Request): Person {
@@ -23,6 +23,7 @@ export class VHPerson extends VHAbstract {
             const genderInstance = new Gender({ id: person.gender_id });
             personInstance.gender = genderInstance;
         }
+        
         if(person.phone){
             const phoneInstance = new Phone(person.phone);
             personInstance.phone = phoneInstance;

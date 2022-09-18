@@ -56,7 +56,6 @@ class Controller{
         }
         
         const entity = this.vhs[route].getEntity(req);
-        console.log("🚀 ~ file: Controller.ts ~ line 59 ~ Controller ~ delete ~ entity", entity)
         const msg = await this.facade.delete(entity);
 
         return this.vhs[route].setView(req, res, msg);

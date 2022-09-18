@@ -8,11 +8,11 @@ export interface IGetQuery{
 
 export abstract class VHAbstract{
     abstract getEntity(req: Request): Domain;
-    setView(req: Request, res: any, result: Domain[] | string): void {
+    setView(req: Request, res: any, result: Domain[] | Domain | string): void {
         if (typeof result === 'string') {
-            res.status(200).json({ message: result });
+            res.status(201).json({ message: result });
         } else {
-            res.status(200).json(result);
+            res.status(201).json(result);
         }
     }
 }

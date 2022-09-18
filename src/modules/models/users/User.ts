@@ -1,6 +1,6 @@
 import Domain from "../Domain";
 import { UserRolesEnum } from "./enum/UserRolesEnum";
-import { Column, Entity, OneToOne } from "typeorm";
+import { BeforeInsert, BeforeUpdate, Column, Entity, OneToOne } from "typeorm";
 import Person from "./Person";
 
 @Entity('tb_users')

@@ -7,7 +7,12 @@ export async function globalErrorHandler(
   response: Response,
   _: NextFunction,
 ): Promise<Response<any>> {
-  console.log(err)
+  console.log(`Error - ${err} 
+  URL - [${request.method}] - ${request.url}
+  Request:
+  body - ${JSON.stringify(request.body)}, 
+  params - ${JSON.stringify(request.params)}, 
+  query - ${JSON.stringify(request.query)}`);
 
   return response.status(500).json({
     status: 'error',

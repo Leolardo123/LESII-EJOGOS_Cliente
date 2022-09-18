@@ -15,13 +15,20 @@ class SessionController{
             throw new Error('Email ou senha incorretos.');
         }
 
-        const jwToken = sign({ sub:  userExists.id, isMaster:  userExists.role === UserRolesEnum.admin }, jwt_config.secret, {
-            expiresIn: jwt_config.expiresIn,
-        });
+        const jwToken = sign(
+            { 
+                sub:  userExists.id, 
+                role:  userExists.role, 
+                person: userExists.person ? userExists.person.id : null
+            }, 
+            jwt_config.secret, {
+                expiresIn: jwt_config.expiresIn,
+            }
+        );
 
         const { password: _, ...userWithoutPassword } =  userExists;
 
-        res.json({ userWithoutPassword, access_token: jwToken });
+        res.json({ user: userWithoutPassword, access_token: jwToken });
     }
 }
 
