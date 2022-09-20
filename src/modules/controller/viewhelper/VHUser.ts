@@ -9,7 +9,7 @@ import { Request } from "express";
 import { VHAbstract } from "./VHAbstract";
 import { ensureAuthenticated } from "@shared/utils/ensureAuthenticated";
 
-export class VHUser extends VHAbstract {
+export class VHUser extends VHAbstract {//aa
     getEntity(req: Request): User {
         const {
             user,
