@@ -40,4 +40,11 @@ export default class Product extends Domain {
 
     @Column()
     image: string;
+
+    constructor(
+        product?: Partial<Product>
+    ) {
+        super();
+        Object.assign(this, product)
+    }
 }

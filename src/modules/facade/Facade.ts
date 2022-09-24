@@ -8,6 +8,7 @@ import { ValidateGender } from "@modules/validators/ValidateGender";
 import { ValidatePassword } from "@modules/validators/ValidatePassword";
 import { ValidatePerson } from "@modules/validators/ValidatePerson";
 import { ValidatePhone } from "@modules/validators/ValidatePhone";
+import { ValidateProduct } from "@modules/validators/ValidateProduct";
 import { ValidateUser } from "@modules/validators/ValidateUser";
 import IHash from "@shared/interfaces/IHash";
 import { IFacade } from "./IFacade";
@@ -16,9 +17,6 @@ export class Facade implements IFacade {
 	private validators: IHash<IValidate> = {};
 
 	constructor(){
-		/**
-		 * Singletons de validação
-		 */
 		const validateAddress = new ValidateAddress();
 		const validatePhone = new ValidatePhone();
 		const validateCPF = new ValidateCPF();
@@ -33,14 +31,15 @@ export class Facade implements IFacade {
 			validatePerson, 
 			validatePassword
 		);
-		//*
 		const validateCard = new ValidateCard();
+		const validateProduct = new ValidateProduct();
 
 		this.validators.address = validateAddress;
 		this.validators.person = validatePerson;
 		this.validators.user = validateUser;
 		this.validators.gender = validateGender;
 		this.validators.card = validateCard;
+		this.validators.product = validateProduct;
 	}
 
 	async getInstance(entity: Domain): Promise<Domain> {

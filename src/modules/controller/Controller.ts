@@ -10,6 +10,7 @@ import { VHCard } from "./viewhelper/VHCard";
 import { VHGender } from "./viewhelper/VHGender";
 import { VHPerson } from "./viewhelper/VHPerson";
 import { VHPlaceType } from "./viewhelper/VHPlaceType";
+import { VHProduct } from "./viewhelper/VHProduct";
 import { VHUser } from "./viewhelper/VHUser";
 class Controller{
     private vhs: IHash<IViewHelper> = {};
@@ -23,6 +24,7 @@ class Controller{
             "places-types": new VHPlaceType(),
             "brands": new VHBrand(),
             "cards": new VHCard(),
+            "products": new VHProduct(),
        }
     }
 

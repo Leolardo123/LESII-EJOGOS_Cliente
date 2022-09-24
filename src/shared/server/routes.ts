@@ -1,12 +1,16 @@
+import { uploadConfig } from '@config/upload';
 import { Controller } from '@modules/controller/Controller';
 import { SessionController } from '@modules/controller/SessionController';
 import { Facade } from '@modules/facade/Facade';
 import { Router, Request, Response, NextFunction } from 'express';
+import multer from 'multer';
 
 const router = Router();
 const facade = new Facade();
 const controller = new Controller(facade);
 const sessionController = new SessionController();
+
+const formdataMiddleware = multer(uploadConfig.multer)//Usado para upload de arquivos em formdata
 
 router.get('/', (request: Request, response: Response) =>
 response.send('LES - EJOGOS - 0.0.1'),
@@ -20,9 +24,9 @@ router.get('/:route', controller.index);
 
 router.get('/:route/:id', controller.get);
 
-router.post('/:route', controller.create);
+router.post('/:route', formdataMiddleware.any(), controller.create);
 
-router.put('/:route/:id', controller.update);
+router.put('/:route/:id', formdataMiddleware.any(), controller.update);
 
 router.delete('/:route/:id', controller.delete);
 
