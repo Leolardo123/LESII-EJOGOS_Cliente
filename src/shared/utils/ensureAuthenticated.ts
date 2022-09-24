@@ -6,15 +6,15 @@ import { jwt_config } from "@config/auth";
 interface ITokenPayload {
   iat: number;
   exp: number;
-  sub: string;
+  sub: number;
   person?: string;
-  role_id: number;
+  role: string;
 }
 
 interface IRequestUser {
-  id: string;
+  id: number;
   person?: string;
-  role_id: number;
+  role: string;
 }
 
 function ensureAuthenticated(request: Request): IRequestUser {
@@ -29,11 +29,11 @@ function ensureAuthenticated(request: Request): IRequestUser {
   try {
     const decoded = verify(token, jwt_config.secret as string);
 
-    const { sub, role_id, person } = decoded as ITokenPayload;
+    const { sub, role, person } = decoded as ITokenPayload;
 
     return {
       id: sub,
-      role_id,
+      role,
       person,
     };
   } catch (error) {

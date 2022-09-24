@@ -1,3 +1,4 @@
+import { ManyToOne } from "typeorm";
 import { Column } from "typeorm/decorator/columns/Column";
 import { Entity } from "typeorm/decorator/entity/Entity";
 import { JoinColumn } from "typeorm/decorator/relations/JoinColumn";
@@ -25,7 +26,7 @@ class Person extends Domain {
     cellphone: string;
 
     @Column()
-    birth_date: string;
+    birth_date: Date;
 
     @Column()
     gender_id: number;
@@ -40,7 +41,7 @@ class Person extends Domain {
     addresses: Address[];
 
     @JoinColumn({ name: 'gender_id' })
-    @OneToOne(() => Gender, gender => gender.persons, {
+    @ManyToOne(() => Gender, gender => gender.persons, {
         cascade: true, onDelete: 'RESTRICT', onUpdate: 'CASCADE'
     })
     gender: Gender;
@@ -56,7 +57,7 @@ class Person extends Domain {
     carts: Cart[];
 
     @OneToOne(() => Phone, phone => phone.person, {
-        cascade: true, eager: true, onDelete: 'CASCADE', onUpdate: 'CASCADE'
+        cascade: true, eager: true, onDelete: 'CASCADE', onUpdate: 'CASCADE',
     })
     phone: Phone;
 

@@ -4,6 +4,7 @@ import Phone from "@modules/models/users/Phone";
 import { Request } from "express";
 import { VHAbstract } from "./VHAbstract";
 import { ensureAuthenticated } from "@shared/utils/ensureAuthenticated";
+import moment from 'moment';
 
 export class VHPerson extends VHAbstract {
     getEntity(req: Request): Person {
@@ -19,6 +20,7 @@ export class VHPerson extends VHAbstract {
         }
 
         Object.assign(personInstance, person);
+        personInstance.birth_date = moment(person.birth_date, "DD/MM/YYYY").toDate();
         if(person.gender_id){
             const genderInstance = new Gender({ id: person.gender_id });
             personInstance.gender = genderInstance;

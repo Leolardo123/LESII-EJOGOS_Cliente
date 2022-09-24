@@ -1,5 +1,6 @@
 import { AddressTypesEnum } from "@modules/models/address/enum/AddressTypesEnum";
 import { DAOGender } from "@modules/repositories/DAOGender";
+import moment from "moment";
 import Person from "../models/users/Person";
 import { IValidate } from "./IValidate";
 import { ValidateAddress } from "./ValidateAddress";
@@ -27,6 +28,9 @@ export class ValidatePerson implements IValidate{
             if(!entity.cpf){
                 throw new Error('CPF é um campo obrigatório (Pessoa).');
             }
+            if(!entity.birth_date){
+                throw new Error('Data de nascimento é um campo obrigatório (Pessoa).');
+            }
             if(!entity.gender || !entity.gender.id){
                 throw new Error('Gênero é um campo obrigatório (Pessoa).');
             }else {
@@ -49,6 +53,18 @@ export class ValidatePerson implements IValidate{
         }
         if(entity.phone){
             await this.validatePhone.validate(entity.phone);
+        }
+        if(entity.cellphone){
+            if(/\((\d{2})\) (\d{5})-(\d{4})/.test(entity.cellphone)){
+                throw new Error('Número celular inválido (Pessoa).');
+            }
+        }
+        if(entity.birth_date){
+            if(
+                !moment(entity.birth_date).isValid()
+            ){
+                throw new Error('Data de nascimento inválida (Pessoa).');
+            }
         }
         if(entity.addresses){
             if (entity.addresses.length <= 0) {

@@ -8,6 +8,7 @@ import User from "@modules/models/users/User";
 import { Request } from "express";
 import { VHAbstract } from "./VHAbstract";
 import { ensureAuthenticated } from "@shared/utils/ensureAuthenticated";
+import moment from 'moment';
 
 export class VHUser extends VHAbstract {
     getEntity(req: Request): User {
@@ -51,6 +52,7 @@ export class VHUser extends VHAbstract {
                 const phoneInstance = new Phone(person.phone);
                 personInstance.phone = phoneInstance;
             }
+            personInstance.birth_date = moment(person.birth_date, "DD/MM/YYYY").toDate();
             personInstance.addresses = addressesInstances;
             userInstance.person = personInstance;
         }

@@ -1,4 +1,5 @@
-import Brand from "../../../modules/models/cards/Brand";
+
+import Brand from "@modules/models/cards/Brand";
 import { Connection } from "typeorm";
 import { Factory, Seeder } from "typeorm-seeding";
 

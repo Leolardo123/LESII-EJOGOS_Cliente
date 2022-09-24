@@ -5,6 +5,8 @@ import { Request, Response } from "express";
 import { IViewHelper } from "./viewhelper/interface/IViewHelper";
 import { VHAddress } from "./viewhelper/VHAddress";
 import { VHAddressType } from "./viewhelper/VHAddressType";
+import { VHBrand } from "./viewhelper/VHBrand";
+import { VHCard } from "./viewhelper/VHCard";
 import { VHGender } from "./viewhelper/VHGender";
 import { VHPerson } from "./viewhelper/VHPerson";
 import { VHPlaceType } from "./viewhelper/VHPlaceType";
@@ -19,6 +21,8 @@ class Controller{
             "addresses-types": new VHAddressType(),
             "genders": new VHGender(),
             "places-types": new VHPlaceType(),
+            "brands": new VHBrand(),
+            "cards": new VHCard(),
        }
     }
 

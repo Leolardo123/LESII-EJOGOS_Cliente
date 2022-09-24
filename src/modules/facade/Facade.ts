@@ -2,6 +2,7 @@ import Domain from "@modules/models/Domain";
 import { DAOFactory } from "@modules/repositories/factory/DAOFactory";
 import { IValidate } from "@modules/validators/IValidate";
 import { ValidateAddress } from "@modules/validators/ValidateAddress";
+import { ValidateCard } from "@modules/validators/ValidateCard";
 import { ValidateCPF } from "@modules/validators/ValidateCPF";
 import { ValidateGender } from "@modules/validators/ValidateGender";
 import { ValidatePassword } from "@modules/validators/ValidatePassword";
@@ -33,11 +34,13 @@ export class Facade implements IFacade {
 			validatePassword
 		);
 		//*
+		const validateCard = new ValidateCard();
 
 		this.validators.address = validateAddress;
 		this.validators.person = validatePerson;
 		this.validators.user = validateUser;
 		this.validators.gender = validateGender;
+		this.validators.card = validateCard;
 	}
 
 	async getInstance(entity: Domain): Promise<Domain> {
@@ -63,7 +66,11 @@ export class Facade implements IFacade {
 		await validatorInstance.validate(entity);
 
 		const daoInstance = DAOFactory.getDAO(entityName);
-		const entityExists = await daoInstance.findOne({ where: { id: entity.id } });
+		const entityExists = await daoInstance.findOne({ 
+			where: { 
+				id: entity.id 
+			} 
+		});
 
 		if(!entityExists) throw new Error('Não encontrado');
 		Object.assign(entityExists, entity);

@@ -1,10 +1,9 @@
 import {MigrationInterface, QueryRunner} from "typeorm";
 
-export class createDatabase1663445650972 implements MigrationInterface {
-    name = 'createDatabase1663445650972'
+export class createDatabase1664040735346 implements MigrationInterface {
+    name = 'createDatabase1664040735346'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
-        await queryRunner.query(`CREATE TABLE "tb_addresses_types" ("id" SERIAL NOT NULL, "name" character varying NOT NULL, "description" character varying, CONSTRAINT "PK_aae6705201c6fc0f9e792bd101b" PRIMARY KEY ("id"))`);
         await queryRunner.query(`CREATE TABLE "tb_places_types" ("id" SERIAL NOT NULL, "name" character varying NOT NULL, "description" character varying, CONSTRAINT "PK_c53e8458e5e67a3ea19fb918119" PRIMARY KEY ("id"))`);
         await queryRunner.query(`CREATE TABLE "tb_brands" ("id" SERIAL NOT NULL, "name" character varying NOT NULL, "image" character varying NOT NULL, CONSTRAINT "PK_e96f07b75c390335257b00496ca" PRIMARY KEY ("id"))`);
         await queryRunner.query(`CREATE TABLE "tb_cards" ("id" SERIAL NOT NULL, "owner_name" character varying NOT NULL, "number" character varying NOT NULL, "brand_id" integer NOT NULL, "person_id" integer NOT NULL, "security_code" character varying NOT NULL, CONSTRAINT "PK_6dea528d0de1b4ea34bcff34200" PRIMARY KEY ("id"))`);
@@ -14,8 +13,9 @@ export class createDatabase1663445650972 implements MigrationInterface {
         await queryRunner.query(`CREATE TABLE "tb_genders" ("id" SERIAL NOT NULL, "name" character varying NOT NULL, CONSTRAINT "PK_ad4433ee86ecc6885a91b560532" PRIMARY KEY ("id"))`);
         await queryRunner.query(`CREATE TABLE "tb_phones" ("id" SERIAL NOT NULL, "number" character varying NOT NULL, "ddd" integer NOT NULL, "person_id" integer NOT NULL, CONSTRAINT "REL_26973d11e13ec316b40eae12f6" UNIQUE ("person_id"), CONSTRAINT "PK_91419dd4de201e2b2eb80a9faf7" PRIMARY KEY ("id"))`);
         await queryRunner.query(`CREATE TABLE "tb_users" ("id" SERIAL NOT NULL, "email" character varying NOT NULL, "password" character varying NOT NULL, "role" character varying NOT NULL DEFAULT 'usuario', CONSTRAINT "UQ_142ce3112f446974f1c96a5d3ff" UNIQUE ("email"), CONSTRAINT "PK_a2c23e0679749c22ffa6c2be910" PRIMARY KEY ("id"))`);
-        await queryRunner.query(`CREATE TABLE "tb_persons" ("id" SERIAL NOT NULL, "name" character varying NOT NULL, "cpf" character varying NOT NULL, "cellphone" character varying NOT NULL, "birth_date" character varying NOT NULL, "gender_id" integer NOT NULL, "user_id" integer NOT NULL, CONSTRAINT "REL_16c3a260805188fc6bdb85d63d" UNIQUE ("gender_id"), CONSTRAINT "REL_f0dc0d17f29a844a6089e0aef8" UNIQUE ("user_id"), CONSTRAINT "PK_2af079ba897e0e01ca2ae609e42" PRIMARY KEY ("id"))`);
+        await queryRunner.query(`CREATE TABLE "tb_persons" ("id" SERIAL NOT NULL, "name" character varying NOT NULL, "cpf" character varying NOT NULL, "cellphone" character varying NOT NULL, "birth_date" TIMESTAMP NOT NULL, "gender_id" integer NOT NULL, "user_id" integer NOT NULL, CONSTRAINT "REL_f0dc0d17f29a844a6089e0aef8" UNIQUE ("user_id"), CONSTRAINT "PK_2af079ba897e0e01ca2ae609e42" PRIMARY KEY ("id"))`);
         await queryRunner.query(`CREATE TABLE "tb_addresses" ("id" SERIAL NOT NULL, "cep" character varying NOT NULL, "number" integer NOT NULL, "address_type_id" integer NOT NULL, "city" character varying NOT NULL, "state" character varying NOT NULL, "country" character varying NOT NULL, "complement" character varying, "neighborhood" character varying NOT NULL, "place" character varying NOT NULL, "place_type_id" integer NOT NULL, CONSTRAINT "PK_86c23d37552ae8e71ecbcfd46d9" PRIMARY KEY ("id"))`);
+        await queryRunner.query(`CREATE TABLE "tb_addresses_types" ("id" SERIAL NOT NULL, "name" character varying NOT NULL, "description" character varying, CONSTRAINT "PK_aae6705201c6fc0f9e792bd101b" PRIMARY KEY ("id"))`);
         await queryRunner.query(`CREATE TABLE "tb_purchases" ("id" SERIAL NOT NULL, "total_price" integer NOT NULL, "cart_id" character varying NOT NULL, "payment_id" character varying NOT NULL, "person_id" character varying NOT NULL, "status_id" character varying NOT NULL DEFAULT 'pending', CONSTRAINT "PK_7cad9595706b9a2dcf6ac28e1e7" PRIMARY KEY ("id"))`);
         await queryRunner.query(`CREATE TABLE "tb_purchases_coupons" ("id" SERIAL NOT NULL, "coupon_id" character varying NOT NULL, "purchase_id" character varying NOT NULL, "purchaseId" integer, CONSTRAINT "UQ_22ddfcbd6c920c56d23f4634c72" UNIQUE ("purchase_id", "coupon_id"), CONSTRAINT "PK_8ae2cc317cfc0ca750cce8723a1" PRIMARY KEY ("id"))`);
         await queryRunner.query(`CREATE TABLE "coupom" ("id" SERIAL NOT NULL, "code" character varying NOT NULL, "value" integer NOT NULL DEFAULT '0', "type_id" character varying NOT NULL DEFAULT 'return_product', CONSTRAINT "PK_dac9504d91710ffbdd15752cb7a" PRIMARY KEY ("id"))`);
@@ -57,6 +57,7 @@ export class createDatabase1663445650972 implements MigrationInterface {
         await queryRunner.query(`DROP TABLE "coupom"`);
         await queryRunner.query(`DROP TABLE "tb_purchases_coupons"`);
         await queryRunner.query(`DROP TABLE "tb_purchases"`);
+        await queryRunner.query(`DROP TABLE "tb_addresses_types"`);
         await queryRunner.query(`DROP TABLE "tb_addresses"`);
         await queryRunner.query(`DROP TABLE "tb_persons"`);
         await queryRunner.query(`DROP TABLE "tb_users"`);
@@ -68,7 +69,6 @@ export class createDatabase1663445650972 implements MigrationInterface {
         await queryRunner.query(`DROP TABLE "tb_cards"`);
         await queryRunner.query(`DROP TABLE "tb_brands"`);
         await queryRunner.query(`DROP TABLE "tb_places_types"`);
-        await queryRunner.query(`DROP TABLE "tb_addresses_types"`);
     }
 
 }

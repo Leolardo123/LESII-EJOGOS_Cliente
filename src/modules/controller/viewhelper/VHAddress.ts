@@ -22,6 +22,8 @@ export class VHAddress extends VHAbstract {
                 const personInstance = new Person();
                 Object.assign(personInstance, { id: Number(person_id) });
                 addressInstance.persons = [personInstance];
+            } else {
+                throw new Error('Cadastre os dados pessoais antes de cadastrar um endereço.');
             }
         }
 
