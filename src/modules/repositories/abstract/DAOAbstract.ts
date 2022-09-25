@@ -22,7 +22,7 @@ export abstract class DAOAbstract<T extends Domain> implements IDAO {
         await this.repository.findAndCount({
           skip: (page - 1) * limit,
           take: limit,
-          where: findParams.where
+          where: findParams.where,
         }) : await this.repository.findAndCount({
           skip: (page - 1) * limit,
           take: limit,
@@ -37,14 +37,14 @@ export abstract class DAOAbstract<T extends Domain> implements IDAO {
     public async findOne({ where, relations }: IFilter<T>): Promise<T | undefined | null> {
       return await this.repository.findOne({
         where,
-        relations
+        relations,
       })
     }
   
     public async findMany({ where, relations }: IFilter<T>): Promise<T[]> {
       return await this.repository.find({
         where,
-        relations
+        relations,
       })
     }
   

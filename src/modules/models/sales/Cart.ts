@@ -12,7 +12,7 @@ export default class Cart extends Domain {
     total_price: number;
 
     @Column()
-    person_id: string;
+    person_id: number;
 
     @Column({ enum: CartStatusEnum, default: CartStatusEnum.CART_STATUS_OPEN })
     status_id: string;
