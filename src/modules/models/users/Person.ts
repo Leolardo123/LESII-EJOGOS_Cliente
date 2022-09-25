@@ -9,7 +9,7 @@ import { OneToOne } from "typeorm/decorator/relations/OneToOne";
 import Address from "../address/Address";
 import Card from "../cards/Card";
 import Domain from "../Domain";
-import Cart from "../sales/models/Cart";
+import Cart from "../sales/Cart";
 import Gender from "./Gender";
 import Phone from "./Phone";
 import User from "./User";
