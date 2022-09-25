@@ -1,0 +1,7 @@
+export enum PurchaseStatusEnum {
+    PENDING = "EM ANÁLISE",
+    PAID = "PAGAMENTO REALIZADO",
+    TRANSPORTING = "EM TRANSPORTE",
+    DELIVERED = "ENTREGA REALIZADA",
+    FINISHED = "FINALIZADO"
+}
