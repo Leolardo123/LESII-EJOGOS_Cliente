@@ -37,5 +37,9 @@ export class ValidateProduct implements IValidate{
                 throw new Error('Idioma é um campo obrigatório (Produto).');
             }
         }
+
+        if(entity.stock < 0){
+            throw new Error('Estoque não pode ser negativo')
+        }
     }
 }
