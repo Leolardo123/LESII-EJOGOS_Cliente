@@ -31,6 +31,13 @@ export class VHBrand extends VHAbstract {
         }
         Object.assign(branddInstance, brand);
 
+        const files = req.files as Express.Multer.File[];
+        if(files && files.length > 0){
+            const [ image ] = files;
+            branddInstance.image = image.filename;
+        }
+
+
         return branddInstance;
     }
 }
