@@ -28,6 +28,17 @@ export class VHProduct extends VHAbstract {
             }
         }
 
+        if(req.method == 'GET'){
+            try{
+                const userInfo = ensureAuthenticated(req);
+                if(userInfo.role != UserRolesEnum.admin){
+                    
+                }
+            } catch(err){
+                productInstance.isActive = true
+            }
+        }
+
         if(id){
             Object.assign(productInstance, { id: Number(id) });
         }

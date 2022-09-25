@@ -15,9 +15,5 @@ export class ValidateCart implements IValidate{
 
             }
         }
-
-        if(entity.stock < 0){
-            throw new Error('Estoque não pode ser negativo')
-        }
     }
 }

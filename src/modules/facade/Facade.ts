@@ -2,6 +2,7 @@ import Domain from "@modules/models/Domain";
 import { DAOFactory } from "@modules/repositories/factory/DAOFactory";
 import { IValidate } from "@modules/validators/IValidate";
 import { ValidateAddress } from "@modules/validators/ValidateAddress";
+import { ValidateBrand } from "@modules/validators/ValidateBrand";
 import { ValidateCard } from "@modules/validators/ValidateCard";
 import { ValidateCPF } from "@modules/validators/ValidateCPF";
 import { ValidateGender } from "@modules/validators/ValidateGender";
@@ -33,6 +34,7 @@ export class Facade implements IFacade {
 		);
 		const validateCard = new ValidateCard();
 		const validateProduct = new ValidateProduct();
+		const validateBrand = new ValidateBrand();
 
 		this.validators.address = validateAddress;
 		this.validators.person = validatePerson;
@@ -40,6 +42,7 @@ export class Facade implements IFacade {
 		this.validators.gender = validateGender;
 		this.validators.card = validateCard;
 		this.validators.product = validateProduct;
+		this.validators.brand = validateBrand;
 	}
 
 	async getInstance(entity: Domain): Promise<Domain> {
