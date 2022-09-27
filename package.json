@@ -6,8 +6,8 @@
   "scripts": {
     "dev:server": "ts-node-dev --inspect -r tsconfig-paths/register --inspect --transpile-only --ignore-watch node_modules src/shared/server",
     "typeorm": "ts-node-dev -r tsconfig-paths/register ./node_modules/typeorm/cli.js",
-    "typeorm": "ts-node-dev -r tsconfig-paths/register ./node_modules/typeorm/cli.js migration:run",
-    "typeorm": "ts-node-dev -r tsconfig-paths/register ./node_modules/typeorm/cli.js migration:generate -n Adjust",
+    "migration:run": "ts-node-dev -r tsconfig-paths/register ./node_modules/typeorm/cli.js migration:run",
+    "migration:generate": "ts-node-dev -r tsconfig-paths/register ./node_modules/typeorm/cli.js migration:generate -n Adjust",
     "seed:config": "ts-node -r tsconfig-paths/register ./node_modules/typeorm-seeding/dist/cli.js config",
     "seed:run": "ts-node -r tsconfig-paths/register ./node_modules/typeorm-seeding/dist/cli.js seed",
     "test": "echo \"Error: no test specified\" && exit 1"
