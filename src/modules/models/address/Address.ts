@@ -5,6 +5,9 @@ import { Column, Entity, JoinColumn, ManyToOne, ManyToMany } from 'typeorm'
 import Person from "../users/Person";
 @Entity('tb_addresses')
 class Address extends Domain {
+    @Column({ default: '' })
+    name: string;
+
     @Column()
     cep: string;
 

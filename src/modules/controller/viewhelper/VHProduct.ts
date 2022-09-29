@@ -32,7 +32,7 @@ export class VHProduct extends VHAbstract {
             try{
                 const userInfo = ensureAuthenticated(req);
                 if(userInfo.role != UserRolesEnum.admin){
-                    
+                    throw new Error();
                 }
             } catch(err){
                 productInstance.isActive = true

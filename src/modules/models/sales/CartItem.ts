@@ -6,7 +6,6 @@ import Cart from "./Cart";
 @Entity('tb_carts_items')
 @Unique(['cart_id', 'product_id'])
 export default class CartItem extends Domain {
-
     @Column()
     quantity: number;
 
