@@ -4,6 +4,8 @@ import { IValidate } from "@modules/validators/IValidate";
 import { ValidateAddress } from "@modules/validators/ValidateAddress";
 import { ValidateBrand } from "@modules/validators/ValidateBrand";
 import { ValidateCard } from "@modules/validators/ValidateCard";
+import { ValidateCart } from "@modules/validators/ValidateCart";
+import { ValidateCartItem } from "@modules/validators/ValidateCartItem";
 import { ValidateCPF } from "@modules/validators/ValidateCPF";
 import { ValidateGender } from "@modules/validators/ValidateGender";
 import { ValidatePassword } from "@modules/validators/ValidatePassword";
@@ -35,6 +37,8 @@ export class Facade implements IFacade {
 		const validateCard = new ValidateCard();
 		const validateProduct = new ValidateProduct();
 		const validateBrand = new ValidateBrand();
+		const validateCartItem = new ValidateCartItem();
+		const validateCart = new ValidateCart(validateCartItem);
 
 		this.validators.address = validateAddress;
 		this.validators.person = validatePerson;
@@ -43,6 +47,8 @@ export class Facade implements IFacade {
 		this.validators.card = validateCard;
 		this.validators.product = validateProduct;
 		this.validators.brand = validateBrand;
+		this.validators.cartitem = validateCartItem;
+		this.validators.cart = validateCart;
 	}
 
 	async getInstance(entity: Domain): Promise<Domain> {

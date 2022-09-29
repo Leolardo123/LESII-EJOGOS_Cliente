@@ -12,8 +12,8 @@ export default class Purchase extends Domain {
     @Column()
     cart_id: string;
 
-    @Column()
-    payment_id: string;
+    @Column({ default: 'credit_card'})
+    payment_method: string;
 
     @Column()
     person_id: string;

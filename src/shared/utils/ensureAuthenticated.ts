@@ -7,14 +7,14 @@ interface ITokenPayload {
   iat: number;
   exp: number;
   sub: number;
-  person?: string;
   role: string;
+  person?: number;
 }
 
 interface IRequestUser {
   id: number;
-  person?: string;
   role: string;
+  person?: number;
 }
 
 function ensureAuthenticated(request: Request): IRequestUser {

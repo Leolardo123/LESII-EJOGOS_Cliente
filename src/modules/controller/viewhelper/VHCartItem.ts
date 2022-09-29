@@ -1,3 +1,4 @@
+import Cart from "@modules/models/sales/Cart";
 import CartItem from "@modules/models/sales/CartItem";
 import { ensureAuthenticated } from "@shared/utils/ensureAuthenticated";
 import { Request } from "express";
@@ -11,13 +12,16 @@ export class VHCartItem extends VHAbstract {
         const { id } = req.params;
 
         const userInfo = ensureAuthenticated(req);
-
-        const cartItemInstance = new CartItem()
-        Object.assign(cartItemInstance, cart_item)
-
-        if(id){
-            Object.assign(cartItemInstance, { id: Number(id) })
+        if(!userInfo.person){
+            throw new Error('Dados da pessoa fisica não encontrados.');
         }
+
+        const cartItemInstance = new CartItem(cart_item);
+        if(id){
+            cartItemInstance.id = Number(id);
+        }
+
+        cartItemInstance.cart = new Cart({ person_id: userInfo.person })
 
         return cartItemInstance;
     }

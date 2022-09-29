@@ -1,7 +1,7 @@
 import { PrimaryGeneratedColumn } from 'typeorm';
 class Domain {
     @PrimaryGeneratedColumn()
-    readonly id: number;
+    id: number;
 }
 
 export default Domain;

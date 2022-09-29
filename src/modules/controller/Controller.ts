@@ -7,6 +7,8 @@ import { VHAddress } from "./viewhelper/VHAddress";
 import { VHAddressType } from "./viewhelper/VHAddressType";
 import { VHBrand } from "./viewhelper/VHBrand";
 import { VHCard } from "./viewhelper/VHCard";
+import { VHCart } from "./viewhelper/VHCart";
+import { VHCartItem } from "./viewhelper/VHCartItem";
 import { VHGender } from "./viewhelper/VHGender";
 import { VHPerson } from "./viewhelper/VHPerson";
 import { VHPlaceType } from "./viewhelper/VHPlaceType";
@@ -25,6 +27,8 @@ class Controller{
             "brands": new VHBrand(),
             "cards": new VHCard(),
             "products": new VHProduct(),
+            "cart": new VHCart(),
+            "cart-items": new VHCartItem(),
        }
     }
 

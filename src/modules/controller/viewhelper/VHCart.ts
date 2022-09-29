@@ -13,12 +13,15 @@ export class VHCart extends VHAbstract {
 
         const userInfo = ensureAuthenticated(req);
 
-        const cartInstance = new Cart();
-        Object.assign(cartInstance, cart);
-        cartInstance.person_id = userInfo.id;
+        if(!userInfo.person){
+            throw new Error('Dados da pessoa fisica não encontrados.');
+        }
+
+        const cartInstance = new Cart(cart);
+        cartInstance.person_id = userInfo.person;
 
         if(id){
-            Object.assign(cartInstance, { id: Number(id) });
+            cartInstance.id = Number(id);
         }
 
         return cartInstance;

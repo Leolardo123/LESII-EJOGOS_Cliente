@@ -14,6 +14,12 @@ export default class Cart extends Domain {
     @Column()
     person_id: number;
 
+    @Column()
+    payment_address_id: number;
+
+    @Column()
+    delivery_address_id: number;
+
     @Column({ enum: CartStatusEnum, default: CartStatusEnum.CART_STATUS_OPEN })
     status_id: string;
 
