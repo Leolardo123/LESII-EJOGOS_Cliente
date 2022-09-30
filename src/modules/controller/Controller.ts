@@ -27,7 +27,7 @@ class Controller{
             "brands": new VHBrand(),
             "cards": new VHCard(),
             "products": new VHProduct(),
-            "cart": new VHCart(),
+            "carts": new VHCart(),
             "cart-items": new VHCartItem(),
        }
     }

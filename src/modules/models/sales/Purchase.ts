@@ -1,6 +1,7 @@
 import Domain from "@modules/models/Domain";
 import Person from "@modules/models/users/Person";
-import { Column, Entity, JoinColumn, OneToMany, OneToOne } from "typeorm";
+import { Column, Entity, JoinColumn, JoinTable, ManyToMany, OneToMany, OneToOne } from "typeorm";
+import Card from "../cards/Card";
 import Cart from "./Cart";
 import { PurchaseStatusEnum } from "./enum/PurchaseStatus";
 
@@ -24,6 +25,10 @@ export default class Purchase extends Domain {
     @JoinColumn({ name: 'cart_id' })
     @OneToOne(() => Cart, cart => cart.purchase)
     cart: Cart;
+
+    @JoinTable()
+    @ManyToMany(() => Card)
+    cards: Card[];
 
     @OneToOne(() => Person)
     person: Person;

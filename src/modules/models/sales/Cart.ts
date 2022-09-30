@@ -6,10 +6,6 @@ import Purchase from "./Purchase";
 
 @Entity('tb_item_carts')
 export default class Cart extends Domain {
-
-    @Column()
-    total_price: number;
-
     @Column()
     person_id: number;
 
@@ -23,9 +19,11 @@ export default class Cart extends Domain {
         onDelete: 'CASCADE', onUpdate: 'CASCADE',
         eager: true
     })
-    cartItems: CartItem[];
+    items: CartItem[];
 
-    @OneToOne(() => Purchase)
+    @OneToOne(() => Purchase, {
+        eager: true
+    })
     purchase: Purchase;
 
     @JoinColumn({ name: 'person_id' })
