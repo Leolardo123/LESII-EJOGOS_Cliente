@@ -1,5 +1,16 @@
 import Domain from "@modules/models/Domain";
-import { DAOFactory } from "@modules/repositories/factory/DAOFactory";
+import { DAOAddress } from "@modules/repositories/DAOAddress";
+import { DAOAddressType } from "@modules/repositories/DAOAddressType";
+import { DAOBrand } from "@modules/repositories/DAOBrand";
+import { DAOCard } from "@modules/repositories/DAOCard";
+import { DAOCart } from "@modules/repositories/DAOCart";
+import { DAOCartItem } from "@modules/repositories/DAOCartItem";
+import { DAOGender } from "@modules/repositories/DAOGender";
+import { DAOPerson } from "@modules/repositories/DAOPerson";
+import { DAOPlaceType } from "@modules/repositories/DAOPlaceType";
+import { DAOProduct } from "@modules/repositories/DAOProducts";
+import { DAOUser } from "@modules/repositories/DAOUser";
+import { IDAO } from "@modules/repositories/interfaces/IDAO";
 import { IValidate } from "@modules/validators/IValidate";
 import { ValidateAddress } from "@modules/validators/ValidateAddress";
 import { ValidateBrand } from "@modules/validators/ValidateBrand";
@@ -14,10 +25,13 @@ import { ValidatePhone } from "@modules/validators/ValidatePhone";
 import { ValidateProduct } from "@modules/validators/ValidateProduct";
 import { ValidateUser } from "@modules/validators/ValidateUser";
 import IHash from "@shared/interfaces/IHash";
+import { createConnections } from "typeorm";
 import { IFacade } from "./IFacade";
+
 
 export class Facade implements IFacade {
 	private validators: IHash<IValidate> = {};
+	private daos: IHash<IDAO<Domain>> = {};
 
 	constructor(){
 		const validateAddress = new ValidateAddress();
@@ -49,6 +63,25 @@ export class Facade implements IFacade {
 		this.validators.brand = validateBrand;
 		this.validators.cartitem = validateCartItem;
 		this.validators.cart = validateCart;
+
+		console.log('[BANCO DE DADOS 🎲] Tentando conectar.');
+		createConnections()
+		.then(() => {
+			console.log('[BANCO DE DADOS 🎲] Conectado com sucesso!');
+
+			this.daos.user = new DAOUser() as any;
+			this.daos.person = new DAOPerson() as any;
+			this.daos.gender = new DAOGender() as any;
+			this.daos.address = new DAOAddress() as any;
+			this.daos.addresstype = new DAOAddressType() as any;
+			this.daos.placetype = new DAOPlaceType() as any;
+			this.daos.card = new DAOCard() as any;
+			this.daos.brand = new DAOBrand() as any;
+			this.daos.product = new DAOProduct() as any;
+			this.daos.cart = new DAOCart() as any;
+			this.daos.cartitem = new DAOCartItem() as any;
+		})
+		.catch(err => console.log(err));
 	}
 
 	async create(entity: Domain): Promise<string> {
@@ -56,7 +89,14 @@ export class Facade implements IFacade {
 		const validatorInstance = this.validators[entityName];
 		await validatorInstance.validate(entity);
 
-		const daoInstance = DAOFactory.getDAO(entityName);
+		if(
+			!this.daos[entityName] ||
+			!this.validators[entityName]
+		){
+			throw new Error('Tipo de pedido não encontrado');
+		}
+
+		const daoInstance = this.daos[entityName];
 		await daoInstance.save(entity);
 
 		return 'Cadastrado com sucesso';
@@ -67,7 +107,14 @@ export class Facade implements IFacade {
 		const validatorInstance = this.validators[entityName];
 		await validatorInstance.validate(entity);
 
-		const daoInstance = DAOFactory.getDAO(entityName);
+		if(
+			!this.daos[entityName] ||
+			!this.validators[entityName]
+		){
+			throw new Error('Tipo de pedido não encontrado');
+		}
+
+		const daoInstance = this.daos[entityName];
 		const entityExists = await daoInstance.findOne({ 
 			where: { 
 				id: entity.id 
@@ -76,7 +123,7 @@ export class Facade implements IFacade {
 
 		if(!entityExists) throw new Error('Não encontrado');
 		Object.assign(entityExists, entity);
-		
+
 		await daoInstance.save(entityExists);
 
 		return 'Atualizado com sucesso';
@@ -85,7 +132,14 @@ export class Facade implements IFacade {
 	async delete(entity: Domain): Promise<string> {
 		const entityName = entity.constructor.name.toLowerCase();
 
-		const daoInstance = DAOFactory.getDAO(entityName);
+		if(
+			!this.daos[entityName] ||
+			!this.validators[entityName]
+		){
+			throw new Error('Tipo de pedido não encontrado');
+		}
+
+		const daoInstance = this.daos[entityName];
 		const createdEntity = daoInstance.create(entity);
 		await daoInstance.remove(createdEntity);
 
@@ -95,14 +149,28 @@ export class Facade implements IFacade {
 	async findOne(entity: Domain, relations: string[]): Promise<Domain | undefined | null> {
 		const entityName = entity.constructor.name.toLowerCase();
 
-		const daoInstance = DAOFactory.getDAO(entityName);
+		if(
+			!this.daos[entityName] ||
+			!this.validators[entityName]
+		){
+			throw new Error('Tipo de pedido não encontrado');
+		}
+
+		const daoInstance = this.daos[entityName];
 		return await daoInstance.findOne({ where: entity, relations});
 	}
 
 	async findMany(entity: Domain, relations: string[]): Promise<Domain[]> {
 		const entityName = entity.constructor.name.toLowerCase();
 
-		const daoInstance = DAOFactory.getDAO(entityName);
+		if(
+			!this.daos[entityName] ||
+			!this.validators[entityName]
+		){
+			throw new Error('Tipo de pedido não encontrado');
+		}
+		
+		const daoInstance = this.daos[entityName];
 		return await daoInstance.findMany({ where: entity, relations });
 	}
 }
