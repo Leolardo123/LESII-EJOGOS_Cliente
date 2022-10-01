@@ -14,7 +14,6 @@ export class ValidateCart implements IValidate{
         }
 
         const daoCart = new DAOCart();
-        console.log(entity)
         const where = entity.id ? { 
             id: entity.id 
         } : { 
