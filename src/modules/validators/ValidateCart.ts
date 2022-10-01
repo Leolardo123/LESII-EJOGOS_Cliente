@@ -22,7 +22,6 @@ export class ValidateCart implements IValidate{
         };
 
         const cartExists = await daoCart.findOne({ where });
-
         if(!entity.id){
             if(cartExists){
                 throw new Error('Já existe um carrinho ativo.');
