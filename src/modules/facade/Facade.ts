@@ -51,12 +51,6 @@ export class Facade implements IFacade {
 		this.validators.cart = validateCart;
 	}
 
-	async getInstance(entity: Domain): Promise<Domain> {
-		const entityName = entity.constructor.name.toLowerCase();
-		const daoInstance = DAOFactory.getDAO(entityName);
-		return daoInstance.create(entity);;
-	}
-
 	async create(entity: Domain): Promise<string> {
 		const entityName = entity.constructor.name.toLowerCase();
 		const validatorInstance = this.validators[entityName];
@@ -82,7 +76,8 @@ export class Facade implements IFacade {
 
 		if(!entityExists) throw new Error('Não encontrado');
 		Object.assign(entityExists, entity);
-		await daoInstance.save(entity);
+		
+		await daoInstance.save(entityExists);
 
 		return 'Atualizado com sucesso';
 	}

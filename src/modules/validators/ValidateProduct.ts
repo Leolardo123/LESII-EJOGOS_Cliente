@@ -41,5 +41,13 @@ export class ValidateProduct implements IValidate{
         if(entity.stock < 0){
             throw new Error('Estoque não pode ser negativo')
         }
+
+        if(entity.stock == 0){
+            entity.isActive = false;
+        }
+
+        if(entity.price < 0){
+            throw new Error('Preço não pode ser negativo')
+        }
     }
 }

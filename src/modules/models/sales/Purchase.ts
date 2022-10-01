@@ -1,5 +1,4 @@
 import Domain from "@modules/models/Domain";
-import Person from "@modules/models/users/Person";
 import { Column, Entity, JoinColumn, JoinTable, ManyToMany, OneToMany, OneToOne } from "typeorm";
 import Card from "../cards/Card";
 import Cart from "./Cart";
@@ -13,25 +12,24 @@ export default class Purchase extends Domain {
     @Column()
     cart_id: string;
 
-    @Column({ default: 'credit_card'})
-    payment_method: string;
+    @Column()
+    payment_address_id: number;
 
     @Column()
-    person_id: string;
+    delivery_address_id: number;
 
     @Column({ enum: PurchaseStatusEnum, default: PurchaseStatusEnum.PENDING })
     status_id: string;
 
     @JoinColumn({ name: 'cart_id' })
-    @OneToOne(() => Cart, cart => cart.purchase)
+    @OneToOne(() => Cart, cart => cart.purchase, {
+        onDelete: 'CASCADE', onUpdate: 'CASCADE',
+    })
     cart: Cart;
 
     @JoinTable()
     @ManyToMany(() => Card)
     cards: Card[];
-
-    @OneToOne(() => Person)
-    person: Person;
 
     constructor(
         purchase?: Partial<Purchase>

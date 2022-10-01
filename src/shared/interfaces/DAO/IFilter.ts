@@ -1,7 +1,7 @@
 import Domain from "@modules/models/Domain";
-import { DeepPartial } from "typeorm";
+import { DeepPartial, FindOneOptions } from "typeorm";
 
 export interface IFilter<T extends Domain> {
-    where?: DeepPartial<T>,
+    where?: FindOneOptions<T>,
     relations?: string[],
 }

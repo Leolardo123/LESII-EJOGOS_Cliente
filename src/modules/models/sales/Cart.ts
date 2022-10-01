@@ -7,28 +7,29 @@ import Purchase from "./Purchase";
 @Entity('tb_item_carts')
 export default class Cart extends Domain {
     @Column()
+    total_price: number;
+
+    @Column()
     person_id: number;
-
-    @Column()
-    payment_address_id: number;
-
-    @Column()
-    delivery_address_id: number;
 
     @OneToMany(() => CartItem, cartItem => cartItem.cart, {
         onDelete: 'CASCADE', onUpdate: 'CASCADE',
-        eager: true
+        eager: true,
+        cascade: ['insert', 'update']
     })
     items: CartItem[];
 
-    @OneToOne(() => Purchase, {
-        eager: true
-    })
-    purchase: Purchase;
+    @Column({ default: true })
+    isOpen: boolean;
 
     @JoinColumn({ name: 'person_id' })
     @ManyToOne(() => Person, person => person.carts)
     person: Person;
+
+    @OneToOne(() => Purchase, purchase => purchase.cart, {
+        eager: true
+    })
+    purchase: Purchase;
 
     constructor(
         cart?: Partial<Cart>

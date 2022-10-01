@@ -2,12 +2,12 @@ import Domain from "@modules/models/Domain";
 import { IFilter } from "@shared/interfaces/DAO/IFilter";
 import { IFilterPaginated } from "@shared/interfaces/DAO/IFilterPaginated";
 import IPaginatedResponse from "@shared/interfaces/IPaginatedResponse";
-import { EntityTarget, Repository, DeepPartial, getRepository } from "typeorm";
+import { EntityTarget, Repository, DeepPartial, getRepository, FindOneOptions } from "typeorm";
 import { IDAO } from "../interfaces/IDAO";
 
 
-export abstract class DAOAbstract<T extends Domain> implements IDAO {
-    private repository: Repository<T>;
+export abstract class DAOAbstract<T extends Domain> implements IDAO<T> {
+    protected repository: Repository<T>;
 
     constructor(entity: EntityTarget<T>) {
       this.repository = getRepository(entity);
@@ -34,14 +34,14 @@ export abstract class DAOAbstract<T extends Domain> implements IDAO {
       return this.repository.create(entity)
     }
   
-    public async findOne({ where, relations }: IFilter<T>): Promise<T | undefined | null> {
+    public async findOne({ where, relations }: FindOneOptions<T>): Promise<T | undefined | null> {
       return await this.repository.findOne({
         where,
         relations,
       })
     }
   
-    public async findMany({ where, relations }: IFilter<T>): Promise<T[]> {
+    public async findMany({ where, relations }: FindOneOptions<T>): Promise<T[]> {
       return await this.repository.find({
         where,
         relations,

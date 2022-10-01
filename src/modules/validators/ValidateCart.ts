@@ -13,39 +13,55 @@ export class ValidateCart implements IValidate{
             throw new Error('Entidade inválida, esperava carrinho.');
         }
 
+        const daoCart = new DAOCart();
+        const where = entity.id ? { 
+            id: entity.id 
+        } : { 
+            person_id: entity.person.id,
+            isOpen: true
+        };
+
+        const cartExists = await daoCart.findOne({ where });
+
         if(!entity.id){
-            if(!entity.person_id){
+            if(cartExists){
+                throw new Error('Já existe um carrinho ativo.');
+            }
+
+            if(!entity.person || !entity.person.id){
                 throw new Error('Pessoa não encontrada (Carrinho).');
             }
-        }
+        } else {
+            if(!cartExists){
+                throw new Error('Carrinho não encontrado.');
+            }
 
-        const daoCart = new DAOCart()
-        const cartExists = await daoCart.findOne({ where: { 
-            person_id: entity.person_id, 
-            purchase: IsNull() as any
-        }})
+            if(cartExists.purchase){
+                throw new Error('Carrinho já foi finalizado.');
+            }
+        }
                 
         if(cartExists){
             if(cartExists.purchase){
                 throw new Error('Carrinho já finalizado')
             }
-            entity.id = cartExists.id
         }
 
         if(entity.items){
-            if(entity.items.length <= 0){
-                throw new Error('Carrinho deve conter pelo menos 1 item.')
-            }
-
+            entity.total_price = 0;
             await Promise.all(entity.items.map(async cartItem => {
-                const itemExists = cartExists ?
-                                   cartExists.items.find(i => i.id === cartItem.id) : false
-
-                if(itemExists){
-                    cartItem.id = itemExists.id
+                cartItem.cart = entity;
+                if(cartExists && cartExists.items){
+                    const itemExists = cartExists.items.find(
+                        item => item.product.id === cartItem.product.id
+                    )
+                    if(itemExists){
+                        cartItem.id = itemExists.id
+                    }
                 }
 
                 await this.validateCartItem.validate(cartItem);
+                entity.total_price += cartItem.price
             }))
         }
     }
