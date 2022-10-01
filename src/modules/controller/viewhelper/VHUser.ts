@@ -9,6 +9,7 @@ import { Request } from "express";
 import { VHAbstract } from "./VHAbstract";
 import { ensureAuthenticated } from "@shared/utils/ensureAuthenticated";
 import moment from 'moment';
+import { userInfo } from "os";
 
 export class VHUser extends VHAbstract {
     getEntity(req: Request): User {
@@ -58,5 +59,22 @@ export class VHUser extends VHAbstract {
         }
 
         return userInstance;
+    }
+    
+    setView(req: Request, res: any, result: User[] | User | string): void {
+        if (typeof result === 'string') {
+            res.status(201).json({ message: result });
+        } else {
+            if(result instanceof Array){
+                res.status(201).json(
+                    result.map(({password, ...user}: User) => {
+                        return user
+                    })
+                );
+            } else {
+                const { password, ...user} = result;
+                res.status(201).json(user);
+            }
+        }
     }
 }
