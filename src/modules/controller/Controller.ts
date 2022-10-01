@@ -81,7 +81,7 @@ class Controller{
         const entity = this.vhs[route].getEntity(req);
         const result = await this.facade.findOne(entity, []);
 
-        return res.json(result);
+        return this.vhs[route].setView(req, res, result);
     }
 
     index = async (req: Request, res: Response) => {
@@ -94,7 +94,7 @@ class Controller{
         const entity = this.vhs[route].getEntity(req);
         const result = await this.facade.findMany(entity, []);
 
-        return res.json(result);
+        return this.vhs[route].setView(req, res, result);
     }
 }
 
