@@ -42,4 +42,24 @@ export class VHCart extends VHAbstract {
 
         return cartInstance;
     }
+
+        
+    setView(req: Request, res: any, result: Cart[] | Cart | string): void {
+        if (typeof result === 'string') {
+            res.status(201).json({ message: result });
+        } else {
+            if(result instanceof Array){
+                res.status(201).json(
+                    result.map((cart: Cart) => {
+                        return {
+                            ...cart,
+                            total_price: cart.getTotalPrice(),
+                        }
+                    })
+                );
+            } else {
+                res.status(201).json({...result, total_price: result.getTotalPrice()});
+            }
+        }
+    }
 }

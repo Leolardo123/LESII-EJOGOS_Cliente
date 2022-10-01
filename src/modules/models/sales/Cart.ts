@@ -7,9 +7,6 @@ import Purchase from "./Purchase";
 @Entity('tb_item_carts')
 export default class Cart extends Domain {
     @Column()
-    total_price: number;
-
-    @Column()
     person_id: number;
 
     @OneToMany(() => CartItem, cartItem => cartItem.cart, {
@@ -36,5 +33,12 @@ export default class Cart extends Domain {
     ) {
         super();
         Object.assign(this, cart)
+    }
+
+    getTotalPrice(): number {
+        if(this.items.length > 0) {
+            return this.items.reduce((total, item) => total + item.price, 0)
+        }
+        return 0
     }
 }

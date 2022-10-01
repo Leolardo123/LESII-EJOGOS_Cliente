@@ -82,6 +82,5 @@ export class ValidateCartItem implements IValidate{
         }
 
         entity.price = productExists.price * entity.quantity;
-        entity.cart.total_price = cartExists.total_price + entity.price;
     }
 }

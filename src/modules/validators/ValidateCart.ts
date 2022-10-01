@@ -48,7 +48,6 @@ export class ValidateCart implements IValidate{
             }
         }
 
-        entity.total_price = 0;
         if(entity.items){
             await Promise.all(entity.items.map(async cartItem => {
                 cartItem.cart = entity;
@@ -62,7 +61,6 @@ export class ValidateCart implements IValidate{
                 }
 
                 await this.validateCartItem.validate(cartItem);
-                entity.total_price += cartItem.price
             }))
         }
     }
