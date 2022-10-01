@@ -15,7 +15,6 @@ class AddressType extends Domain {
     })
     address: Address
 
-
     constructor(
         type?: Partial<AddressType>
      ) {

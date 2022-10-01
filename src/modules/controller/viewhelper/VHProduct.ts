@@ -11,16 +11,13 @@ export class VHProduct extends VHAbstract {
         } = req.body;
         const { id } = req.params;
 
-
         const adminActions = [
             'POST',
             'PUT',
             'DELETE'
         ]
 
-        const productInstance = new Product();
-        Object.assign(productInstance, product);
-
+        const productInstance = new Product(product);
         if(adminActions.includes(req.method)){
             const userInfo = ensureAuthenticated(req);
             if(userInfo.role != UserRolesEnum.admin){
