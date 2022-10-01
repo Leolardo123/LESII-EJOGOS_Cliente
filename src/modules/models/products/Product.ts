@@ -1,6 +1,7 @@
 
-import { Column, Entity } from "typeorm";
+import { Column, Entity, OneToMany } from "typeorm";
 import Domain from "../Domain";
+import CartItem from "../sales/CartItem";
 
 @Entity("tb_products")
 export default class Product extends Domain {
@@ -40,6 +41,11 @@ export default class Product extends Domain {
 
     @Column()
     image: string;
+
+    @OneToMany(() => CartItem, item => item.product, {
+        onDelete: 'CASCADE', onUpdate: 'CASCADE'
+    })
+    cart_items: CartItem[]
 
     constructor(
         product?: Partial<Product>
