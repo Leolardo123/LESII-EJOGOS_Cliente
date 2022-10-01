@@ -4,7 +4,7 @@ import { Column, Entity, JoinColumn, ManyToOne, Unique } from "typeorm";
 import Cart from "./Cart";
 
 @Entity('tb_carts_items')
-@Unique(['cart_id', 'product_id'])
+@Unique(['cart', 'product'])
 export default class CartItem extends Domain {
     @Column()
     quantity: number;
@@ -12,22 +12,17 @@ export default class CartItem extends Domain {
     @Column()
     price: number;
 
-    @Column()
-    cart_id: number;
-
-    @Column()
-    product_id: number;
-
     @JoinColumn({ name: 'cart_id' })
     @ManyToOne(() => Cart, cart => cart.items, {
         onDelete: 'CASCADE', onUpdate: 'CASCADE',
+        nullable: false,
     })
     cart: Cart;
 
     @JoinColumn({ name: 'product_id' })
     @ManyToOne(() => Product, product => product.cart_items, {
         onDelete: 'CASCADE', onUpdate: 'CASCADE',
-        eager: true,
+        eager: true, nullable: false,
     })
     product: Product;
 

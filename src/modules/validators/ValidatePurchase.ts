@@ -12,10 +12,10 @@ export class ValidatePurchase implements IValidate{
         }
 
         if(!entity.id){
-            if(!entity.payment_address_id){
+            if(!entity.payment_address.id){
                 throw new Error('Endereço de pagamento é obrigatório (Compra).');
             }
-            if(!entity.delivery_address_id){
+            if(!entity.delivery_address.id){
                 throw new Error('Endereço de entrega é obrigatório (Compra).');
             }
         }
@@ -44,7 +44,7 @@ export class ValidatePurchase implements IValidate{
         const daoAddress = new DAOAddress();
         const paymentAddress = await daoAddress.findOne({
             where: {
-                id: entity.payment_address_id
+                id: entity.payment_address.id
             }
         });
         if(!paymentAddress){
@@ -53,7 +53,7 @@ export class ValidatePurchase implements IValidate{
 
         const deliveryAddress = await daoAddress.findOne({
             where: {
-                id: entity.delivery_address_id
+                id: entity.delivery_address.id
             }
         });
         if(!deliveryAddress){
@@ -63,8 +63,19 @@ export class ValidatePurchase implements IValidate{
         const daoProduct = new DAOProduct();
         cartExists.items.map(item => {
             if(!item.product){
+                throw new Error('Produto não selecionado (Compra).');
+            }
+
+            const productExists = daoProduct.findOne({
+                where: {
+                    id: item.product.id
+                }
+            });
+
+            if(!item.product){
                 throw new Error('Um dos produtos não está mais disponível.');
             }
+
             item.product.stock -= item.quantity;
         })
     }

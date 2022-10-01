@@ -1,7 +1,7 @@
 import Domain from "@modules/models/Domain";
-import { Column, Entity, OneToOne } from "typeorm";
+import { Column, Entity, JoinColumn, OneToOne } from "typeorm";
 import { CoupomTypeEnum } from "./enum/CoupomTypes";
-import PurchaseCoupom from "./PurchaseCoupom";
+import Purchase from "./Purchase";
 
 @Entity()
 export default class Coupom extends Domain {
@@ -12,10 +12,11 @@ export default class Coupom extends Domain {
     value: number;
 
     @Column({ enum: CoupomTypeEnum, default: CoupomTypeEnum.RETURN_PRODUCT })
-    type_id: string;
+    type: string;
 
-    @OneToOne(() => PurchaseCoupom)
-    purchase: PurchaseCoupom;
+    @JoinColumn({ name: 'purchase_id' })
+    @OneToOne(() => Purchase, purchase => purchase.coupom, {})
+    purchase: Purchase;
 
     constructor(
         coupom?: Partial<Coupom>

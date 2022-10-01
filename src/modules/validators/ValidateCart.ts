@@ -37,7 +37,7 @@ export class ValidateCart implements IValidate{
             if(!cartExists.isOpen || cartExists.purchase){
                 throw new Error('Carrinho já foi finalizado.');
             }
-            if(cartExists.person_id != entity.person.id){
+            if(cartExists.person.id != entity.person.id){
                 throw new Error('Acesso negado.');
             }
         }

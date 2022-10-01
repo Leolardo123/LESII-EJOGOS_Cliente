@@ -1,8 +1,9 @@
 import Domain from "../Domain";
 import AddressType from "./AddressType";
 import PlaceType from "./PlaceType";
-import { Column, Entity, JoinColumn, ManyToOne, ManyToMany } from 'typeorm'
+import { Column, Entity, JoinColumn, ManyToOne, ManyToMany, OneToMany } from 'typeorm'
 import Person from "../users/Person";
+import Purchase from "../sales/Purchase";
 @Entity('tb_addresses')
 class Address extends Domain {
     @Column({ default: '' })
@@ -13,9 +14,6 @@ class Address extends Domain {
 
     @Column()
     number: number;
-
-    @Column()
-    address_type_id: number;
 
     @Column()
     city: string;
@@ -35,9 +33,6 @@ class Address extends Domain {
     @Column()
     place: string;
 
-    @Column()
-    place_type_id: number;
-
     @JoinColumn({ name: 'address_type_id' })
     @ManyToOne(() => AddressType, atype => atype.address, {
         onDelete: 'RESTRICT', onUpdate: 'CASCADE'
@@ -49,6 +44,16 @@ class Address extends Domain {
         onDelete: 'RESTRICT', onUpdate: 'CASCADE'
     })
     place_type: PlaceType;
+
+    @OneToMany(() => Purchase, purchase => purchase.payment_address, {
+        onDelete: 'RESTRICT', onUpdate: 'CASCADE'
+    })
+    payment: Purchase;
+
+    @OneToMany(() => Purchase, purchase => purchase.delivery_address, {
+        onDelete: 'RESTRICT', onUpdate: 'CASCADE'
+    })
+    delivery: Purchase;
 
     @ManyToMany(() => Person, person => person.addresses, {
        onDelete: 'CASCADE', onUpdate: 'CASCADE'

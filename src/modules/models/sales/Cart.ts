@@ -6,9 +6,6 @@ import Purchase from "./Purchase";
 
 @Entity('tb_item_carts')
 export default class Cart extends Domain {
-    @Column()
-    person_id: number;
-
     @OneToMany(() => CartItem, cartItem => cartItem.cart, {
         onDelete: 'CASCADE', onUpdate: 'CASCADE',
         eager: true,
@@ -20,11 +17,14 @@ export default class Cart extends Domain {
     isOpen: boolean;
 
     @JoinColumn({ name: 'person_id' })
-    @ManyToOne(() => Person, person => person.carts)
+    @ManyToOne(() => Person, person => person.carts, {
+        onDelete: 'CASCADE', onUpdate: 'CASCADE',
+        nullable: false, 
+    })
     person: Person;
 
     @OneToOne(() => Purchase, purchase => purchase.cart, {
-        eager: true
+        eager: true,
     })
     purchase: Purchase;
 
@@ -37,7 +37,9 @@ export default class Cart extends Domain {
 
     getTotalPrice(): number {
         if(this.items.length > 0) {
-            return this.items.reduce((total, item) => total + item.price, 0)
+            return this.items.reduce(
+                (total, item) => total + item.price, 0
+            )
         }
         return 0
     }
