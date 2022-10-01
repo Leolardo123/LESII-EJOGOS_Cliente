@@ -3,7 +3,3 @@ export const jwt_config = {
   expiresIn: '1d',
 };
 
-export const refreshToken_config = {
-  expiresIn: (15 * 86400).toString(),
-  prefix: 'session-token-',
-};
