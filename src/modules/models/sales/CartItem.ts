@@ -19,12 +19,15 @@ export default class CartItem extends Domain {
     product_id: number;
 
     @JoinColumn({ name: 'cart_id' })
-    @ManyToOne(() => Cart, cart => cart.items)
+    @ManyToOne(() => Cart, cart => cart.items, {
+        onDelete: 'CASCADE', onUpdate: 'CASCADE',
+    })
     cart: Cart;
 
     @JoinColumn({ name: 'product_id' })
     @ManyToOne(() => Product, {
-        eager: true
+        onDelete: 'CASCADE', onUpdate: 'CASCADE',
+        eager: true,
     })
     product: Product;
 

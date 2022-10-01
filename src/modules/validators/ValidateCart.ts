@@ -14,6 +14,7 @@ export class ValidateCart implements IValidate{
         }
 
         const daoCart = new DAOCart();
+        console.log(entity)
         const where = entity.id ? { 
             id: entity.id 
         } : { 
@@ -35,9 +36,11 @@ export class ValidateCart implements IValidate{
             if(!cartExists){
                 throw new Error('Carrinho não encontrado.');
             }
-
-            if(cartExists.purchase){
+            if(!cartExists.isOpen || cartExists.purchase){
                 throw new Error('Carrinho já foi finalizado.');
+            }
+            if(cartExists.person_id != entity.person.id){
+                throw new Error('Acesso negado.');
             }
         }
                 
@@ -47,8 +50,8 @@ export class ValidateCart implements IValidate{
             }
         }
 
+        entity.total_price = 0;
         if(entity.items){
-            entity.total_price = 0;
             await Promise.all(entity.items.map(async cartItem => {
                 cartItem.cart = entity;
                 if(cartExists && cartExists.items){

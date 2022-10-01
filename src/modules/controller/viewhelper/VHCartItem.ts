@@ -1,5 +1,6 @@
 import Cart from "@modules/models/sales/Cart";
 import CartItem from "@modules/models/sales/CartItem";
+import Person from "@modules/models/users/Person";
 import { ensureAuthenticated } from "@shared/utils/ensureAuthenticated";
 import { Request } from "express";
 import { VHAbstract } from "./VHAbstract";
@@ -21,7 +22,10 @@ export class VHCartItem extends VHAbstract {
             cartItemInstance.id = Number(id);
         }
 
-        cartItemInstance.cart = new Cart({ person_id: userInfo.person })
+        const personInstance = new Person({ id: userInfo.person });
+        cartItemInstance.cart = new Cart({ 
+            person: personInstance,
+        });
 
         return cartItemInstance;
     }
