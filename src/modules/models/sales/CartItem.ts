@@ -25,7 +25,7 @@ export default class CartItem extends Domain {
     cart: Cart;
 
     @JoinColumn({ name: 'product_id' })
-    @ManyToOne(() => Product, {
+    @ManyToOne(() => Product, product => product.cart_items, {
         onDelete: 'CASCADE', onUpdate: 'CASCADE',
         eager: true,
     })

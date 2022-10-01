@@ -1,3 +1,4 @@
+import Product from "@modules/models/products/Product";
 import Cart from "@modules/models/sales/Cart";
 import CartItem from "@modules/models/sales/CartItem";
 import Person from "@modules/models/users/Person";
@@ -21,6 +22,9 @@ export class VHCartItem extends VHAbstract {
         if(id){
             cartItemInstance.id = Number(id);
         }
+
+        const productInstance = new Product({ id: cart_item.product_id });
+        cartItemInstance.product = productInstance;
 
         const personInstance = new Person({ id: userInfo.person });
         cartItemInstance.cart = new Cart({ 

@@ -1,6 +1,7 @@
 import { DAOCart } from "@modules/repositories/DAOCart";
 import { DAOCartItem } from "@modules/repositories/DAOCartItem";
 import { DAOProduct } from "@modules/repositories/DAOProducts";
+import { SimpleConsoleLogger } from "typeorm";
 import CartItem from "../models/sales/CartItem";
 import { IValidate } from "./IValidate";
 
@@ -9,10 +10,6 @@ export class ValidateCartItem implements IValidate{
     async validate(entity: CartItem): Promise<void> {
         if(!(entity instanceof CartItem)){
             throw new Error('Entidade inválida, esperava item do carrinho.');
-        }
-
-        if(entity.quantity < 1){
-            throw new Error('Quantidade deve ser maior que 0 (Item do Carrinho).');
         }
 
         const daoProduct = new DAOProduct();
@@ -24,35 +21,59 @@ export class ValidateCartItem implements IValidate{
             throw new Error('Produto não existe ou está indísponível no momento (Item do Carrinho).');
         }
 
-        if(!entity.cart || !entity.cart.id){
+        if(!entity.cart){
             throw new Error('Carrinho não encontrado (Item do Carrinho).');
         }
 
-        const where = entity.id ? { 
-            id: entity.id 
+        const where = entity.cart.id ? { 
+            id: entity.cart.id
         } : { 
-            product_id: productExists.id, 
-            cart_id: entity.cart.id
+            person_id: entity.cart.person.id,
+            isOpen: true
         };
-
         
-        const daoCartItem = new DAOCartItem();
-        const cartItemExists = await daoCartItem.findOne({ 
+        const daoCart = new DAOCart();
+        const cartExists = await daoCart.findOne({ 
             where,
-            relations: ['cart', 'cart.person']
+            relations: ['items', 'person']
         })
+
+        if(!cartExists){
+            throw new Error('Carrinho não encontrado (Item do Carrinho).');
+        }
+
+        if(!cartExists.isOpen || cartExists.purchase){
+            throw new Error('Carrinho já foi finalizado (Item do Carrinho).');
+        }
+
+        const cartItemExists = cartExists ? cartExists.items.find(
+            item => item.product.id === productExists.id
+        ) : undefined;
+        entity.cart.id = cartExists.id;
 
         if(!entity.id){
             if(cartItemExists){
                 entity.id = cartItemExists.id;
-                entity.quantity += 1;
             }
-            if(!entity.product.id){
-                throw new Error('nenhum produto selecionado (Item do Carrinho).');
+            if(!entity.quantity){
+                if(cartItemExists){
+                    throw new Error('Item já adicionado ao carrinho.');
+                } else {
+                    entity.quantity = 1;
+                }
+            }
+            if(!entity.product || !entity.product.id){
+                throw new Error('Produto não selecionado (Item do Carrinho).');
             }
         } else {
             if(!cartItemExists){
                 throw new Error('Item não encontrado.');
+            }
+        }
+
+        if(entity.quantity){
+            if(entity.quantity < 1){
+                throw new Error('Quantidade inválida.');
             }
         }
 
@@ -61,5 +82,6 @@ export class ValidateCartItem implements IValidate{
         }
 
         entity.price = productExists.price * entity.quantity;
+        entity.cart.total_price = cartExists.total_price + entity.price;
     }
 }
