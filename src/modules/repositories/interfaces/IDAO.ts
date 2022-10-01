@@ -10,5 +10,5 @@ export interface IDAO<T extends Domain> {
   findOne({ where, relations }: FindOneOptions<T>): Promise<T | undefined | null>;
   findMany({ where, relations }: FindOneOptions<T>): Promise<T[]>;
   save(entity: DeepPartial<T>): Promise<DeepPartial<T>>;
-  remove(entity: T): void;
+  remove(entity: T): Promise<void>;
 }
