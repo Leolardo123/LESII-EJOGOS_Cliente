@@ -1,1 +1,0 @@
-import { createConnections } from 'typeorm';
