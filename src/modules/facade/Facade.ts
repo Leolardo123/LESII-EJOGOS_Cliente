@@ -87,7 +87,6 @@ export class Facade implements IFacade {
 	async create(entity: Domain): Promise<string> {
 		const entityName = entity.constructor.name.toLowerCase();
 
-
 		if(
 			!this.daos[entityName] ||
 			!this.validators[entityName]
@@ -95,6 +94,8 @@ export class Facade implements IFacade {
 			throw new Error('Tipo de pedido não encontrado');
 		}
 
+		const validatorInstance = this.validators[entityName];
+		await validatorInstance.validate(entity);
 		const daoInstance = this.daos[entityName];
 		await daoInstance.save(entity);
 
@@ -103,8 +104,6 @@ export class Facade implements IFacade {
 	
 	async update(entity: Domain): Promise<string> {
 		const entityName = entity.constructor.name.toLowerCase();
-		const validatorInstance = this.validators[entityName];
-		await validatorInstance.validate(entity);
 
 		if(
 			!this.daos[entityName] ||
@@ -113,6 +112,8 @@ export class Facade implements IFacade {
 			throw new Error('Tipo de pedido não encontrado');
 		}
 
+		const validatorInstance = this.validators[entityName];
+		await validatorInstance.validate(entity);
 		const daoInstance = this.daos[entityName];
 		const entityExists = await daoInstance.findOne({ 
 			where: { 
@@ -132,15 +133,15 @@ export class Facade implements IFacade {
 		const entityName = entity.constructor.name.toLowerCase();
 
 		if(
-			!this.daos[entityName] ||
-			!this.validators[entityName]
+			!this.daos[entityName]
 		){
 			throw new Error('Tipo de pedido não encontrado');
 		}
 
+		if(!entity.id) throw new Error('Item não selecionado');
+
 		const daoInstance = this.daos[entityName];
-		const createdEntity = daoInstance.create(entity);
-		await daoInstance.remove(createdEntity);
+		await daoInstance.remove(entity);
 
 		return 'Removido com sucesso';
 	}
