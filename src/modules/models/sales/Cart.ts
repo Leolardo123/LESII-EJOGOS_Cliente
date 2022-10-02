@@ -1,6 +1,6 @@
 import Domain from "@modules/models/Domain";
 import Person from "@modules/models/users/Person";
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne } from "typeorm";
+import { Column, Entity, JoinColumn, JoinTable, ManyToOne, OneToMany, OneToOne } from "typeorm";
 import CartItem from "./CartItem";
 import Purchase from "./Purchase";
 

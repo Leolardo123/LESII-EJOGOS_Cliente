@@ -35,7 +35,7 @@ class Person extends Domain {
     user_id: string;
 
     @JoinTable({ name: 'tb_persons_addresses' })
-    @ManyToMany(() => Address, address => address.persons, {
+    @ManyToOne(() => Address, address => address.person, {
         cascade: true, eager: true
     })
     addresses: Address[];
@@ -57,7 +57,8 @@ class Person extends Domain {
     carts: Cart[];
 
     @OneToOne(() => Phone, phone => phone.person, {
-        cascade: true, eager: true, onDelete: 'CASCADE', onUpdate: 'CASCADE',
+         onDelete: 'CASCADE', onUpdate: 'CASCADE',
+         cascade: true, eager: true,
     })
     phone: Phone;
 

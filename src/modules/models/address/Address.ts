@@ -35,30 +35,30 @@ class Address extends Domain {
 
     @JoinColumn({ name: 'address_type_id' })
     @ManyToOne(() => AddressType, atype => atype.address, {
-        onDelete: 'RESTRICT', onUpdate: 'CASCADE'
+        onDelete: 'RESTRICT', onUpdate: 'CASCADE',
+        nullable: false
     })
     address_type: AddressType;
 
     @JoinColumn({ name: 'place_type_id' })
     @ManyToOne(() => PlaceType, ptype => ptype.address, {
-        onDelete: 'RESTRICT', onUpdate: 'CASCADE'
+        onDelete: 'RESTRICT', onUpdate: 'CASCADE',
+        nullable: false
     })
     place_type: PlaceType;
 
     @OneToMany(() => Purchase, purchase => purchase.payment_address, {
-        onDelete: 'RESTRICT', onUpdate: 'CASCADE'
     })
-    payment: Purchase;
+    payment: Purchase[];
 
     @OneToMany(() => Purchase, purchase => purchase.delivery_address, {
-        onDelete: 'RESTRICT', onUpdate: 'CASCADE'
     })
-    delivery: Purchase;
+    delivery: Purchase[];
 
-    @ManyToMany(() => Person, person => person.addresses, {
-       onDelete: 'CASCADE', onUpdate: 'CASCADE'
+    @ManyToOne(() => Person, person => person.addresses, {
+       onDelete: 'CASCADE', onUpdate: 'CASCADE',
     })
-    persons: Person[];
+    person: Person;
 
     constructor(
         address?: Partial<Address>
