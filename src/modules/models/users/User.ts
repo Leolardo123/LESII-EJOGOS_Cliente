@@ -1,6 +1,6 @@
 import Domain from "../Domain";
 import { UserRolesEnum } from "./enum/UserRolesEnum";
-import { BeforeInsert, BeforeUpdate, Column, Entity, OneToOne } from "typeorm";
+import { Column, Entity, OneToOne } from "typeorm";
 import Person from "./Person";
 
 @Entity('tb_users')
@@ -13,6 +13,9 @@ class User extends Domain {
 
     @Column({ default: UserRolesEnum.default })
     role: string;
+
+    @Column({ default: true })
+    isActive: boolean;
 
     @OneToOne(() => Person, person => person.user, {
         cascade: true, eager: true, onDelete: 'CASCADE', onUpdate: 'CASCADE'

@@ -1,5 +1,4 @@
 import { jwt_config } from "@config/auth";
-import { UserRolesEnum } from "@modules/models/users/enum/UserRolesEnum";
 import { DAOUser } from "@modules/repositories/DAOUser";
 import { ensureAuthenticated } from "@shared/utils/ensureAuthenticated";
 import { Request, Response } from "express";
@@ -14,6 +13,10 @@ class SessionController{
 
         if(!userExists|| password !=  userExists.password){
             throw new Error('Email ou senha incorretos.');
+        }
+
+        if(!userExists.isActive){
+            throw new Error('Não autorizado.');
         }
 
         const jwToken = sign(
@@ -40,6 +43,10 @@ class SessionController{
         
         if(!userExists){
             throw new Error('Usuário não encontrado.');
+        }
+
+        if(!userExists.isActive){
+            throw new Error('Não autorizado.');
         }
 
         const jwToken = sign(

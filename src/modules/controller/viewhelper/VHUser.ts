@@ -9,11 +9,11 @@ import { Request } from "express";
 import { VHAbstract } from "./VHAbstract";
 import { ensureAuthenticated } from "@shared/utils/ensureAuthenticated";
 import moment from 'moment';
-import { userInfo } from "os";
 
 export class VHUser extends VHAbstract {
     getEntity(req: Request): User {
         const {
+            isActive,
             user,
             person,
             addresses,
@@ -24,8 +24,18 @@ export class VHUser extends VHAbstract {
         Object.assign(userInstance, user);
 
         if(id) {
-            ensureAuthenticated(req);
-            Object.assign(userInstance, { id: Number(id) });
+            const userInfo = ensureAuthenticated(req);
+            if(id){
+                Object.assign(userInstance, { id: Number(id) });
+            }
+
+            if(userInfo.role === 'admin' || userInfo.id === Number(id)){
+                if(isActive){
+                    Object.assign(userInstance, { 
+                        isActive: isActive === 1 ? true : false,
+                    });
+                }
+            }
         }
 
         if(person){
