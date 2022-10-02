@@ -16,6 +16,9 @@ export default class Cart extends Domain {
     @Column({ default: true })
     isOpen: boolean;
 
+    @Column()
+    person_id: number;
+
     @JoinColumn({ name: 'person_id' })
     @ManyToOne(() => Person, person => person.carts, {
         onDelete: 'CASCADE', onUpdate: 'CASCADE',
