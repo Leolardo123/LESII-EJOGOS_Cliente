@@ -55,8 +55,8 @@ class Address extends Domain {
     })
     delivery: Purchase[];
 
-    @ManyToOne(() => Person, person => person.addresses, {
-       onDelete: 'CASCADE', onUpdate: 'CASCADE',
+    @ManyToMany(() => Person, person => person.addresses, {
+       onDelete: 'NO ACTION', onUpdate: 'CASCADE',
     })
     person: Person;
 

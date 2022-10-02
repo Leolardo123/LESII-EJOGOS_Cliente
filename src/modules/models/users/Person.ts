@@ -35,7 +35,7 @@ class Person extends Domain {
     user_id: string;
 
     @JoinTable({ name: 'tb_persons_addresses' })
-    @ManyToOne(() => Address, address => address.person, {
+    @ManyToMany(() => Address, address => address.person, {
         cascade: true, eager: true
     })
     addresses: Address[];
