@@ -14,10 +14,6 @@ export default class Coupom extends Domain {
     @Column({ enum: CoupomTypeEnum, default: CoupomTypeEnum.RETURN_PRODUCT })
     type: string;
 
-    @JoinColumn({ name: 'purchase_id' })
-    @OneToOne(() => Purchase, purchase => purchase.coupom, {})
-    purchase: Purchase;
-
     constructor(
         coupom?: Partial<Coupom>
     ) {
