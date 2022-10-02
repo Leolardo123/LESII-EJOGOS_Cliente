@@ -86,8 +86,7 @@ export class Facade implements IFacade {
 
 	async create(entity: Domain): Promise<string> {
 		const entityName = entity.constructor.name.toLowerCase();
-		const validatorInstance = this.validators[entityName];
-		await validatorInstance.validate(entity);
+
 
 		if(
 			!this.daos[entityName] ||
@@ -150,8 +149,7 @@ export class Facade implements IFacade {
 		const entityName = entity.constructor.name.toLowerCase();
 
 		if(
-			!this.daos[entityName] ||
-			!this.validators[entityName]
+			!this.daos[entityName]
 		){
 			throw new Error('Tipo de pedido não encontrado');
 		}
@@ -164,8 +162,7 @@ export class Facade implements IFacade {
 		const entityName = entity.constructor.name.toLowerCase();
 
 		if(
-			!this.daos[entityName] ||
-			!this.validators[entityName]
+			!this.daos[entityName]
 		){
 			throw new Error('Tipo de pedido não encontrado');
 		}
