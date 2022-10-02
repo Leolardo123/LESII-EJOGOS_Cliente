@@ -1,9 +1,8 @@
 import Domain from "@modules/models/Domain";
-import { Column, Entity, JoinColumn, JoinTable, ManyToMany, OneToMany, OneToOne } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToMany, ManyToOne, OneToOne } from "typeorm";
 import Address from "../address/Address";
 import Card from "../cards/Card";
 import Cart from "./Cart";
-import Coupom from "./Coupom";
 import { PurchaseStatusEnum } from "./enum/PurchaseStatus";
 
 @Entity('tb_purchases')
@@ -21,27 +20,24 @@ export default class Purchase extends Domain {
     cart: Cart;
 
     @JoinColumn({ name: 'payment_address_id' })
-    @OneToMany(() => Address, address => address.payment, {
-        onDelete: 'SET NULL', onUpdate: 'CASCADE',
+    @ManyToOne(() => Address, address => address.payment, {
+        onDelete: 'RESTRICT', onUpdate: 'CASCADE',
+        nullable: false
     })
     payment_address: Address;
 
     @JoinColumn({ name: 'delivery_address_id' })
-    @OneToMany(() => Address, address => address.delivery, {
-        onDelete: 'SET NULL', onUpdate: 'CASCADE',
+    @ManyToOne(() => Address, address => address.delivery, {
+        onDelete: 'RESTRICT', onUpdate: 'CASCADE',
+        nullable: false
     })
     delivery_address: Address;
-
-    @JoinTable({ name: 'tb_purchases_cards' })
+    
+    @JoinColumn({ name: 'tb_purchases_cards' })
     @ManyToMany(() => Card, card => card.purchases, {
         onDelete: 'SET NULL', onUpdate: 'CASCADE',
     })
     cards: Card[];
-
-    @OneToOne(() => Coupom, coupom => coupom.purchase, {
-        onDelete: 'CASCADE', onUpdate: 'CASCADE',
-    })
-    coupom: Coupom;
 
     constructor(
         purchase?: Partial<Purchase>
