@@ -5,12 +5,14 @@ import { VHAbstract } from "./VHAbstract";
 export class VHAddressType extends VHAbstract {
     getEntity(req: Request): AddressType {
         const {
-            name
+            ...addressType
         } = req.body;
         const { id } = req.params;
 
-        const addressTypeInstance = new AddressType({ id: id ? Number(id) : undefined });
-        Object.assign(addressTypeInstance, { name });
+        const addressTypeInstance = new AddressType(addressType);
+        if(id){
+            Object.assign(addressTypeInstance, { id: Number(id) });
+        }
 
         return addressTypeInstance;
     }

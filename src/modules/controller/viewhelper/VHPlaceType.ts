@@ -7,12 +7,15 @@ import { IGetQuery } from "./interface/IViewHelper";
 export class VHPlaceType extends VHAbstract {
     getEntity(req: Request): PlaceType {
         const {
-            name
+            ...placeType
         } = req.body;
         const { id } = req.params;
 
-        const placeTypeInstance = new PlaceType({ id: id ? Number(id) : undefined });
-        Object.assign(placeTypeInstance, { name });
+        const placeTypeInstance = new PlaceType(placeType);
+
+        if(id){
+            Object.assign(placeTypeInstance, { id: Number(id) });
+        }
 
         return placeTypeInstance;
     }
