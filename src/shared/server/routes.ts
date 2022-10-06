@@ -17,7 +17,6 @@ response.send('LES - EJOGOS - 0.0.1'),
 );
 
 router.post('/users/auth', sessionController.create);
-
 router.patch('/users/auth', sessionController.refresh);
 
 router.get('/:route', controller.index);

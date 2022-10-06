@@ -29,7 +29,7 @@ export class VHUser extends VHAbstract {
                 Object.assign(userInstance, { id: Number(id) });
             }
 
-            if(userInfo.role === 'admin' || userInfo.id === Number(id)){
+            if(userInfo.role === 'admin'){
                 if(isActive){
                     Object.assign(userInstance, { 
                         isActive: isActive === 1 ? true : false,
