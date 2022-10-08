@@ -39,8 +39,6 @@ export class VHCartItem extends VHAbstract {
             cartItemInstance.cart.id = Number(cart_item.cart_id);
         }
 
-        console.log(cartItemInstance);
-
         return cartItemInstance;
     }
 }

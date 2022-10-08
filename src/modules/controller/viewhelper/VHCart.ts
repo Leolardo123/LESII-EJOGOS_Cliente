@@ -13,9 +13,6 @@ export class VHCart extends VHAbstract {
             ...cart
         } = req.body;
         const { id } = req.params;
-
-        console.log(cart);
-
         const userInfo = ensureAuthenticated(req);
         
         const cartInstance = new Cart();
