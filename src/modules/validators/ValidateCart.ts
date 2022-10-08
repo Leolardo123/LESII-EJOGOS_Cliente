@@ -23,12 +23,25 @@ export class ValidateCart implements IValidate{
 
         const cartExists = await daoCart.findOne({ where });
         if(!entity.id){
-            if(cartExists){
-                throw new Error('Já existe um carrinho ativo.');
-            }
-
             if(!entity.person || !entity.person.id){
                 throw new Error('Pessoa não encontrada (Carrinho).');
+            }
+
+            if(cartExists){
+                if(
+                    !entity.items || 
+                    entity.items.length > 1
+                ){
+                    throw new Error('Falha ao adicionar item ao carrinho.');
+                } 
+                if(!cartExists.items.find(
+                    item => item.id === entity.items[0].id
+                )){
+                    cartExists.items.push(entity.items[0]);
+                    entity = cartExists;
+                } else {
+                    throw new Error('Item já está adicionado ao carrinho.');
+                }
             }
         } else {
             if(!cartExists){
