@@ -21,28 +21,23 @@ export class ValidateCart implements IValidate{
             isOpen: true
         };
 
-        const cartExists = await daoCart.findOne({ where });
+        const cartExists = await daoCart.findOne({ 
+            where ,relations: ['items', 'person'] 
+        });
+        if(cartExists){
+            if(!cartExists.isOpen || cartExists.purchase){
+                throw new Error('Carrinho já foi finalizado.');
+            }
+
+            entity.id = cartExists.id;
+        }
+
         if(!entity.id){
             if(!entity.person || !entity.person.id){
                 throw new Error('Pessoa não encontrada (Carrinho).');
             }
 
-            if(cartExists){
-                if(
-                    !entity.items || 
-                    entity.items.length > 1
-                ){
-                    throw new Error('Falha ao adicionar item ao carrinho.');
-                } 
-                if(!cartExists.items.find(
-                    item => item.id === entity.items[0].id
-                )){
-                    cartExists.items.push(entity.items[0]);
-                    entity = cartExists;
-                } else {
-                    throw new Error('Item já está adicionado ao carrinho.');
-                }
-            }
+            entity.isOpen = true;
         } else {
             if(!cartExists){
                 throw new Error('Carrinho não encontrado.');
@@ -54,27 +49,26 @@ export class ValidateCart implements IValidate{
                 throw new Error('Acesso negado.');
             }
         }
-                
-        if(cartExists){
-            if(cartExists.purchase){
-                throw new Error('Carrinho já finalizado')
-            }
-        }
 
         if(entity.items){
-            await Promise.all(entity.items.map(async cartItem => {
-                cartItem.cart = entity;
+            await Promise.all(entity.items.map(async newItem => {
+                newItem.cart = entity;
                 if(cartExists && cartExists.items){
                     const itemExists = cartExists.items.find(
-                        item => item.product.id === cartItem.product.id
+                        item => item.product.id === newItem.product.id
                     )
+
                     if(itemExists){
-                        cartItem.id = itemExists.id
+                        throw new Error('Item já adicionado ao carrinho.');
                     }
+
+                    cartExists.items.push(newItem);
                 }
 
-                await this.validateCartItem.validate(cartItem);
+                await this.validateCartItem.validate(newItem);
             }))
+
+            entity.items = cartExists ? cartExists.items : entity.items;
         }
     }
 }

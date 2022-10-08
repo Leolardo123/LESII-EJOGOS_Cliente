@@ -10,10 +10,6 @@ export class ValidateCartItem implements IValidate{
             throw new Error('Entidade inválida, esperava item do carrinho.');
         }
 
-        if(!entity.cart){
-            throw new Error('Carrinho não encontrado (Item do Carrinho).');
-        }
-
         const where = entity.cart.id ? { 
             id: entity.cart.id
         } : { 
@@ -26,68 +22,52 @@ export class ValidateCartItem implements IValidate{
             where,
             relations: ['items', 'person']
         })
-
-        if(!cartExists){
-            throw new Error('Carrinho não encontrado (Item do Carrinho).');
-        }
-
-        if(!cartExists.isOpen || cartExists.purchase){
-            throw new Error('Carrinho já foi finalizado (Item do Carrinho).');
-        }
-
-        const cartItemExists = cartExists ? cartExists.items.find(
-            item => item.id === entity.id
-        ) : undefined;
-
-        if(!entity.id){
-            const daoProduct = new DAOProduct();
-            const productExists = await daoProduct.findOne({ 
-                where: { id: entity.product.id, isActive: true }
-            });
-    
-            if(!productExists){
-                throw new Error('Produto não existe ou está indísponível no momento (Item do Carrinho).');
+2
+        if(cartExists){
+            if(!cartExists.isOpen || cartExists.purchase){
+                throw new Error('Carrinho já foi finalizado.');
             }
 
-            if(cartItemExists){
-                entity.id = cartItemExists.id;
-            }
+            const itemExists = cartExists.items.find(
+                item => item.product.id === entity.product.id
+            );
 
-            if(!entity.quantity){
-                if(cartItemExists){
-                    throw new Error('Item já adicionado ao carrinho.');
-                } else {
-                    entity.quantity = 1;
+            if(itemExists){
+                entity.id = itemExists.id;
+
+                if(!entity.quantity){
+                    entity.quantity = itemExists.quantity;
+                }
+
+                if(entity.product.id != itemExists.product.id){
+                    throw new Error('Produto inválido.');
                 }
             }
-            if(!entity.product || !entity.product.id){
-                throw new Error('Produto não selecionado (Item do Carrinho).');
-            }
-            entity.price = productExists.price * entity.quantity;
+
+            entity.cart.id = cartExists.id;
         } else {
-            if(!cartItemExists){
-                throw new Error('Item não encontrado.');
+            if(!entity.cart.id){
+                throw new Error('Carrinho não encontrado.');
             }
-            if(
-                entity.product &&
-                entity.product.id != cartItemExists.product.id
-            ){
-                throw new Error('Produto não pode ser alterado (Item do Carrinho).');
-            }
-            if(!cartItemExists.product.isActive){
-                throw new Error('Produto não está disponível no momento (Item do Carrinho).');
-            }
-            if(cartItemExists.product.stock < entity.quantity){
-                throw new Error(`Não há quantidade suficiente em estoque (Item do Carrinho).`);
-            }
-            entity.cart = cartItemExists.cart;
-            entity.price = cartItemExists.product.price * entity.quantity;
         }
 
-        if(entity.quantity){
-            if(entity.quantity < 1){
-                throw new Error('Quantidade inválida.');
-            }
+        if(!entity.product || !entity.product.id){
+            throw new Error('Produto não especificado.');
         }
+
+        const daoProduct = new DAOProduct();
+        const productExists = await daoProduct.findOne({
+            where: { id: entity.product.id }
+        });
+
+        if(!productExists || !productExists.isActive){
+            throw new Error('Produto não existe ou está indísponível no momento.');
+        }
+
+        if(!entity.quantity){
+            entity.quantity = 1;
+        }
+
+        entity.price = productExists.price * entity.quantity;
     }
 }

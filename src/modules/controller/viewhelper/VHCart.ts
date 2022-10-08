@@ -14,6 +14,8 @@ export class VHCart extends VHAbstract {
         } = req.body;
         const { id } = req.params;
 
+        console.log(cart);
+
         const userInfo = ensureAuthenticated(req);
         
         const cartInstance = new Cart();
@@ -26,14 +28,14 @@ export class VHCart extends VHAbstract {
 
         if(cart.items){
             cartInstance.items = cart.items.map((item: any) => {
-                const productInstance = new Product({ id: item.product_id });
+                const productInstance = new Product({ id: Number(item.product.id) });
                 const cartItemInstance = new CartItem({ 
-                    quantity: item.quantity,
+                    quantity: item.quantity ? item.quantity : 1,
                     product: productInstance,
                 });
 
                 if(item.id){
-                    cartItemInstance.id = item.id;
+                    cartItemInstance.id = Number(item.id);
                 }
 
                 return cartItemInstance;

@@ -9,6 +9,8 @@ import { VHAbstract } from "./VHAbstract";
 export class VHCartItem extends VHAbstract {
     getEntity(req: Request): CartItem {
         const {
+            quantity,
+            product,
             ...cart_item
         } = req.body;
         const { id } = req.params;
@@ -27,6 +29,17 @@ export class VHCartItem extends VHAbstract {
         cartItemInstance.cart = new Cart({ 
             person: personInstance,
         });
+
+        if(product){
+            const productInstance = new Product({ id: Number(product.id) });
+            cartItemInstance.product = productInstance;
+        }
+        
+        if(cart_item.cart_id){
+            cartItemInstance.cart.id = Number(cart_item.cart_id);
+        }
+
+        console.log(cartItemInstance);
 
         return cartItemInstance;
     }

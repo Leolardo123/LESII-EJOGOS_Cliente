@@ -9,7 +9,7 @@ export default class Cart extends Domain {
     @OneToMany(() => CartItem, cartItem => cartItem.cart, {
         onDelete: 'CASCADE', onUpdate: 'CASCADE',
         eager: true,
-        cascade: ['insert', 'update']
+        cascade: ['insert']
     })
     items: CartItem[];
 
