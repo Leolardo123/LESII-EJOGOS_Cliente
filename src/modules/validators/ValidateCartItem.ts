@@ -68,6 +68,10 @@ export class ValidateCartItem implements IValidate{
             entity.quantity = 1;
         }
 
+        if(entity.quantity > productExists.stock){
+            throw new Error('Quantidade indisponível em estoque.');
+        }
+
         entity.price = productExists.price * entity.quantity;
     }
 }

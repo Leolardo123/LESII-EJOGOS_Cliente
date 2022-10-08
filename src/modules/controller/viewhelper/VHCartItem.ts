@@ -9,7 +9,6 @@ import { VHAbstract } from "./VHAbstract";
 export class VHCartItem extends VHAbstract {
     getEntity(req: Request): CartItem {
         const {
-            quantity,
             product,
             ...cart_item
         } = req.body;
