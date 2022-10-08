@@ -36,14 +36,14 @@ class Address extends Domain {
     @JoinColumn({ name: 'address_type_id' })
     @ManyToOne(() => AddressType, atype => atype.address, {
         onDelete: 'RESTRICT', onUpdate: 'CASCADE',
-        nullable: false
+        nullable: false, eager: true
     })
     address_type: AddressType;
 
     @JoinColumn({ name: 'place_type_id' })
     @ManyToOne(() => PlaceType, ptype => ptype.address, {
         onDelete: 'RESTRICT', onUpdate: 'CASCADE',
-        nullable: false
+        nullable: false, eager: true
     })
     place_type: PlaceType;
 
@@ -56,9 +56,9 @@ class Address extends Domain {
     delivery: Purchase[];
 
     @ManyToMany(() => Person, person => person.addresses, {
-       onDelete: 'NO ACTION', onUpdate: 'CASCADE',
+       onDelete: 'CASCADE', onUpdate: 'CASCADE',
     })
-    person: Person;
+    person: Person[];
 
     constructor(
         address?: Partial<Address>

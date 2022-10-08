@@ -19,9 +19,8 @@ export class VHAddress extends VHAbstract {
             const person_id = userInfo.person ? userInfo.person : null;
 
             if(person_id){
-                const personInstance = new Person();
-                Object.assign(personInstance, { id: Number(person_id) });
-                addressInstance.person = personInstance;
+                const personInstance = new Person( { id: Number(person_id) });
+                addressInstance.person = [personInstance];
             } else {
                 throw new Error('Cadastre os dados pessoais antes de cadastrar um endereço.');
             }
@@ -38,18 +37,8 @@ export class VHAddress extends VHAbstract {
         if(address.address_type_id){
             addressInstance.address_type = new AddressType({ id: address.address_type_id })
         }
-
-
         Object.assign(addressInstance, address);
 
         return addressInstance;
-    }
-    
-    setView(req: Request, res: any, result: Address[] | string): void {
-        if (typeof result === 'string') {
-            res.status(201).json({ message: result });
-        } else {
-            res.status(201).json(result);
-        }
     }
 }
