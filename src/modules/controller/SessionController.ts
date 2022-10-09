@@ -32,7 +32,7 @@ class SessionController{
 
         const { password: _, ...userWithoutPassword } =  userExists;
 
-        res.status(200).json({ user: userWithoutPassword, access_token: jwToken });
+        res.status(201).json({ user: userWithoutPassword, access_token: jwToken });
     }
 
     refresh = async (req: Request, res: Response) => {
@@ -62,7 +62,7 @@ class SessionController{
 
         const { password: _, ...userWithoutPassword } =  userExists;
 
-        res.status(200).json({ user: userWithoutPassword, access_token: jwToken });
+        res.status(201).json({ user: userWithoutPassword, access_token: jwToken });
     }
 }
 
