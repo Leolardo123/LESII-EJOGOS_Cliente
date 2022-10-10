@@ -3,20 +3,45 @@ import { DAOCart } from "@modules/repositories/DAOCart";
 import { DAOProduct } from "@modules/repositories/DAOProducts";
 import Purchase from "../models/sales/Purchase";
 import { IValidate } from "./IValidate";
+import { ValidateAddress } from "./ValidateAddress";
+import { ValidateCart } from "./ValidateCart";
 
 export class ValidatePurchase implements IValidate{
-    constructor(){}
+    constructor(
+        private validateCart: ValidateCart,
+        private validateAddress:ValidateAddress
+    ){}
     async validate(entity: Purchase): Promise<void> {
         if(!(entity instanceof Purchase)){
             throw new Error('Entidade inválida, esperava item do carrinho.');
         }
 
+        const daoAddress = new DAOAddress();
         if(!entity.id){
-            if(!entity.payment_address.id){
-                throw new Error('Endereço de pagamento é obrigatório (Compra).');
+            if(entity.payment_address.id){
+                const paymentAddress = await daoAddress.findOne({
+                    where: {
+                        id: entity.payment_address.id
+                    }
+                });
+                if(!paymentAddress){
+                    throw new Error('Endereço de pagamento não encontrado.');
+                }
+            } else {
+                await this.validateAddress.validate(entity.payment_address);
             }
-            if(!entity.delivery_address.id){
-                throw new Error('Endereço de entrega é obrigatório (Compra).');
+    
+            if(entity.delivery_address.id){
+                const deliveryAddress = await daoAddress.findOne({
+                    where: {
+                        id: entity.delivery_address.id
+                    }
+                });
+                if(!deliveryAddress){
+                    throw new Error('Endereço de entrega não encontrado.');
+                }
+            } else {
+                await this.validateAddress.validate(entity.delivery_address);
             }
         }
         
@@ -41,42 +66,6 @@ export class ValidatePurchase implements IValidate{
             throw new Error('Carrinho não encontrado.');
         }
 
-        const daoAddress = new DAOAddress();
-        const paymentAddress = await daoAddress.findOne({
-            where: {
-                id: entity.payment_address.id
-            }
-        });
-        if(!paymentAddress){
-            throw new Error('Endereço de pagamento não encontrado.');
-        }
-
-        const deliveryAddress = await daoAddress.findOne({
-            where: {
-                id: entity.delivery_address.id
-            }
-        });
-        if(!deliveryAddress){
-            throw new Error('Endereço de entrega não encontrado.');
-        }
-
-        const daoProduct = new DAOProduct();
-        cartExists.items.map(item => {
-            if(!item.product){
-                throw new Error('Produto não selecionado (Compra).');
-            }
-
-            const productExists = daoProduct.findOne({
-                where: {
-                    id: item.product.id
-                }
-            });
-
-            if(!item.product){
-                throw new Error('Um dos produtos não está mais disponível.');
-            }
-
-            item.product.stock -= item.quantity;
-        })
+        await this.validateCart.validate(entity.cart);
     }
 }
