@@ -22,14 +22,14 @@ export default class Purchase extends Domain {
     @JoinColumn({ name: 'payment_address_id' })
     @ManyToOne(() => Address, address => address.payment, {
         onDelete: 'RESTRICT', onUpdate: 'CASCADE',
-        nullable: false
+        nullable: false, cascade: ['insert']
     })
     payment_address: Address;
 
     @JoinColumn({ name: 'delivery_address_id' })
     @ManyToOne(() => Address, address => address.delivery, {
         onDelete: 'RESTRICT', onUpdate: 'CASCADE',
-        nullable: false
+        nullable: false, cascade: ['insert']
     })
     delivery_address: Address;
     

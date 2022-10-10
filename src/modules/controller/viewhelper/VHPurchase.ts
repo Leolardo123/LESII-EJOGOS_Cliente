@@ -11,6 +11,7 @@ export class VHCartItem extends VHAbstract {
         const { 
             payment_address,
             delivery_address,
+            cards,
             ...purchase
         } = req.body;
         const { id } = req.params;
@@ -29,15 +30,21 @@ export class VHCartItem extends VHAbstract {
         if(payment_address){
             purchaseInstance.payment_address = new Address({ ...payment_address });
             if(delivery_address.save){
-                purchaseInstance.delivery_address.person = personInstance;
+                purchaseInstance.delivery_address.person = [personInstance];
             }
         }
 
         if(delivery_address){
             purchaseInstance.delivery_address = new Address({ ...delivery_address });
             if(delivery_address.save){
-                purchaseInstance.delivery_address.person = personInstance;
+                purchaseInstance.delivery_address.person = [personInstance];
             }
+        }
+
+        if(cards){
+            purchaseInstance.cards = cards.map((card: any) => {
+                return new CartItem({ ...card });
+            });
         }
 
         return purchase;
