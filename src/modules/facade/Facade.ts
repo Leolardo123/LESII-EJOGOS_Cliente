@@ -23,6 +23,7 @@ import { ValidatePassword } from "@modules/validators/ValidatePassword";
 import { ValidatePerson } from "@modules/validators/ValidatePerson";
 import { ValidatePhone } from "@modules/validators/ValidatePhone";
 import { ValidateProduct } from "@modules/validators/ValidateProduct";
+import { ValidatePurchase } from "@modules/validators/ValidatePurchase";
 import { ValidateUser } from "@modules/validators/ValidateUser";
 import IHash from "@shared/interfaces/IHash";
 import { createConnections } from "typeorm";
@@ -54,6 +55,12 @@ export class Facade implements IFacade {
 		const validateCartItem = new ValidateCartItem();
 		const validateCart = new ValidateCart(validateCartItem);
 
+		const validatePurchase = new ValidatePurchase(
+			validateCart,
+			validateAddress,
+			validateCard,
+		);
+
 		this.validators.address = validateAddress;
 		this.validators.person = validatePerson;
 		this.validators.user = validateUser;
@@ -63,6 +70,7 @@ export class Facade implements IFacade {
 		this.validators.brand = validateBrand;
 		this.validators.cartitem = validateCartItem;
 		this.validators.cart = validateCart;
+		this.validators.purchase = validatePurchase;
 
 		console.log('[BANCO DE DADOS 🎲] Tentando conectar.');
 		createConnections()

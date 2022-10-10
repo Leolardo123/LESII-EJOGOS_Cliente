@@ -4,12 +4,14 @@ import { DAOProduct } from "@modules/repositories/DAOProducts";
 import Purchase from "../models/sales/Purchase";
 import { IValidate } from "./IValidate";
 import { ValidateAddress } from "./ValidateAddress";
+import { ValidateCard } from "./ValidateCard";
 import { ValidateCart } from "./ValidateCart";
 
 export class ValidatePurchase implements IValidate{
     constructor(
         private validateCart: ValidateCart,
-        private validateAddress:ValidateAddress
+        private validateAddress: ValidateAddress,
+        private validateCard: ValidateCard
     ){}
     async validate(entity: Purchase): Promise<void> {
         if(!(entity instanceof Purchase)){
@@ -18,6 +20,25 @@ export class ValidatePurchase implements IValidate{
 
         const daoAddress = new DAOAddress();
         if(!entity.id){
+            if(!entity.cart){
+                throw new Error('Carrinho não encontrado.');
+            }
+
+            const daoCart = new DAOCart();
+            const cartExists = await daoCart.findOne({
+                where: { id: entity.cart.id },
+            });
+    
+            if(!cartExists){
+                throw new Error('Carrinho não encontrado.');
+            }
+
+            await this.validateCart.validate(entity.cart);
+    
+            if(!entity.cart.person || !entity.cart.person.id){
+                throw new Error('Pessoa não encontrada (Compra).');
+            }
+
             if(entity.payment_address.id){
                 const paymentAddress = await daoAddress.findOne({
                     where: {
@@ -43,29 +64,25 @@ export class ValidatePurchase implements IValidate{
             } else {
                 await this.validateAddress.validate(entity.delivery_address);
             }
-        }
-        
-        if(!entity.cart){
-            throw new Error('Carrinho não encontrado.');
-        }
 
-        if(!entity.cart.person || !entity.cart.person.id){
-            throw new Error('Pessoa não encontrada (Compra).');
+            if(!entity.cards || entity.cards.length <= 0){
+                throw new Error('Cartão não selecionado.');
+            }
+
+            if(entity.cards){
+                await Promise.all(entity.cards.map(async card => {
+                    await this.validateCard.validate(card);
+                }));
+            }
+        } else {
+            const daoPurchase = new DAOCart();
+            const purchaseExists = await daoPurchase.findOne({
+                where: { id: entity.id },
+            });
+    
+            if(!purchaseExists){
+                throw new Error('Compra não encontrada.');
+            }
         }
-
-        if(!entity.cards || !entity.cards.length || !entity.cards[0].id){
-            throw new Error('Cartão não encontrado.');
-        }
-
-        const daoCart = new DAOCart();
-        const cartExists = await daoCart.findOne({
-            where: { id: entity.cart.id },
-        });
-
-        if(!cartExists){
-            throw new Error('Carrinho não encontrado.');
-        }
-
-        await this.validateCart.validate(entity.cart);
     }
 }
