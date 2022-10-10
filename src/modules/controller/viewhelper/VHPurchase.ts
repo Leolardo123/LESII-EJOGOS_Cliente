@@ -43,6 +43,10 @@ export class VHCartItem extends VHAbstract {
 
         if(cards){
             purchaseInstance.cards = cards.map((card: any) => {
+                if(card.save){
+                    card.person = [personInstance];
+                }
+                
                 return new CartItem({ ...card });
             });
         }
