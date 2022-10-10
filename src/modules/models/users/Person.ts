@@ -32,7 +32,7 @@ class Person extends Domain {
     gender_id: number;
 
     @Column()
-    user_id: string;
+    user_id:  number;
 
     @JoinTable({ name: 'tb_persons_addresses' })
     @ManyToMany(() => Address, address => address.person, {
