@@ -80,8 +80,8 @@ class Controller{
             throw new Error(`${route} não existe.`)
         }
         
-        const entity = this.vhs[route].getEntity(req);
-        const result = await this.facade.findOne(entity, []);
+        const { entity, relations }= this.vhs[route].findEntity(req);
+        const result = await this.facade.findOne(entity, relations);
 
         return this.vhs[route].setView(req, res, result);
     }
@@ -93,8 +93,8 @@ class Controller{
             throw new Error(`${route} não existe.`)
         }
         
-        const entity = this.vhs[route].getEntity(req);
-        const result = await this.facade.findMany(entity, []);
+        const { entity, relations }= this.vhs[route].findEntity(req);
+        const result = await this.facade.findMany(entity, relations);
 
         return this.vhs[route].setView(req, res, result);
     }
