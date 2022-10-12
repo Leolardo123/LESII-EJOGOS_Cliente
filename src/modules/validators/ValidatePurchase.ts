@@ -1,6 +1,8 @@
+import Product from "@modules/models/products/Product";
 import { DAOAddress } from "@modules/repositories/DAOAddress";
 import { DAOCart } from "@modules/repositories/DAOCart";
 import { DAOProduct } from "@modules/repositories/DAOProducts";
+import { DAOPurchase } from "@modules/repositories/DAOPurchase";
 import Purchase from "../models/sales/Purchase";
 import { IValidate } from "./IValidate";
 import { ValidateAddress } from "./ValidateAddress";
@@ -74,8 +76,17 @@ export class ValidatePurchase implements IValidate{
                     await this.validateCard.validate(card);
                 }));
             }
-        } else {
-            const daoPurchase = new DAOCart();
+
+            cartExists.items.map((item)=>{
+                item.product.stock -= item.quantity
+            })
+
+            entity.total_price = cartExists.getTotalPrice();
+            entity.cart.isOpen = false;
+        } 
+        
+        if(entity.id){
+            const daoPurchase = new DAOPurchase();
             const purchaseExists = await daoPurchase.findOne({
                 where: { id: entity.id },
             });

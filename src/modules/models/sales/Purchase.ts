@@ -1,5 +1,5 @@
 import Domain from "@modules/models/Domain";
-import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToOne } from "typeorm";
+import { BeforeInsert, BeforeUpdate, Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToOne } from "typeorm";
 import Address from "../address/Address";
 import Card from "../cards/Card";
 import Cart from "./Cart";
@@ -16,6 +16,7 @@ export default class Purchase extends Domain {
     @JoinColumn({ name: 'cart_id' })
     @OneToOne(() => Cart, cart => cart.purchase, {
         onDelete: 'CASCADE', onUpdate: 'CASCADE',
+        cascade: ['update']
     })
     cart: Cart;
 
@@ -35,7 +36,7 @@ export default class Purchase extends Domain {
     
     @JoinTable({ name: 'tb_purchases_cards' })
     @ManyToMany(() => Card, card => card.purchases, {
-        onDelete: 'SET NULL', onUpdate: 'CASCADE',
+        onDelete: 'CASCADE', onUpdate: 'CASCADE',
     })
     cards: Card[];
 
