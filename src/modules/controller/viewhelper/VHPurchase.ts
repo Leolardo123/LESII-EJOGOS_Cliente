@@ -5,6 +5,7 @@ import Purchase from "@modules/models/sales/Purchase";
 import Person from "@modules/models/users/Person";
 import { ensureAuthenticated } from "@shared/utils/ensureAuthenticated";
 import { Request } from "express";
+import { IGetEntity } from "./interface/IViewHelper";
 import { VHAbstract } from "./VHAbstract";
 
 export class VHPurchase extends VHAbstract {
@@ -24,14 +25,16 @@ export class VHPurchase extends VHAbstract {
 
         const personInstance = new Person({ id: userInfo.person });
         const purchaseInstance = new Purchase();
+        const cartInstance = new Cart()
+        cartInstance.person = personInstance;
+        purchaseInstance.cart = cartInstance;
 
         if(id){
             purchaseInstance.id = Number(id);
         }
 
         if(cart_id){
-            const cartInstance = new Cart({ id: cart_id })
-            purchaseInstance.cart = cartInstance;
+            purchaseInstance.cart.id = cart_id;
         }
 
         if(payment_address){
@@ -49,5 +52,12 @@ export class VHPurchase extends VHAbstract {
         }
 
         return purchaseInstance;
+    }
+
+    findEntity(req: Request): IGetEntity {
+        return {
+            entity: this.getEntity(req),
+            relations: ['cart']
+        }
     }
 }

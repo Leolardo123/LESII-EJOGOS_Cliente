@@ -77,6 +77,10 @@ export class ValidatePurchase implements IValidate{
                 }));
             }
 
+            if(cartExists.items.length <= 0){
+                throw new Error('Nenhum produto selecionado')
+            }
+            
             cartExists.items.map((item)=>{
                 item.product.stock -= item.quantity
             })
