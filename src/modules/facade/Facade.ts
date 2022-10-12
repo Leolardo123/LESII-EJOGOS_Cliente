@@ -9,6 +9,7 @@ import { DAOGender } from "@modules/repositories/DAOGender";
 import { DAOPerson } from "@modules/repositories/DAOPerson";
 import { DAOPlaceType } from "@modules/repositories/DAOPlaceType";
 import { DAOProduct } from "@modules/repositories/DAOProducts";
+import { DAOPurchase } from "@modules/repositories/DAOPurchase";
 import { DAOUser } from "@modules/repositories/DAOUser";
 import { IDAO } from "@modules/repositories/interfaces/IDAO";
 import { IValidate } from "@modules/validators/IValidate";
@@ -33,6 +34,7 @@ import { IFacade } from "./IFacade";
 export class Facade implements IFacade {
 	private validators: IHash<IValidate> = {};
 	private daos: IHash<IDAO<Domain>> = {};
+	private isConected = false;
 
 	constructor(){
 		const validateAddress = new ValidateAddress();
@@ -72,9 +74,11 @@ export class Facade implements IFacade {
 		this.validators.cart = validateCart;
 		this.validators.purchase = validatePurchase;
 
-		console.log('[BANCO DE DADOS 🎲] Tentando conectar.');
+		console.clear();
+		console.log('[BANCO DE DADOS 🎲] Conectando com o banco de dados...');
 		createConnections()
 		.then(() => {
+			console.clear();
 			console.log('[BANCO DE DADOS 🎲] Conectado com sucesso!');
 
 			this.daos.user = new DAOUser() as any;
@@ -88,11 +92,18 @@ export class Facade implements IFacade {
 			this.daos.product = new DAOProduct() as any;
 			this.daos.cart = new DAOCart() as any;
 			this.daos.cartitem = new DAOCartItem() as any;
+			this.daos.purchase = new DAOPurchase() as any;
+
+			this.isConected = true
 		})
 		.catch(err => console.log(err));
 	}
 
 	async create(entity: Domain): Promise<string> {
+		if(!this.isConected){
+			throw new Error('O Sistema ainda está inicializando...')
+		}
+
 		const entityName = entity.constructor.name.toLowerCase();
 
 		if(
@@ -111,6 +122,10 @@ export class Facade implements IFacade {
 	}
 	
 	async update(entity: Domain): Promise<string> {
+		if(!this.isConected){
+			throw new Error('O Sistema ainda está inicializando...')
+		}
+
 		const entityName = entity.constructor.name.toLowerCase();
 
 		if(
@@ -138,6 +153,10 @@ export class Facade implements IFacade {
 	}
 	
 	async delete(entity: Domain): Promise<string> {
+		if(!this.isConected){
+			throw new Error('O Sistema ainda está inicializando...')
+		}
+
 		const entityName = entity.constructor.name.toLowerCase();
 
 		if(
@@ -155,6 +174,10 @@ export class Facade implements IFacade {
 	}
 
 	async findOne(entity: Domain, relations: string[]): Promise<Domain | undefined | null> {
+		if(!this.isConected){
+			throw new Error('O Sistema ainda está inicializando...')
+		}
+
 		const entityName = entity.constructor.name.toLowerCase();
 
 		if(
@@ -168,6 +191,10 @@ export class Facade implements IFacade {
 	}
 
 	async findMany(entity: Domain, relations: string[]): Promise<Domain[]> {
+		if(!this.isConected){
+			throw new Error('O Sistema ainda está inicializando...')
+		}
+
 		const entityName = entity.constructor.name.toLowerCase();
 
 		if(
