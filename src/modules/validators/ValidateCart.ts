@@ -18,13 +18,14 @@ export class ValidateCart implements IValidate{
             id: entity.id 
         } : { 
             person_id: entity.person.id,
-            isOpen: true
+            isOpen: true,
         };
-
+        
         const cartExists = await daoCart.findOne({ 
             where ,relations: ['items', 'person'] 
         });
-        if(cartExists){
+
+        if(cartExists && !entity.id){
             if(!cartExists.isOpen || cartExists.purchase){
                 throw new Error('Carrinho já foi finalizado.');
             }
@@ -36,8 +37,6 @@ export class ValidateCart implements IValidate{
             if(!entity.person || !entity.person.id){
                 throw new Error('Pessoa não encontrada (Carrinho).');
             }
-
-            entity.isOpen = true;
         } else {
             if(!cartExists){
                 throw new Error('Carrinho não encontrado.');
