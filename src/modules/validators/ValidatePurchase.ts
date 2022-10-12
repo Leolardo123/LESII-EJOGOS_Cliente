@@ -1,5 +1,6 @@
 import Product from "@modules/models/products/Product";
 import { DAOAddress } from "@modules/repositories/DAOAddress";
+import { DAOCard } from "@modules/repositories/DAOCard";
 import { DAOCart } from "@modules/repositories/DAOCart";
 import { DAOProduct } from "@modules/repositories/DAOProducts";
 import { DAOPurchase } from "@modules/repositories/DAOPurchase";
@@ -50,6 +51,7 @@ export class ValidatePurchase implements IValidate{
                 if(!paymentAddress){
                     throw new Error('Endereço de pagamento não encontrado.');
                 }
+                entity.payment_address = paymentAddress;
             } else {
                 await this.validateAddress.validate(entity.payment_address);
             }
@@ -63,6 +65,7 @@ export class ValidatePurchase implements IValidate{
                 if(!deliveryAddress){
                     throw new Error('Endereço de entrega não encontrado.');
                 }
+                entity.delivery_address = deliveryAddress;
             } else {
                 await this.validateAddress.validate(entity.delivery_address);
             }
@@ -72,15 +75,21 @@ export class ValidatePurchase implements IValidate{
             }
 
             if(entity.cards){
+                const daoCard = new DAOCard();
                 await Promise.all(entity.cards.map(async card => {
-                    await this.validateCard.validate(card);
+                    const cardExists = await daoCard.findOne({
+                        where: { id: card.id }
+                    })
+                    if(!cardExists){
+                        throw new Error('Um dos cartões selecionados não está mais ativo')
+                    }
                 }));
             }
 
             if(cartExists.items.length <= 0){
                 throw new Error('Nenhum produto selecionado')
             }
-            
+
             cartExists.items.map((item)=>{
                 item.product.stock -= item.quantity
             })
