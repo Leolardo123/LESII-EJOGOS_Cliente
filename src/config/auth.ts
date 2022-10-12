@@ -1,5 +1,5 @@
 export const jwt_config = {
   secret: process.env.API_SECRET || 'default',
-  expiresIn: '7d',
+  expiresIn: '365d',
 };
 
