@@ -13,6 +13,7 @@ import { VHGender } from "./viewhelper/VHGender";
 import { VHPerson } from "./viewhelper/VHPerson";
 import { VHPlaceType } from "./viewhelper/VHPlaceType";
 import { VHProduct } from "./viewhelper/VHProduct";
+import { VHPurchase } from "./viewhelper/VHPurchase";
 import { VHUser } from "./viewhelper/VHUser";
 class Controller{
     private vhs: IHash<IViewHelper> = {};
@@ -29,6 +30,7 @@ class Controller{
             "products": new VHProduct(),
             "carts": new VHCart(),
             "cart-items": new VHCartItem(),
+            "purchases": new VHPurchase(),
        }
     }
 
