@@ -1,11 +1,12 @@
 import Domain from "@modules/models/Domain";
 import { Request } from "express";
 
-export interface IGetQuery{
+export interface IGetEntity{
     entity: Domain,
-    where: string,
+    relations: string[]
 }
 export interface IViewHelper{
     getEntity(req: Request): Domain;
+    findEntity(req: Request): IGetEntity;
     setView(req: Request, res: any, result: any): void;
 }
