@@ -1,4 +1,6 @@
 import Address from "@modules/models/address/Address";
+import AddressType from "@modules/models/address/AddressType";
+import PlaceType from "@modules/models/address/PlaceType";
 import Card from "@modules/models/cards/Card";
 import Cart from "@modules/models/sales/Cart";
 import Purchase from "@modules/models/sales/Purchase";
@@ -39,10 +41,26 @@ export class VHPurchase extends VHAbstract {
 
         if(payment_address){
             purchaseInstance.payment_address = new Address({ ...payment_address });
+            if(!payment_address.id){
+                purchaseInstance.payment_address.address_type = new AddressType({ 
+                    id: payment_address.address_type_id
+                })
+                purchaseInstance.payment_address.place_type = new PlaceType({ 
+                    id: payment_address.place_type_id
+                })
+            }
         }
 
         if(delivery_address){
             purchaseInstance.delivery_address = new Address({ ...delivery_address });
+            if(!delivery_address.id){
+                purchaseInstance.delivery_address.address_type = new AddressType({ 
+                    id: delivery_address.address_type_id
+                })
+                purchaseInstance.delivery_address.place_type = new PlaceType({ 
+                    id: delivery_address.place_type_id
+                })
+            }
         }
 
         if(cards){
