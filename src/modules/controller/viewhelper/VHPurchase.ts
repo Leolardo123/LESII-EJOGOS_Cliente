@@ -1,18 +1,19 @@
 import Address from "@modules/models/address/Address";
-import CartItem from "@modules/models/sales/CartItem";
+import Card from "@modules/models/cards/Card";
+import Cart from "@modules/models/sales/Cart";
 import Purchase from "@modules/models/sales/Purchase";
 import Person from "@modules/models/users/Person";
 import { ensureAuthenticated } from "@shared/utils/ensureAuthenticated";
 import { Request } from "express";
 import { VHAbstract } from "./VHAbstract";
 
-export class VHCartItem extends VHAbstract {
-    getEntity(req: Request): CartItem {
+export class VHPurchase extends VHAbstract {
+    getEntity(req: Request): Purchase {
         const { 
             payment_address,
             delivery_address,
             cards,
-            ...purchase
+            cart_id,
         } = req.body;
         const { id } = req.params;
 
@@ -22,9 +23,15 @@ export class VHCartItem extends VHAbstract {
         }
 
         const personInstance = new Person({ id: userInfo.person });
-        const purchaseInstance = new Purchase(purchase);
+        const purchaseInstance = new Purchase();
+
         if(id){
             purchaseInstance.id = Number(id);
+        }
+
+        if(cart_id){
+            const cartInstance = new Cart({ id: cart_id })
+            purchaseInstance.cart = cartInstance;
         }
 
         if(payment_address){
@@ -41,10 +48,10 @@ export class VHCartItem extends VHAbstract {
                     card.person = [personInstance];
                 }
                 
-                return new CartItem({ ...card });
+                return new Card({ ...card });
             });
         }
 
-        return purchase;
+        return purchaseInstance;
     }
 }
