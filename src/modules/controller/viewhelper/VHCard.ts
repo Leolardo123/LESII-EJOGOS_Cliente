@@ -16,7 +16,7 @@ export class VHCard extends VHAbstract {
         const userInfo = ensureAuthenticated(req);
         const person_id = userInfo.person ? userInfo.person : null;
 
-        const cardInstance = new Card();
+        const cardInstance = new Card({ ...card });
         if(id){
             Object.assign(cardInstance, { id: Number(id) });
         }
@@ -28,7 +28,6 @@ export class VHCard extends VHAbstract {
         } else {
             throw new Error('Cadastre os dados pessoais antes de cadastrar um cartão.');
         }
-        Object.assign(cardInstance, card);
 
         if(brand_id){
             const brandInstance = new Brand({ id: brand_id });

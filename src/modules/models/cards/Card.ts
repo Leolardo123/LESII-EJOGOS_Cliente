@@ -13,25 +13,25 @@ class Card extends Domain {
     number: string;
 
     @Column()
-    brand_id: string;
+    brand_id: number;
 
     @Column()
-    person_id: string;
+    person_id: number;
 
     @Column()
     security_code: string;
+
+    @JoinColumn({ name: 'person_id' })
+    @ManyToOne(() => Person, person => person.cards, {
+        onDelete: 'CASCADE', onUpdate: 'CASCADE'
+    })
+    person: Person;
 
     @JoinColumn({ name: 'brand_id' })
     @ManyToOne(() => Brand, {
         onDelete: 'CASCADE', onUpdate: 'CASCADE'
     })
     brand: Brand;
-
-    @JoinColumn({ name: 'person_id' })
-    @ManyToOne(() => Person, {
-        onDelete: 'CASCADE', onUpdate: 'CASCADE'
-    })
-    person: Person;
 
     @ManyToMany(() => Purchase, purchase => purchase.cards, {})
     purchases: Purchase[];

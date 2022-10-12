@@ -29,16 +29,10 @@ export class VHCartItem extends VHAbstract {
 
         if(payment_address){
             purchaseInstance.payment_address = new Address({ ...payment_address });
-            if(delivery_address.save){
-                purchaseInstance.delivery_address.person = [personInstance];
-            }
         }
 
         if(delivery_address){
             purchaseInstance.delivery_address = new Address({ ...delivery_address });
-            if(delivery_address.save){
-                purchaseInstance.delivery_address.person = [personInstance];
-            }
         }
 
         if(cards){
