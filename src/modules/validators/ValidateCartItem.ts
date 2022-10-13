@@ -22,7 +22,7 @@ export class ValidateCartItem implements IValidate{
             where,
             relations: ['items', 'person']
         })
-2
+
         if(cartExists){
             if(!cartExists.isOpen || cartExists.purchase){
                 throw new Error('Carrinho já foi finalizado.');
@@ -68,7 +68,12 @@ export class ValidateCartItem implements IValidate{
             entity.quantity = 1;
         }
 
-        if(entity.quantity > productExists.stock){
+        const reservedQuantity = await daoProduct.getReservedQuantity(
+            productExists, 
+            [entity.cart]
+        );
+
+        if(entity.quantity > (productExists.stock - reservedQuantity)){
             throw new Error('Quantidade indisponível em estoque.');
         }
 
