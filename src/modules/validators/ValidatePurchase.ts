@@ -9,12 +9,13 @@ import { IValidate } from "./IValidate";
 import { ValidateAddress } from "./ValidateAddress";
 import { ValidateCard } from "./ValidateCard";
 import { ValidateCart } from "./ValidateCart";
+import { ValidateProduct } from "./ValidateProduct";
 
 export class ValidatePurchase implements IValidate{
     constructor(
         private validateCart: ValidateCart,
         private validateAddress: ValidateAddress,
-        private validateCard: ValidateCard
+        private validateProduct: ValidateProduct
     ){}
     async validate(entity: Purchase): Promise<void> {
         if(!(entity instanceof Purchase)){
@@ -81,7 +82,7 @@ export class ValidatePurchase implements IValidate{
                         where: { id: card.id }
                     })
                     if(!cardExists){
-                        throw new Error('Um dos cartões selecionados não está mais ativo')
+                        throw new Error('Um dos cartões selecionados não está disponível');
                     }
                 }));
             }
@@ -90,10 +91,14 @@ export class ValidatePurchase implements IValidate{
                 throw new Error('Nenhum produto selecionado')
             }
 
-            cartExists.items.map((item)=>{
-                item.product.stock -= item.quantity
-            })
+            await Promise.all(
+                cartExists.items.map(async (item)=>{
+                    item.product.stock -= item.quantity
+                    await this.validateProduct.validate(item.product);
+                })
+            )
 
+            entity.cart = cartExists;
             entity.total_price = cartExists.getTotalPrice();
             entity.cart.isOpen = false;
         } 
