@@ -1,4 +1,5 @@
 import Product from "@modules/models/products/Product";
+import { PurchaseStatusEnum } from "@modules/models/sales/enum/PurchaseStatus";
 import { DAOAddress } from "@modules/repositories/DAOAddress";
 import { DAOCard } from "@modules/repositories/DAOCard";
 import { DAOCart } from "@modules/repositories/DAOCart";
@@ -111,6 +112,17 @@ export class ValidatePurchase implements IValidate{
     
             if(!purchaseExists){
                 throw new Error('Compra não encontrada.');
+            }
+
+            if(entity.status){
+                if(PurchaseStatusEnum){
+                    if(
+                        !Object.values(PurchaseStatusEnum)
+                        .includes(entity.status as PurchaseStatusEnum)
+                    ){
+                        throw new Error('Estado de compra selecionado não é válido.');
+                    }
+                }
             }
         }
     }
