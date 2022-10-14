@@ -17,6 +17,7 @@ export class VHPurchase extends VHAbstract {
             delivery_address,
             cards,
             cart_id,
+            status,
         } = req.body;
         const { id } = req.params;
 
@@ -31,12 +32,25 @@ export class VHPurchase extends VHAbstract {
         cartInstance.person = personInstance;
         purchaseInstance.cart = cartInstance;
 
+        if(req.method == 'POST'){
+            if(!userInfo.person){
+                throw new Error('Dados da pessoa fisica não encontrados.');
+            }
+        }
+
         if(id){
             purchaseInstance.id = Number(id);
         }
 
         if(cart_id){
             purchaseInstance.cart.id = cart_id;
+        }
+
+        if(status){
+            if(userInfo.role != 'admin'){
+                throw new Error('Operação não autorizada.');
+            }
+            purchaseInstance.status = status;
         }
 
         if(payment_address){
