@@ -9,14 +9,18 @@ import { DAOPurchase } from "@modules/repositories/DAOPurchase";
 import Purchase from "../models/sales/Purchase";
 import { IValidate } from "./IValidate";
 import { ValidateAddress } from "./ValidateAddress";
+import { ValidateCard } from "./ValidateCard";
 import { ValidateCart } from "./ValidateCart";
+import { ValidateCoupom } from "./ValidateCoupom";
 import { ValidateProduct } from "./ValidateProduct";
 
 export class ValidatePurchase implements IValidate {
     constructor(
         private validateCart: ValidateCart,
         private validateAddress: ValidateAddress,
-        private validateProduct: ValidateProduct
+        private validateProduct: ValidateProduct,
+        private validateCoupom: ValidateCoupom,
+        private validateCard: ValidateCard,
     ) { }
     async validate(entity: Purchase): Promise<void> {
         if (!(entity instanceof Purchase)) {
@@ -36,6 +40,10 @@ export class ValidatePurchase implements IValidate {
 
             if (!cartExists) {
                 throw new Error('Carrinho não encontrado.');
+            }
+
+            if (!cartExists.items) {
+                throw new Error('Carrinho vazio.');
             }
 
             await this.validateCart.validate(entity.cart);
@@ -90,22 +98,47 @@ export class ValidatePurchase implements IValidate {
 
             let paymentTotal = 0;
             if (entity.payments) {
-                paymentTotal = entity.payments.reduce((total, payment) => {
-                    return total + Number(payment.value);
+                const daoCard = new DAOCard();
+                const promise = entity.payments.map(async (payment) => {
+                    const coupomExists = daoCard.findOne({
+                        where: {
+                            id: payment.card.id
+                        }
+                    });
+
+                    if (!coupomExists) {
+                        throw new Error('Cupom não encontrado.');
+                    }
+
+                    await this.validateCard.validate(payment.card);
+
+                    paymentTotal += Number(payment.value);
                 }, 0)
+                await Promise.all(promise);
             }
 
             let couponTotal = 0;
             if (entity.coupons) {
-                couponTotal = entity.coupons.reduce((total, coupon) => {
-                    return total + Number(coupon.value);
+                const daoCoupom = new DAOCoupom();
+                const promise = entity.coupons.map(async (coupon) => {
+                    const coupomExists = daoCoupom.findOne({
+                        where: {
+                            id: coupon.id
+                        }
+                    });
+
+                    if (!coupomExists) {
+                        throw new Error('Cupom não encontrado.');
+                    }
+
+                    await this.validateCoupom.validate(coupon);
+
+                    couponTotal += Number(coupon.value);
                 }, 0)
+                await Promise.all(promise);
             }
 
-            console.log('paymentTotal', paymentTotal);
-
             const cartTotal = cartExists.getTotalPrice() || 0;
-
             const tobePaid = cartTotal - couponTotal;
             if (tobePaid < 0) {//Se cupom vale mais que o total, um cupom de troco deve ser gerado
                 const newCoupom = new Coupom({
@@ -132,26 +165,6 @@ export class ValidatePurchase implements IValidate {
                     })
                     if (!cardExists) {
                         throw new Error('Um dos cartões selecionados não é válido.');
-                    }
-                });
-                await Promise.all(promise);
-            }
-
-            if (entity.coupons) {
-                const daoCoupom = new DAOCoupom();
-                const promise = entity.coupons.map(async coupon => {
-                    const coupomExists = await daoCoupom.findOne({
-                        where: {
-                            id: coupon.id,
-                            is_used: false,
-                            person: {
-                                id: entity.cart.person.id
-                            }
-                        },
-                    })
-
-                    if (!coupomExists) {
-                        throw new Error('Um dos cupons selecionados não é válido.');
                     }
                 });
                 await Promise.all(promise);
