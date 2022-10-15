@@ -3,6 +3,7 @@ import AddressType from "@modules/models/address/AddressType";
 import PlaceType from "@modules/models/address/PlaceType";
 import Card from "@modules/models/cards/Card";
 import Cart from "@modules/models/sales/Cart";
+import Payment from "@modules/models/sales/Payment";
 import Purchase from "@modules/models/sales/Purchase";
 import Person from "@modules/models/users/Person";
 import { ensureAuthenticated } from "@shared/utils/ensureAuthenticated";
@@ -12,17 +13,17 @@ import { VHAbstract } from "./VHAbstract";
 
 export class VHPurchase extends VHAbstract {
     getEntity(req: Request): Purchase {
-        const { 
+        const {
             payment_address,
             delivery_address,
-            cards,
+            payments,
             cart_id,
             status,
         } = req.body;
         const { id } = req.params;
 
         const userInfo = ensureAuthenticated(req);
-        if(!userInfo.person){
+        if (!userInfo.person) {
             throw new Error('Dados da pessoa fisica não encontrados.');
         }
 
@@ -32,54 +33,55 @@ export class VHPurchase extends VHAbstract {
         cartInstance.person = personInstance;
         purchaseInstance.cart = cartInstance;
 
-        if(req.method == 'POST'){
-            if(!userInfo.person){
+        if (req.method == 'POST') {
+            if (!userInfo.person) {
                 throw new Error('Dados da pessoa fisica não encontrados.');
             }
         }
 
-        if(id){
+        if (id) {
             purchaseInstance.id = Number(id);
         }
 
-        if(cart_id){
+        if (cart_id) {
             purchaseInstance.cart.id = cart_id;
         }
 
-        if(status){
-            if(userInfo.role != 'admin'){
+        if (status) {
+            if (userInfo.role != 'admin') {
                 throw new Error('Operação não autorizada.');
             }
             purchaseInstance.status = status;
         }
 
-        if(payment_address){
+        if (payment_address) {
             purchaseInstance.payment_address = new Address({ ...payment_address });
-            if(!payment_address.id){
-                purchaseInstance.payment_address.address_type = new AddressType({ 
+            if (!payment_address.id) {
+                purchaseInstance.payment_address.address_type = new AddressType({
                     id: payment_address.address_type_id
                 })
-                purchaseInstance.payment_address.place_type = new PlaceType({ 
+                purchaseInstance.payment_address.place_type = new PlaceType({
                     id: payment_address.place_type_id
                 })
             }
         }
 
-        if(delivery_address){
+        if (delivery_address) {
             purchaseInstance.delivery_address = new Address({ ...delivery_address });
-            if(!delivery_address.id){
-                purchaseInstance.delivery_address.address_type = new AddressType({ 
+            if (!delivery_address.id) {
+                purchaseInstance.delivery_address.address_type = new AddressType({
                     id: delivery_address.address_type_id
                 })
-                purchaseInstance.delivery_address.place_type = new PlaceType({ 
+                purchaseInstance.delivery_address.place_type = new PlaceType({
                     id: delivery_address.place_type_id
                 })
             }
         }
 
-        if(cards){
-            purchaseInstance.cards = cards.map((card: any) => {
-                return new Card({ ...card });
+        if (payments) {
+            purchaseInstance.payments = payments.map((payment: any) => {
+                const paymentInstance = new Payment({ ...payment });
+                paymentInstance.card = new Card({ ...payment.card });
             });
         }
 

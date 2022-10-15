@@ -10,6 +10,7 @@ import Address from "../address/Address";
 import Card from "../cards/Card";
 import Domain from "../Domain";
 import Cart from "../sales/Cart";
+import Coupom from "../sales/Coupom";
 import Gender from "./Gender";
 import Phone from "./Phone";
 import User from "./User";
@@ -32,7 +33,7 @@ class Person extends Domain {
     gender_id: number;
 
     @Column()
-    user_id:  number;
+    user_id: number;
 
     @JoinTable({ name: 'tb_persons_addresses' })
     @ManyToMany(() => Address, address => address.person, {
@@ -56,9 +57,15 @@ class Person extends Domain {
     })
     carts: Cart[];
 
+    @OneToMany(() => Coupom, coupom => coupom.person, {
+        onDelete: 'CASCADE', onUpdate: 'CASCADE',
+        cascade: true
+    })
+    coupons: Coupom[];
+
     @OneToOne(() => Phone, phone => phone.person, {
-         onDelete: 'CASCADE', onUpdate: 'CASCADE',
-         cascade: true, eager: true,
+        onDelete: 'CASCADE', onUpdate: 'CASCADE',
+        cascade: true, eager: true,
     })
     phone: Phone;
 

@@ -1,9 +1,11 @@
 import Domain from "@modules/models/Domain";
-import { BeforeInsert, BeforeUpdate, Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToOne } from "typeorm";
+import { BeforeInsert, BeforeUpdate, Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, OneToOne } from "typeorm";
 import Address from "../address/Address";
 import Card from "../cards/Card";
 import Cart from "./Cart";
+import Coupom from "./Coupom";
 import { PurchaseStatusEnum } from "./enum/PurchaseStatus";
+import Payment from "./Payment";
 
 @Entity('tb_purchases')
 export default class Purchase extends Domain {
@@ -33,12 +35,19 @@ export default class Purchase extends Domain {
         nullable: false, cascade: ['insert']
     })
     delivery_address: Address;
-    
-    @JoinTable({ name: 'tb_purchases_cards' })
-    @ManyToMany(() => Card, card => card.purchases, {
+
+    @JoinTable({ name: 'tb_purchases_coupons' })
+    @ManyToOne(() => Coupom, coupom => coupom.purchase, {
         onDelete: 'CASCADE', onUpdate: 'CASCADE',
+        eager: true, cascade: ['update']
     })
-    cards: Card[];
+    coupons: Coupom[];
+
+    @OneToMany(() => Payment, payment => payment.purchase, {
+        onDelete: 'CASCADE', onUpdate: 'CASCADE',
+        cascade: ['insert']
+    })
+    payments: Payment[];
 
     constructor(
         purchase?: Partial<Purchase>

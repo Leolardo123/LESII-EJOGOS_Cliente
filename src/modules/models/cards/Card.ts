@@ -1,6 +1,6 @@
-import { Column, Entity, JoinColumn, ManyToMany, ManyToOne } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from "typeorm";
 import Domain from "../Domain";
-import Purchase from "../sales/Purchase";
+import Payment from "../sales/Payment";
 import Person from "../users/Person";
 import Brand from "./Brand";
 
@@ -29,12 +29,12 @@ class Card extends Domain {
 
     @JoinColumn({ name: 'brand_id' })
     @ManyToOne(() => Brand, {
-        onDelete: 'CASCADE', onUpdate: 'CASCADE'
+        onDelete: 'RESTRICT', onUpdate: 'CASCADE'
     })
     brand: Brand;
 
-    @ManyToMany(() => Purchase, purchase => purchase.cards, {})
-    purchases: Purchase[];
+    @OneToMany(() => Payment, payment => payment.card, {})
+    payments: Payment[];
 
     constructor(
         card?: Partial<Card>
