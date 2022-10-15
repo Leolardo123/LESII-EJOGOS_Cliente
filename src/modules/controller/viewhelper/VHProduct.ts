@@ -27,17 +27,6 @@ export class VHProduct extends VHAbstract {
             }
         }
 
-        if (req.method == 'GET') {
-            try {
-                const userInfo = ensureAuthenticated(req);
-                if (userInfo.role != UserRolesEnum.admin) {
-                    throw new Error();
-                }
-            } catch (err) {
-                productInstance.isActive = true
-            }
-        }
-
         if (id) {
             Object.assign(productInstance, { id: Number(id) });
         }
@@ -55,9 +44,22 @@ export class VHProduct extends VHAbstract {
         const { search } = req.query;
 
         const whereParams = {} as FindManyOptions<Product>;
+
         if (search) {
             whereParams.where = {
                 name: ILike(`%${search}%`)
+            }
+        }
+
+        try {
+            const userInfo = ensureAuthenticated(req);
+            if (userInfo.role != UserRolesEnum.admin) {
+                throw new Error();
+            }
+        } catch (err) {
+            whereParams.where = {
+                ...whereParams.where as {},
+                isActive: true
             }
         }
 
