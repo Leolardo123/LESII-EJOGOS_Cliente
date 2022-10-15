@@ -6,7 +6,7 @@ export abstract class VHAbstract {
     abstract getEntity(req: Request): Domain;
     findEntity(req: Request): IGetEntity {
         return {
-            entity: { where: this.getEntity(req) },
+            entity: this.getEntity(req),
             relations: []
         }
     }
