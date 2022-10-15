@@ -2,9 +2,7 @@ import Product from "@modules/models/products/Product";
 import { UserRolesEnum } from "@modules/models/users/enum/UserRolesEnum";
 import { ensureAuthenticated } from "@shared/utils/ensureAuthenticated";
 import { Request } from "express";
-import { ParamsDictionary } from "express-serve-static-core";
-import { ParsedQs } from "qs";
-import { ILike } from "typeorm";
+import { FindManyOptions, ILike } from "typeorm";
 import { IGetEntity } from "./interface/IViewHelper";
 import { VHAbstract } from "./VHAbstract";
 
@@ -56,15 +54,16 @@ export class VHProduct extends VHAbstract {
     findEntity(req: Request): IGetEntity {
         const { search } = req.query;
 
-        const entity = new Product();
-
+        const whereParams = {} as FindManyOptions<Product>;
         if (search) {
-            entity.name = ILike(`%${search}%`) as any;
+            whereParams.where = {
+                name: ILike(`%${search}%`)
+            }
         }
 
         return {
-            entity,
-            relations: []
+            entity: this.getEntity(req),
+            whereParams
         }
     }
 }

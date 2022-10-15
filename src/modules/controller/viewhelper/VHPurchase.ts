@@ -8,6 +8,7 @@ import Purchase from "@modules/models/sales/Purchase";
 import Person from "@modules/models/users/Person";
 import { ensureAuthenticated } from "@shared/utils/ensureAuthenticated";
 import { Request } from "express";
+import { FindManyOptions, ILike } from "typeorm";
 import { IGetEntity } from "./interface/IViewHelper";
 import { VHAbstract } from "./VHAbstract";
 
@@ -92,9 +93,22 @@ export class VHPurchase extends VHAbstract {
     }
 
     findEntity(req: Request): IGetEntity {
+        const { search } = req.query;
+
+        let whereParams = {} as FindManyOptions<Purchase>;
+        if (search) {
+            whereParams.where = [
+                { id: ILike(`%${search}%`) },
+                { status: ILike(`%${search}%`) },
+            ]
+        }
+
+        whereParams.relations = [
+            'cart'
+        ]
         return {
-            entity: this.getEntity(req),
-            relations: ['cart']
+            entity: new Purchase(),
+            whereParams,
         }
     }
 }
