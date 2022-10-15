@@ -59,7 +59,7 @@ class Person extends Domain {
 
     @OneToMany(() => Coupom, coupom => coupom.person, {
         onDelete: 'CASCADE', onUpdate: 'CASCADE',
-        cascade: true
+        cascade: true, eager: true
     })
     coupons: Coupom[];
 
