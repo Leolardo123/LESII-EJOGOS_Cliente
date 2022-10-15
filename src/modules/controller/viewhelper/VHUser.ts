@@ -9,10 +9,12 @@ import { Request } from "express";
 import { ensureAuthenticated } from "@shared/utils/ensureAuthenticated";
 import moment from "moment";
 import { VHAbstract } from "./VHAbstract";
+import { FindManyOptions, ILike, Not } from "typeorm";
+import { IGetEntity } from "./interface/IViewHelper";
 
 export class VHUser extends VHAbstract {
   getEntity(req: Request): User {
-    const { isActive, user, person, addresses } = req.body;
+    const { user, person, addresses } = req.body;
     const { id } = req.params;
 
     const userInstance = new User();
@@ -21,14 +23,12 @@ export class VHUser extends VHAbstract {
     if (id) {
       const userInfo = ensureAuthenticated(req);
       if (id) {
-        Object.assign(userInstance, { id: Number(id) });
+        userInstance.id = Number(id);
       }
 
       if (userInfo.role === "admin") {
-        if (isActive) {
-          Object.assign(userInstance, {
-            isActive: isActive === 1,
-          });
+        if (user.isActive !== undefined) {
+          userInstance.isActive = user.isActive;
         }
       }
     }
@@ -87,6 +87,69 @@ export class VHUser extends VHAbstract {
     } else {
       const { password, ...user } = result;
       res.status(201).json(user);
+    }
+  }
+
+  findEntity(req: Request): IGetEntity {
+    const { search } = req.query;
+    const { id } = req.params;
+    const { role } = req.body;
+
+    let whereParams = {} as FindManyOptions<User>;
+    let includeFilters = {} as FindManyOptions<User>;// Filtros que sempre devem ser incluidos
+
+    if (!id) {
+      const userInfo = ensureAuthenticated(req);
+      if (userInfo.role != "admin") {
+        throw new Error('Não autorizado');
+      }
+      // includeFilters = {
+      //   where: {
+      //     id: Not(userInfo.id),
+      //   },
+      // }
+    }
+
+    if (role) {
+      includeFilters = {
+        where: {
+          role,
+        },
+      }
+    }
+
+    if (search) {
+      whereParams.where = [
+        {
+          ...includeFilters.where as any,
+          email: ILike(`%${search}%`)
+        },
+        {
+          ...includeFilters.where as any,
+          person: {
+            name: ILike(`%${search}%`)
+          }
+        },
+      ]
+    }
+
+    if (id) {
+      whereParams.where = { id: Number(id) };
+    }
+
+    if (!whereParams.where) {
+      whereParams.where = includeFilters.where;
+    }
+
+    whereParams.relations = [
+      "person",
+      "person.addresses",
+      "person.phone"
+    ];
+
+    return {
+      entity: new User(),
+      whereParams,
     }
   }
 }
