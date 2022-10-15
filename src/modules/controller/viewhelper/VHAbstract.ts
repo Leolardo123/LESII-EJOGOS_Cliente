@@ -2,11 +2,11 @@ import Domain from "@modules/models/Domain";
 import { Request } from "express";
 import { IGetEntity } from "./interface/IViewHelper";
 
-export abstract class VHAbstract{
+export abstract class VHAbstract {
     abstract getEntity(req: Request): Domain;
-    findEntity(req: Request):IGetEntity {
+    findEntity(req: Request): IGetEntity {
         return {
-            entity: this.getEntity(req),
+            entity: { where: this.getEntity(req) },
             relations: []
         }
     }

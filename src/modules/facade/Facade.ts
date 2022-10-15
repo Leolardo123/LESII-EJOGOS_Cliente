@@ -47,8 +47,8 @@ export class Facade implements IFacade {
 		const validateProduct = new ValidateProduct();
 		const validateBrand = new ValidateBrand();
 		const validateCartItem = new ValidateCartItem();
-		const validateCoupom = new ValidateCoupom();
 		const validateCart = new ValidateCart(validateCartItem);
+		const validateCoupom = new ValidateCoupom();
 		const validatePerson = new ValidatePerson(
 			validateAddress,
 			validatePhone,

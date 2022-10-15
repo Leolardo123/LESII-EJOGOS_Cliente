@@ -2,6 +2,10 @@ import Product from "@modules/models/products/Product";
 import { UserRolesEnum } from "@modules/models/users/enum/UserRolesEnum";
 import { ensureAuthenticated } from "@shared/utils/ensureAuthenticated";
 import { Request } from "express";
+import { ParamsDictionary } from "express-serve-static-core";
+import { ParsedQs } from "qs";
+import { ILike } from "typeorm";
+import { IGetEntity } from "./interface/IViewHelper";
 import { VHAbstract } from "./VHAbstract";
 
 export class VHProduct extends VHAbstract {
@@ -18,34 +22,49 @@ export class VHProduct extends VHAbstract {
         ]
 
         const productInstance = new Product(product);
-        if(adminActions.includes(req.method)){
+        if (adminActions.includes(req.method)) {
             const userInfo = ensureAuthenticated(req);
-            if(userInfo.role != UserRolesEnum.admin){
+            if (userInfo.role != UserRolesEnum.admin) {
                 throw new Error('Operação não autorizada.');
             }
         }
 
-        if(req.method == 'GET'){
-            try{
+        if (req.method == 'GET') {
+            try {
                 const userInfo = ensureAuthenticated(req);
-                if(userInfo.role != UserRolesEnum.admin){
+                if (userInfo.role != UserRolesEnum.admin) {
                     throw new Error();
                 }
-            } catch(err){
+            } catch (err) {
                 productInstance.isActive = true
             }
         }
 
-        if(id){
+        if (id) {
             Object.assign(productInstance, { id: Number(id) });
         }
 
         const files = req.files as Express.Multer.File[];
-        if(files && files.length > 0){
-            const [ image ] = files;
+        if (files && files.length > 0) {
+            const [image] = files;
             productInstance.image = image.filename;
         }
 
         return productInstance;
+    }
+
+    findEntity(req: Request): IGetEntity {
+        const { search } = req.query;
+
+        const entity = new Product();
+
+        if (search) {
+            entity.name = ILike(`%${search}%`) as any;
+        }
+
+        return {
+            entity,
+            relations: []
+        }
     }
 }
