@@ -88,13 +88,21 @@ export class ValidatePurchase implements IValidate {
                 throw new Error('Selecione pelo menos um cartão ou cupom válido.');
             }
 
-            const paymentTotal = entity.payments.reduce((total, payment) => {
-                return total + payment.value;
-            }, 0);
+            let paymentTotal = 0;
+            if (entity.payments) {
+                paymentTotal = entity.payments.reduce((total, payment) => {
+                    return total + Number(payment.value);
+                }, 0)
+            }
 
-            const couponTotal = entity.coupons.reduce((total, coupon) => {
-                return total + coupon.value;
-            }, 0);
+            let couponTotal = 0;
+            if (entity.coupons) {
+                couponTotal = entity.coupons.reduce((total, coupon) => {
+                    return total + Number(coupon.value);
+                }, 0)
+            }
+
+            console.log('paymentTotal', paymentTotal);
 
             const cartTotal = cartExists.getTotalPrice() || 0;
 

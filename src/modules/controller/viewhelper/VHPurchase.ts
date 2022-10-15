@@ -16,7 +16,7 @@ export class VHPurchase extends VHAbstract {
         const {
             payment_address,
             delivery_address,
-            payments,
+            cards,
             cart_id,
             status,
         } = req.body;
@@ -78,10 +78,13 @@ export class VHPurchase extends VHAbstract {
             }
         }
 
-        if (payments) {
-            purchaseInstance.payments = payments.map((payment: any) => {
-                const paymentInstance = new Payment({ ...payment });
-                paymentInstance.card = new Card({ ...payment.card });
+        if (cards) {
+            purchaseInstance.payments = cards.map((payment: any) => {
+                const { value, ...card } = payment;
+                const paymentInstance = new Payment({ value });
+                paymentInstance.card = new Card({ ...card });
+
+                return paymentInstance;
             });
         }
 
