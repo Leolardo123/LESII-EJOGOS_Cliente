@@ -72,4 +72,30 @@ export class VHProduct extends VHAbstract {
             whereParams
         }
     }
+
+    setView(req: Request, res: any, result: Product[] | Product | string): void {
+        if (typeof result === 'string') {
+            res.status(201).json({ message: result });
+        } else {
+            if (result instanceof Array) {
+                res.status(201).json(result.map((product: Product) => {
+                    return {
+                        ...product,
+                        image_url:
+                            product.image ?
+                                `${process.env.APP_API_URL}/files/${product.image}` :
+                                `${process.env.APP_API_URL}/files/default.png`
+                    };
+                }));
+            } else {
+                res.status(201).json({
+                    ...result,
+                    image_url:
+                        result.image ?
+                            `${process.env.APP_API_URL}/files/${result.image}` :
+                            `${process.env.APP_API_URL}/files/default.png`
+                });
+            }
+        }
+    }
 }
