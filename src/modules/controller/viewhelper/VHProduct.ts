@@ -43,11 +43,14 @@ export class VHProduct extends VHAbstract {
     findEntity(req: Request): IGetEntity {
         const { search } = req.query;
 
-        const whereParams = {} as FindManyOptions<Product>;
+        let whereParams = {} as FindManyOptions<Product>;
 
-        if (search) {
-            whereParams.where = {
-                name: ILike(`%${search}%`)
+        if (search && typeof search === 'string') {
+            whereParams.where = `(name ILIKE '%${search}%'`
+            if (Number(search)) {
+                whereParams.where += ` OR id = '${search}')`
+            } else {
+                whereParams.where += ')'
             }
         }
 
@@ -56,15 +59,16 @@ export class VHProduct extends VHAbstract {
             if (userInfo.role != UserRolesEnum.admin) {
                 throw new Error();
             }
-        } catch (err) {
-            whereParams.where = {
-                ...whereParams.where as {},
-                isActive: true
+        } catch (err) {// Ignora produtos inativos caso não seja admin
+            if (!whereParams.where) {
+                whereParams.where = `"isActive" = true`;
+            } else {
+                whereParams.where += ` AND "isActive" = true`;
             }
         }
 
         return {
-            entity: this.getEntity(req),
+            entity: new Product(),
             whereParams
         }
     }
