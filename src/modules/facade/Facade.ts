@@ -28,7 +28,7 @@ import { ValidateProduct } from "@modules/validators/ValidateProduct";
 import { ValidatePurchase } from "@modules/validators/ValidatePurchase";
 import { ValidateUser } from "@modules/validators/ValidateUser";
 import IHash from "@shared/interfaces/IHash";
-import { createConnections } from "typeorm";
+import { createConnections, FindManyOptions } from "typeorm";
 import { IFacade } from "./IFacade";
 
 
@@ -176,7 +176,10 @@ export class Facade implements IFacade {
 		return 'Removido com sucesso';
 	}
 
-	async findOne(entity: Domain, relations: string[]): Promise<Domain | undefined | null> {
+	async findOne(
+		entity: Domain,
+		whereParams: FindManyOptions<Domain>,
+	): Promise<Domain | undefined | null> {
 		if (!this.isConected) {
 			throw new Error('O Sistema ainda está inicializando...')
 		}
@@ -190,10 +193,13 @@ export class Facade implements IFacade {
 		}
 
 		const daoInstance = this.daos[entityName];
-		return await daoInstance.findOne({ where: entity, relations });
+		return await daoInstance.findOne(whereParams);
 	}
 
-	async findMany(entity: Domain, relations: string[]): Promise<Domain[]> {
+	async findMany(
+		entity: Domain,
+		whereParams: FindManyOptions<Domain>,
+	): Promise<Domain[]> {
 		if (!this.isConected) {
 			throw new Error('O Sistema ainda está inicializando...')
 		}
@@ -207,6 +213,6 @@ export class Facade implements IFacade {
 		}
 
 		const daoInstance = this.daos[entityName];
-		return await daoInstance.findMany({ where: entity, relations });
+		return await daoInstance.findMany(whereParams);
 	}
 }

@@ -4,33 +4,33 @@ import { ensureAuthenticated } from "@shared/utils/ensureAuthenticated";
 import { Request, Response } from "express";
 import { sign } from "jsonwebtoken";
 
-class SessionController{
+class SessionController {
     create = async (req: Request, res: Response) => {
         const { email, password } = req.body;
 
         const daoUser = new DAOUser();
         const userExists = await daoUser.findOne({ where: { email } });
 
-        if(!userExists|| password !=  userExists.password){
+        if (!userExists || password != userExists.password) {
             throw new Error('Email ou senha incorretos.');
         }
 
-        if(!userExists.isActive){
+        if (!userExists.isActive) {
             throw new Error('Não autorizado.');
         }
 
         const jwToken = sign(
-            { 
-                sub:  userExists.id, 
-                role:  userExists.role, 
+            {
+                sub: userExists.id,
+                role: userExists.role,
                 person: userExists.person ? userExists.person.id : null
-            }, 
+            },
             jwt_config.secret, {
-                expiresIn: jwt_config.expiresIn,
-            }
+            expiresIn: jwt_config.expiresIn,
+        }
         );
 
-        const { password: _, ...userWithoutPassword } =  userExists;
+        const { password: _, ...userWithoutPassword } = userExists;
 
         res.status(201).json({ user: userWithoutPassword, access_token: jwToken });
     }
@@ -40,27 +40,27 @@ class SessionController{
 
         const daoUser = new DAOUser();
         const userExists = await daoUser.findOne({ where: { id } });
-        
-        if(!userExists){
+
+        if (!userExists) {
             throw new Error('Usuário não encontrado.');
         }
 
-        if(!userExists.isActive){
+        if (!userExists.isActive) {
             throw new Error('Não autorizado.');
         }
 
         const jwToken = sign(
-            { 
-                sub:  userExists.id, 
-                role:  userExists.role, 
+            {
+                sub: userExists.id,
+                role: userExists.role,
                 person: userExists.person ? userExists.person.id : null
-            }, 
+            },
             jwt_config.secret, {
-                expiresIn: jwt_config.expiresIn,
-            }
+            expiresIn: jwt_config.expiresIn,
+        }
         );
 
-        const { password: _, ...userWithoutPassword } =  userExists;
+        const { password: _, ...userWithoutPassword } = userExists;
 
         res.status(201).json({ user: userWithoutPassword, access_token: jwToken });
     }

@@ -1,9 +1,10 @@
 import Domain from "@modules/models/Domain";
 import { Request } from "express";
+import { FindManyOptions } from "typeorm";
 
 export interface IGetEntity {
     entity: Domain,
-    relations: string[]
+    whereParams: FindManyOptions,
 }
 export interface IViewHelper {
     getEntity(req: Request): Domain;

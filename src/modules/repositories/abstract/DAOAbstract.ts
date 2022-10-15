@@ -7,64 +7,64 @@ import { IDAO } from "../interfaces/IDAO";
 
 
 export abstract class DAOAbstract<T extends Domain> implements IDAO<T> {
-    protected repository: Repository<T>;
+  protected repository: Repository<T>;
 
-    constructor(entity: EntityTarget<T>) {
-      this.repository = getRepository(entity);
-    }
-  
-    public async index({
-      page = 1,
-      limit = 10,
-      findParams,
-    }: IFilterPaginated<T>): Promise<IPaginatedResponse<T>> {
-      const [results, total] = findParams?.where ?
-        await this.repository.findAndCount({
-          skip: (page - 1) * limit,
-          take: limit,
-          where: findParams.where,
-          order: {
-            created_at: 'DESC'
-          }
-        }) : await this.repository.findAndCount({
-          skip: (page - 1) * limit,
-          take: limit,
-          order: {
-            created_at: 'DESC'
-          }
-        })
-      return { results, total, limit, page }
-    }
-  
-    public create(entity: DeepPartial<T>): T {
-      return this.repository.create(entity)
-    }
-  
-    public async findOne({ where, relations }: FindOneOptions<T>): Promise<T | undefined | null> {
-      return await this.repository.findOne({
-        where,
-        relations,
+  constructor(entity: EntityTarget<T>) {
+    this.repository = getRepository(entity);
+  }
+
+  public async index({
+    page = 1,
+    limit = 10,
+    findParams,
+  }: IFilterPaginated<T>): Promise<IPaginatedResponse<T>> {
+    const [results, total] = findParams?.where ?
+      await this.repository.findAndCount({
+        skip: (page - 1) * limit,
+        take: limit,
+        where: findParams.where,
+        order: {
+          created_at: 'DESC'
+        }
+      }) : await this.repository.findAndCount({
+        skip: (page - 1) * limit,
+        take: limit,
         order: {
           created_at: 'DESC'
         }
       })
-    }
-  
-    public async findMany({ where, relations }: FindOneOptions<T>): Promise<T[]> {
-      return await this.repository.find({
-        where,
-        relations,
-        order: {
-          created_at: 'DESC'
-        }
-      })
-    }
-  
-    public async save(entity: DeepPartial<T>): Promise<DeepPartial<T>> {
-      return await this.repository.save(entity);
-    }
-  
-    public async remove(entity: T): Promise<void> {
-      await this.repository.remove(entity);
-    }
+    return { results, total, limit, page }
+  }
+
+  public create(entity: DeepPartial<T>): T {
+    return this.repository.create(entity)
+  }
+
+  public async findOne({ where, relations }: FindOneOptions<T>): Promise<T | undefined | null> {
+    return await this.repository.findOne({
+      where,
+      relations,
+      order: {
+        created_at: 'DESC'
+      }
+    })
+  }
+
+  public async findMany({ where, relations }: FindOneOptions<T>): Promise<T[]> {
+    return await this.repository.find({
+      where,
+      relations,
+      order: {
+        created_at: 'DESC'
+      }
+    })
+  }
+
+  public async save(entity: DeepPartial<T>): Promise<DeepPartial<T>> {
+    return await this.repository.save(entity);
+  }
+
+  public async remove(entity: T): Promise<void> {
+    await this.repository.remove(entity);
+  }
 }

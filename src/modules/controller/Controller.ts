@@ -15,10 +15,10 @@ import { VHPlaceType } from "./viewhelper/VHPlaceType";
 import { VHProduct } from "./viewhelper/VHProduct";
 import { VHPurchase } from "./viewhelper/VHPurchase";
 import { VHUser } from "./viewhelper/VHUser";
-class Controller{
+class Controller {
     private vhs: IHash<IViewHelper> = {};
-    constructor(private facade: IFacade){
-       this.vhs = {
+    constructor(private facade: IFacade) {
+        this.vhs = {
             "users": new VHUser(),
             "persons": new VHPerson(),
             "addresses": new VHAddress(),
@@ -31,13 +31,13 @@ class Controller{
             "carts": new VHCart(),
             "cart-items": new VHCartItem(),
             "purchases": new VHPurchase(),
-       }
+        }
     }
 
-     create = async (req: Request, res: Response) => {
+    create = async (req: Request, res: Response) => {
         const { route } = req.params
 
-        if(!this.vhs[route]){
+        if (!this.vhs[route]) {
             throw new Error(`${route} não existe.`)
         }
 
@@ -50,10 +50,10 @@ class Controller{
     update = async (req: Request, res: Response) => {
         const { route } = req.params
 
-        if(!this.vhs[route]){
+        if (!this.vhs[route]) {
             throw new Error(`${route} não existe.`)
         }
-        
+
         const entity = this.vhs[route].getEntity(req);
         const msg = await this.facade.update(entity);
 
@@ -63,10 +63,10 @@ class Controller{
     delete = async (req: Request, res: Response) => {
         const { route } = req.params
 
-        if(!this.vhs[route]){
+        if (!this.vhs[route]) {
             throw new Error(`${route} não existe.`)
         }
-        
+
         const entity = this.vhs[route].getEntity(req);
         const msg = await this.facade.delete(entity);
 
@@ -76,12 +76,12 @@ class Controller{
     get = async (req: Request, res: Response) => {
         const { route } = req.params
 
-        if(!this.vhs[route]){
+        if (!this.vhs[route]) {
             throw new Error(`${route} não existe.`)
         }
-        
-        const { entity, relations }= this.vhs[route].findEntity(req);
-        const result = await this.facade.findOne(entity, relations);
+
+        const { entity, whereParams } = this.vhs[route].findEntity(req);
+        const result = await this.facade.findOne(entity, whereParams);
 
         return this.vhs[route].setView(req, res, result);
     }
@@ -89,12 +89,12 @@ class Controller{
     index = async (req: Request, res: Response) => {
         const { route } = req.params
 
-        if(!this.vhs[route]){
+        if (!this.vhs[route]) {
             throw new Error(`${route} não existe.`)
         }
-        
-        const { entity, relations }= this.vhs[route].findEntity(req);
-        const result = await this.facade.findMany(entity, relations);
+
+        const { entity, whereParams } = this.vhs[route].findEntity(req);
+        const result = await this.facade.findMany(entity, whereParams);
 
         return this.vhs[route].setView(req, res, result);
     }
