@@ -38,7 +38,6 @@ export default class Purchase extends Domain {
 
     @JoinTable({ name: 'tb_purchases_coupons' })
     @ManyToOne(() => Coupom, coupom => coupom.purchase, {
-        onDelete: 'CASCADE', onUpdate: 'CASCADE',
         eager: true, cascade: ['update']
     })
     coupons: Coupom[];

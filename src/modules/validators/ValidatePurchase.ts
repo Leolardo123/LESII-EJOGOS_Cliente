@@ -29,14 +29,14 @@ export class ValidatePurchase implements IValidate {
         }
 
         const daoAddress = new DAOAddress();
-        if (!entity.id) {
+        if (!entity?.id) {
             if (!entity.cart) {
                 throw new Error('Carrinho não encontrado.');
             }
 
             const daoCart = new DAOCart();
             const cartExists = await daoCart.findOne({
-                where: { id: entity.cart.id },
+                where: { id: entity.cart?.id },
             });
 
             if (!cartExists) {
@@ -49,18 +49,18 @@ export class ValidatePurchase implements IValidate {
 
             await this.validateCart.validate(entity.cart);
 
-            if (!entity.cart.person || !entity.cart.person.id) {
+            if (!entity.cart.person || !entity.cart.person?.id) {
                 throw new Error('Pessoa não encontrada (Compra).');
             }
 
-            if (!entity.payment_address || !entity.payment_address.id) {
+            if (!entity.payment_address || !entity.payment_address?.id) {
                 throw new Error('Endereço de pagamento não selecionado.');
             }
 
-            if (entity.payment_address.id) {
+            if (entity.payment_address?.id) {
                 const paymentAddress = await daoAddress.findOne({
                     where: {
-                        id: entity.payment_address.id
+                        id: entity.payment_address?.id
                     }
                 });
                 if (!paymentAddress) {
@@ -71,14 +71,14 @@ export class ValidatePurchase implements IValidate {
                 await this.validateAddress.validate(entity.payment_address);
             }
 
-            if (!entity.delivery_address || !entity.delivery_address.id) {
+            if (!entity.delivery_address || !entity.delivery_address?.id) {
                 throw new Error('Endereço de entrega não selecionado.');
             }
 
-            if (entity.delivery_address.id) {
+            if (entity.delivery_address?.id) {
                 const deliveryAddress = await daoAddress.findOne({
                     where: {
-                        id: entity.delivery_address.id
+                        id: entity.delivery_address?.id
                     }
                 });
                 if (!deliveryAddress) {
@@ -97,82 +97,89 @@ export class ValidatePurchase implements IValidate {
                 throw new Error('Selecione pelo menos um cartão ou cupom válido.');
             }
 
+            if (cartExists.items.length <= 0) {
+                throw new Error('Nenhum produto selecionado')
+            }
+
+            const cartTotal = cartExists.getTotalPrice() || 0;
+
             let paymentTotal = 0;
             if (entity.payments) {
                 const daoCard = new DAOCard();
                 const promise = entity.payments.map(async (payment) => {
-                    const coupomExists = daoCard.findOne({
+                    const cardExists = await daoCard.findOne({
                         where: {
-                            id: payment.card.id
-                        }
+                            id: payment.card?.id
+                        },
+                        relations: ['person']
                     });
 
-                    if (!coupomExists) {
-                        throw new Error('Cupom não encontrado.');
+                    if (!cardExists) {
+                        throw new Error('Cartão não encontrado.');
                     }
 
-                    await this.validateCard.validate(payment.card);
+                    if (!cardExists.person || !cardExists.person?.id) {
+                        throw new Error('Cartão inválido.');
+                    }
 
                     paymentTotal += Number(payment.value);
-                }, 0)
+                })
                 await Promise.all(promise);
             }
 
-            let couponTotal = 0;
-            if (entity.coupons) {
+            let coupomTotal = 0;
+            let remainingCoupomValue = 0;
+            const tobeDiscounted = cartTotal - paymentTotal;
+
+            if (tobeDiscounted < 0) {
+                throw new Error('Valor do pagamento maior que o valor do carrinho.');
+            }
+
+            if (entity.coupons && entity.coupons.length > 0) {
+
+                if (tobeDiscounted == 0) {
+                    throw new Error('Não é possível utilizar cupons pois o total dos cartões completam preço total.');
+                }
+
                 const daoCoupom = new DAOCoupom();
                 const promise = entity.coupons.map(async (coupon) => {
-                    const coupomExists = daoCoupom.findOne({
+                    const coupomExists = await daoCoupom.findOne({
                         where: {
                             id: coupon.id
-                        }
+                        },
+                        relations: ['person']
                     });
 
                     if (!coupomExists) {
                         throw new Error('Cupom não encontrado.');
                     }
 
-                    await this.validateCoupom.validate(coupon);
+                    if (coupomExists.is_used) {
+                        throw new Error('Cupom já utilizado.');
+                    }
 
-                    couponTotal += Number(coupon.value);
-                }, 0)
+                    if (coupomExists.person?.id != entity.cart?.person?.id) {
+                        throw new Error('Cupom não pertence a pessoa.');
+                    }
+
+                    coupomTotal += Number(coupomExists.value);
+                })
                 await Promise.all(promise);
+                remainingCoupomValue = coupomTotal - tobeDiscounted;
             }
 
-            const cartTotal = cartExists.getTotalPrice() || 0;
-            const tobePaid = cartTotal - couponTotal;
-            if (tobePaid < 0) {//Se cupom vale mais que o total, um cupom de troco deve ser gerado
+            if (cartTotal > paymentTotal + coupomTotal) {
+                throw new Error('Pagamento insuficiente para esta compra.');
+            }
+
+            if (remainingCoupomValue > 0) {//Se cupom vale mais que o total, um cupom de troco deve ser gerado
                 const newCoupom = new Coupom({
-                    value: tobePaid * -1,
+                    is_used: false,
+                    value: remainingCoupomValue,
                     person: entity.cart.person,
                     type: CoupomTypeEnum.RETURN_PRODUCT,
                 });
-                entity.cart.person.coupons.push(newCoupom);
-            }
-
-            if (paymentTotal < tobePaid) {
-                throw new Error('Valor total dos cartões é menor que o valor total da compra.');
-            }
-
-            if (paymentTotal > tobePaid) {
-                throw new Error('Valor total dos cartões é maior que o valor total da compra.');
-            }
-
-            if (entity.payments) {
-                const daoCard = new DAOCard();
-                const promise = entity.payments.map(async payment => {
-                    const cardExists = await daoCard.findOne({
-                        where: { id: payment.card.id },
-                    })
-                    if (!cardExists) {
-                        throw new Error('Um dos cartões selecionados não é válido.');
-                    }
-                });
-                await Promise.all(promise);
-            }
-
-            if (cartExists.items.length <= 0) {
-                throw new Error('Nenhum produto selecionado')
+                entity.cart.person.coupons = [newCoupom];
             }
 
             const promise = cartExists.items.map(async (item) => {
@@ -184,12 +191,12 @@ export class ValidatePurchase implements IValidate {
             entity.cart = cartExists;
             entity.total_price = cartTotal;
             entity.cart.isOpen = false;
-        }
 
-        if (entity.id) {
+            console.log(entity);
+        } else {
             const daoPurchase = new DAOPurchase();
             const purchaseExists = await daoPurchase.findOne({
-                where: { id: entity.id },
+                where: { id: entity?.id },
             });
 
             if (!purchaseExists) {

@@ -3,6 +3,7 @@ import AddressType from "@modules/models/address/AddressType";
 import PlaceType from "@modules/models/address/PlaceType";
 import Card from "@modules/models/cards/Card";
 import Cart from "@modules/models/sales/Cart";
+import Coupom from "@modules/models/sales/Coupom";
 import Payment from "@modules/models/sales/Payment";
 import Purchase from "@modules/models/sales/Purchase";
 import Person from "@modules/models/users/Person";
@@ -18,6 +19,7 @@ export class VHPurchase extends VHAbstract {
             payment_address,
             delivery_address,
             cards,
+            coupons,
             cart_id,
             status,
         } = req.body;
@@ -37,6 +39,7 @@ export class VHPurchase extends VHAbstract {
 
         if (cart_id) {
             purchaseInstance.cart.id = cart_id;
+            purchaseInstance.cart.person = personInstance;
         }
 
         if (status) {
@@ -70,13 +73,21 @@ export class VHPurchase extends VHAbstract {
             }
         }
 
-        if (cards) {
+        if (cards && cards.length > 0) {
             purchaseInstance.payments = cards.map((payment: any) => {
                 const { value, ...card } = payment;
                 const paymentInstance = new Payment({ value });
-                paymentInstance.card = new Card({ ...card });
+                paymentInstance.card = new Card({ id: card.id });
 
                 return paymentInstance;
+            });
+        }
+
+        if (coupons && coupons.length > 0) {
+            purchaseInstance.coupons = coupons.map((coupon: any) => {
+                return new Coupom({
+                    id: coupon.id,
+                });
             });
         }
 
