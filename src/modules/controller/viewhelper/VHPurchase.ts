@@ -24,21 +24,12 @@ export class VHPurchase extends VHAbstract {
         const { id } = req.params;
 
         const userInfo = ensureAuthenticated(req);
-        if (!userInfo.person) {
-            throw new Error('Dados da pessoa fisica não encontrados.');
-        }
 
         const personInstance = new Person({ id: userInfo.person });
         const purchaseInstance = new Purchase();
         const cartInstance = new Cart()
         cartInstance.person = personInstance;
         purchaseInstance.cart = cartInstance;
-
-        if (req.method == 'POST') {
-            if (!userInfo.person) {
-                throw new Error('Dados da pessoa fisica não encontrados.');
-            }
-        }
 
         if (id) {
             purchaseInstance.id = Number(id);
@@ -98,14 +89,18 @@ export class VHPurchase extends VHAbstract {
         let whereParams = {} as FindManyOptions<Purchase>;
         if (search) {
             whereParams.where = [
-                { id: ILike(`%${search}%`) },
                 { status: ILike(`%${search}%`) },
             ]
+
+            if (Number(search)) {
+                whereParams.where.push({ id: Number(search) });
+            }
         }
 
         whereParams.relations = [
             'cart'
         ]
+
         return {
             entity: new Purchase(),
             whereParams,

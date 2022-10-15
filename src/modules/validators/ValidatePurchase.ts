@@ -7,6 +7,7 @@ import { DAOCart } from "@modules/repositories/DAOCart";
 import { DAOCoupom } from "@modules/repositories/DAOCoupom";
 import { DAOPurchase } from "@modules/repositories/DAOPurchase";
 import Purchase from "../models/sales/Purchase";
+import { purchaseStatusOrder } from "./helpers/purchaseStatusOrder";
 import { IValidate } from "./IValidate";
 import { ValidateAddress } from "./ValidateAddress";
 import { ValidateCard } from "./ValidateCard";
@@ -196,13 +197,14 @@ export class ValidatePurchase implements IValidate {
             }
 
             if (entity.status) {
-                if (PurchaseStatusEnum) {
-                    if (
-                        !Object.values(PurchaseStatusEnum)
-                            .includes(entity.status as PurchaseStatusEnum)
-                    ) {
-                        throw new Error('Estado de compra selecionado não é válido.');
-                    }
+                const nextStatusExists = purchaseStatusOrder.find(orders => orders.status === entity.status)
+                if (!nextStatusExists) {
+                    throw new Error('Estado de compra não existe.');
+                }
+
+                const statusExists = purchaseStatusOrder.find(orders => orders.status === purchaseExists.status)
+                if (!statusExists?.next.includes(entity.status as PurchaseStatusEnum)) {
+                    throw new Error(`Não é possível alterar o estado de compra de ${purchaseExists.status} para ${entity.status}.`);
                 }
             }
         }
