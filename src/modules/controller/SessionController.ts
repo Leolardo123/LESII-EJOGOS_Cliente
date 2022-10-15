@@ -9,7 +9,12 @@ class SessionController {
         const { email, password } = req.body;
 
         const daoUser = new DAOUser();
-        const userExists = await daoUser.findOne({ where: { email } });
+        const userExists = await daoUser.findOne({
+            where: { email },
+            relations: [
+                'person', 'person.carts'
+            ]
+        });
 
         if (!userExists || password != userExists.password) {
             throw new Error('Email ou senha incorretos.');
@@ -39,7 +44,12 @@ class SessionController {
         const { id } = ensureAuthenticated(req);
 
         const daoUser = new DAOUser();
-        const userExists = await daoUser.findOne({ where: { id } });
+        const userExists = await daoUser.findOne({
+            where: { id },
+            relations: [
+                'person', 'person.carts'
+            ]
+        });
 
         if (!userExists) {
             throw new Error('Usuário não encontrado.');
