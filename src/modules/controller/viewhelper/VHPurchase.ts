@@ -78,7 +78,9 @@ export class VHPurchase extends VHAbstract {
         if (cards && cards.length > 0) {
             purchaseInstance.payments = cards.map((payment: any) => {
                 const { value, ...card } = payment;
-                const paymentInstance = new Payment({ value });
+                const paymentInstance = new Payment({
+                    value: Number(value) ? Number(value) : 0
+                });
                 paymentInstance.card = new Card({ id: card.id });
 
                 return paymentInstance;
