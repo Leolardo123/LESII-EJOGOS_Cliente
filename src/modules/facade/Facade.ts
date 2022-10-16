@@ -59,11 +59,8 @@ export class Facade implements IFacade {
 			validatePassword
 		);
 		const validatePurchase = new ValidatePurchase(
-			validateCart,
 			validateAddress,
 			validateProduct,
-			validateCoupom,
-			validateCard,
 		);
 
 		this.validators.address = validateAddress;

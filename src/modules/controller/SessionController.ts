@@ -10,7 +10,9 @@ class SessionController {
 
         const daoUser = new DAOUser();
         const userExists = await daoUser.findOne({
-            where: { email },
+            where: {
+                email
+            },
             relations: [
                 'person', 'person.carts'
             ]

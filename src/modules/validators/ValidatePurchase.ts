@@ -1,6 +1,7 @@
 import Coupom from "@modules/models/sales/Coupom";
 import { CoupomTypeEnum } from "@modules/models/sales/enum/CoupomTypes";
 import { PurchaseStatusEnum } from "@modules/models/sales/enum/PurchaseStatus";
+import Person from "@modules/models/users/Person";
 import { DAOAddress } from "@modules/repositories/DAOAddress";
 import { DAOCard } from "@modules/repositories/DAOCard";
 import { DAOCart } from "@modules/repositories/DAOCart";
@@ -10,18 +11,12 @@ import Purchase from "../models/sales/Purchase";
 import { purchaseStatusOrder } from "./helpers/purchaseStatusOrder";
 import { IValidate } from "./IValidate";
 import { ValidateAddress } from "./ValidateAddress";
-import { ValidateCard } from "./ValidateCard";
-import { ValidateCart } from "./ValidateCart";
-import { ValidateCoupom } from "./ValidateCoupom";
 import { ValidateProduct } from "./ValidateProduct";
 
 export class ValidatePurchase implements IValidate {
     constructor(
-        private validateCart: ValidateCart,
         private validateAddress: ValidateAddress,
         private validateProduct: ValidateProduct,
-        private validateCoupom: ValidateCoupom,
-        private validateCard: ValidateCard,
     ) { }
     async validate(entity: Purchase): Promise<void> {
         if (!(entity instanceof Purchase)) {
@@ -164,7 +159,8 @@ export class ValidatePurchase implements IValidate {
                     }
 
                     coupon.is_used = true;
-                    coupomTotal += Number(coupon.value);
+                    coupon.person = null;
+                    coupomTotal += Number(coupomExists.value);
 
                     return coupon;
                 })
@@ -172,7 +168,7 @@ export class ValidatePurchase implements IValidate {
                 remainingCoupomValue = coupomTotal - tobeDiscounted;
             }
 
-            if (cartTotal > paymentTotal + coupomTotal) {
+            if (cartTotal > paymentTotal + coupomTotal || tobeDiscounted > coupomTotal) {
                 throw new Error('Pagamento insuficiente para esta compra.');
             }
 
@@ -182,8 +178,10 @@ export class ValidatePurchase implements IValidate {
                     is_used: false,
                     value: remainingCoupomValue,
                     type: CoupomTypeEnum.RETURN_PRODUCT,
+                    person: entity.cart?.person,
+                    purchase: null,
                 });
-                entity.cart.person.coupons.push(newCoupom);
+                entity.coupons.push(newCoupom);
             }
 
             const promise = cartExists.items.map(async (item) => {
@@ -192,7 +190,7 @@ export class ValidatePurchase implements IValidate {
             })
             await Promise.all(promise);
 
-            entity.cart = cartExists;
+            entity.cart.id = cartExists.id;
             entity.total_price = cartTotal;
             entity.cart.isOpen = false;
         } else {

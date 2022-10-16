@@ -23,11 +23,13 @@ export default class Coupom extends Domain {
     @ManyToOne(() => Purchase, purchase => purchase.coupons, {
         onDelete: 'CASCADE', onUpdate: 'CASCADE',
     })
-    purchase: Purchase;
+    purchase: Purchase | null;
 
     @JoinColumn({ name: 'person_id' })
-    @ManyToOne(() => Person, person => person.coupons, {})
-    person: Person;
+    @ManyToOne(() => Person, person => person.coupons, {
+        onDelete: 'CASCADE', onUpdate: 'CASCADE',
+    })
+    person: Person | null;
 
     constructor(
         coupom?: Partial<Coupom>

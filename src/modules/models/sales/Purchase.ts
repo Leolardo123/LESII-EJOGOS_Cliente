@@ -37,7 +37,7 @@ export default class Purchase extends Domain {
     delivery_address: Address;
 
     @OneToMany(() => Coupom, coupom => coupom.purchase, {
-        eager: true, cascade: ['update']
+        eager: true, cascade: true
     })
     coupons: Coupom[];
 
