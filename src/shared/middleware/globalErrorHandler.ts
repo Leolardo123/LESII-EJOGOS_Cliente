@@ -1,5 +1,6 @@
 /* eslint-disable  @typescript-eslint/no-explicit-any */
 import { Request, Response, NextFunction } from 'express';
+import { TypeORMError } from 'typeorm';
 
 export async function globalErrorHandler(
   err: Error,
@@ -7,6 +8,8 @@ export async function globalErrorHandler(
   response: Response,
   _: NextFunction,
 ): Promise<Response<any>> {
+
+  console.log(err.stack);
   console.log(`Error - ${err} 
   URL - [${request.method}] - ${request.url}
   Request:
