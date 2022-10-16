@@ -6,6 +6,7 @@ import Cart from '@modules/models/sales/Cart';
 import CartItem from "@modules/models/sales/CartItem";
 import Product from "@modules/models/products/Product";
 import Person from "@modules/models/users/Person";
+import { IGetEntity } from "./interface/IViewHelper";
 
 export class VHCart extends VHAbstract {
     getEntity(req: Request): Cart {
@@ -14,24 +15,24 @@ export class VHCart extends VHAbstract {
         } = req.body;
         const { id } = req.params;
         const userInfo = ensureAuthenticated(req);
-        
+
         const cartInstance = new Cart();
         const personInstance = new Person({ id: userInfo.person });
         cartInstance.person = personInstance;
 
-        if(id){
+        if (id) {
             cartInstance.id = Number(id);
         }
 
-        if(cart.items){
+        if (cart.items) {
             cartInstance.items = cart.items.map((item: any) => {
                 const productInstance = new Product({ id: Number(item.product.id) });
-                const cartItemInstance = new CartItem({ 
+                const cartItemInstance = new CartItem({
                     quantity: item.quantity ? item.quantity : 1,
                     product: productInstance,
                 });
 
-                if(item.id){
+                if (item.id) {
                     cartItemInstance.id = Number(item.id);
                 }
 
@@ -42,12 +43,12 @@ export class VHCart extends VHAbstract {
         return cartInstance;
     }
 
-        
+
     setView(req: Request, res: any, result: Cart[] | Cart | string): void {
         if (typeof result === 'string') {
             res.status(201).json({ message: result });
         } else {
-            if(result instanceof Array){
+            if (result instanceof Array) {
                 res.status(201).json(
                     result.map((cart: Cart) => {
                         return {
@@ -57,7 +58,20 @@ export class VHCart extends VHAbstract {
                     })
                 );
             } else {
-                res.status(201).json({...result, total_price: result.getTotalPrice()});
+                res.status(201).json({ ...result, total_price: result.getTotalPrice() });
+            }
+        }
+    }
+
+    findEntity(req: Request): IGetEntity {
+        const entity = this.getEntity(req);
+        return {
+            entity,
+            whereParams: {
+                where: entity,
+                relations: [
+                    'person'
+                ]
             }
         }
     }
