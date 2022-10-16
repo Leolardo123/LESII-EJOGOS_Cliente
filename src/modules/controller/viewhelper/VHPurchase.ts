@@ -27,11 +27,14 @@ export class VHPurchase extends VHAbstract {
 
         const userInfo = ensureAuthenticated(req);
 
-        const personInstance = new Person({ id: userInfo.person });
         const purchaseInstance = new Purchase();
-        const cartInstance = new Cart()
-        cartInstance.person = personInstance;
-        purchaseInstance.cart = cartInstance;
+
+        if (userInfo.person) {
+            const personInstance = new Person({ id: userInfo.person });
+            const cartInstance = new Cart()
+            cartInstance.person = personInstance;
+            purchaseInstance.cart = cartInstance;
+        }
 
         if (id) {
             purchaseInstance.id = Number(id);
@@ -39,7 +42,6 @@ export class VHPurchase extends VHAbstract {
 
         if (cart_id) {
             purchaseInstance.cart.id = cart_id;
-            purchaseInstance.cart.person = personInstance;
         }
 
         if (status) {
