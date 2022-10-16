@@ -204,8 +204,12 @@ export class ValidatePurchase implements IValidate {
             }
 
             if (entity.status) {
-                const statusExists = purchaseStatusOrder.find(orders => orders.next.includes(entity.status as any))
-                if (!statusExists || purchaseExists.status != statusExists.status) {
+                const statusExists = purchaseStatusOrder.find(
+                    orders =>
+                        orders.status == purchaseExists.status &&
+                        orders.next.includes(entity.status as any)
+                )
+                if (!statusExists) {
                     throw new Error(`Não é possível alterar o estado de compra de ${purchaseExists.status} para ${entity.status}.`);
                 }
             }
