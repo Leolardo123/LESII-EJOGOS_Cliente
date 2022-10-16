@@ -18,7 +18,7 @@ export default class Purchase extends Domain {
     @JoinColumn({ name: 'cart_id' })
     @OneToOne(() => Cart, cart => cart.purchase, {
         onDelete: 'CASCADE', onUpdate: 'CASCADE',
-        cascade: ['update']
+        cascade: true
     })
     cart: Cart;
 
@@ -36,15 +36,14 @@ export default class Purchase extends Domain {
     })
     delivery_address: Address;
 
-    @JoinTable({ name: 'tb_purchases_coupons' })
-    @ManyToOne(() => Coupom, coupom => coupom.purchase, {
+    @OneToMany(() => Coupom, coupom => coupom.purchase, {
         eager: true, cascade: ['update']
     })
     coupons: Coupom[];
 
     @OneToMany(() => Payment, payment => payment.purchase, {
         onDelete: 'CASCADE', onUpdate: 'CASCADE',
-        cascade: ['insert']
+        cascade: true
     })
     payments: Payment[];
 

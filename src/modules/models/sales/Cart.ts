@@ -22,7 +22,7 @@ export default class Cart extends Domain {
     @JoinColumn({ name: 'person_id' })
     @ManyToOne(() => Person, person => person.carts, {
         onDelete: 'CASCADE', onUpdate: 'CASCADE',
-        nullable: false, 
+        nullable: false, cascade: ['update']
     })
     person: Person;
 
@@ -39,7 +39,7 @@ export default class Cart extends Domain {
     }
 
     getTotalPrice(): number {
-        if(this.items.length > 0) {
+        if (this.items.length > 0) {
             return this.items.reduce(
                 (total, item) => total + item.price, 0
             )

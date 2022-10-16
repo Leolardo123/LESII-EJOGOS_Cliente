@@ -37,6 +37,7 @@ export class ValidatePurchase implements IValidate {
             const daoCart = new DAOCart();
             const cartExists = await daoCart.findOne({
                 where: { id: entity.cart?.id },
+                relations: ['person']
             });
 
             if (!cartExists) {
@@ -46,8 +47,6 @@ export class ValidatePurchase implements IValidate {
             if (!cartExists.items) {
                 throw new Error('Carrinho vazio.');
             }
-
-            await this.validateCart.validate(entity.cart);
 
             if (!entity.cart.person || !entity.cart.person?.id) {
                 throw new Error('Pessoa não encontrada (Compra).');
@@ -123,6 +122,8 @@ export class ValidatePurchase implements IValidate {
                     }
 
                     paymentTotal += Number(payment.value);
+
+                    return payment;
                 })
                 await Promise.all(promise);
             }
@@ -162,9 +163,12 @@ export class ValidatePurchase implements IValidate {
                         throw new Error('Cupom não pertence a pessoa.');
                     }
 
-                    coupomTotal += Number(coupomExists.value);
+                    coupon.is_used = true;
+                    coupomTotal += Number(coupon.value);
+
+                    return coupon;
                 })
-                await Promise.all(promise);
+                entity.coupons = await Promise.all(promise);
                 remainingCoupomValue = coupomTotal - tobeDiscounted;
             }
 
@@ -174,12 +178,12 @@ export class ValidatePurchase implements IValidate {
 
             if (remainingCoupomValue > 0) {//Se cupom vale mais que o total, um cupom de troco deve ser gerado
                 const newCoupom = new Coupom({
+                    created_at: new Date(),
                     is_used: false,
                     value: remainingCoupomValue,
-                    person: entity.cart.person,
                     type: CoupomTypeEnum.RETURN_PRODUCT,
                 });
-                entity.cart.person.coupons = [newCoupom];
+                entity.cart.person.coupons.push(newCoupom);
             }
 
             const promise = cartExists.items.map(async (item) => {
@@ -191,8 +195,6 @@ export class ValidatePurchase implements IValidate {
             entity.cart = cartExists;
             entity.total_price = cartTotal;
             entity.cart.isOpen = false;
-
-            console.log(entity);
         } else {
             const daoPurchase = new DAOPurchase();
             const purchaseExists = await daoPurchase.findOne({
