@@ -186,11 +186,15 @@ export class ValidatePurchase implements IValidate {
 
             const promise = cartExists.items.map(async (item) => {
                 item.product.stock -= item.quantity
+                if (!item.product.isActive) {
+                    throw new Error(`Produto ${item.product.name} não está mais disponível.`);
+                }
                 await this.validateProduct.validate(item.product);
             })
             await Promise.all(promise);
 
             entity.cart.id = cartExists.id;
+            entity.cart.items = cartExists.items;
             entity.total_price = cartTotal;
             entity.cart.isOpen = false;
         } else {
