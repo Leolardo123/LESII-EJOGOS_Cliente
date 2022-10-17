@@ -47,7 +47,7 @@ export class ValidatePurchase implements IValidate {
                 throw new Error('Pessoa não encontrada (Compra).');
             }
 
-            if (!entity.payment_address || !entity.payment_address?.id) {
+            if (!entity.payment_address) {
                 throw new Error('Endereço de pagamento não selecionado.');
             }
 
@@ -65,7 +65,7 @@ export class ValidatePurchase implements IValidate {
                 await this.validateAddress.validate(entity.payment_address);
             }
 
-            if (!entity.delivery_address || !entity.delivery_address?.id) {
+            if (!entity.delivery_address) {
                 throw new Error('Endereço de entrega não selecionado.');
             }
 
