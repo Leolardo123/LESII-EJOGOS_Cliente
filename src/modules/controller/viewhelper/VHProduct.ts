@@ -42,6 +42,7 @@ export class VHProduct extends VHAbstract {
 
     findEntity(req: Request): IGetEntity {
         const { search } = req.query;
+        const { id } = req.params
 
         let whereParams = {} as FindManyOptions<Product>;
 
@@ -65,6 +66,10 @@ export class VHProduct extends VHAbstract {
             } else {
                 whereParams.where += ` AND "isActive" = true`;
             }
+        }
+
+        if (id) {
+            whereParams.where = `"id" = ${id}`;
         }
 
         return {
