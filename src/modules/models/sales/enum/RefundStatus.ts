@@ -1,0 +1,8 @@
+export enum RefundStatusEnum {
+    PENDING = "EM ANÁLISE",
+    ACCEPTED = "ACEITO",
+    REFUSED = "RECUSADO",
+    TRANSPORTING = "EM TRANSPORTE",
+    DELIVERED = "ENTREGA REALIZADA",
+    FINISHED = "FINALIZADO"
+}
