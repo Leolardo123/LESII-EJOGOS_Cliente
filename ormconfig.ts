@@ -1,6 +1,6 @@
 module.exports = {
-  name: 'default',
-  type: 'postgres',
+  name: "default",
+  type: "postgres",
   host: process.env.DB_HOST,
   port: process.env.DB_PORT,
   username: process.env.DB_USERNAME,
@@ -11,6 +11,6 @@ module.exports = {
   seeds: [`./src/shared/database/seeds/*{.js,.ts}`],
   factories: [`./src/shared/database/factories/*{.ts,.js}`],
   cli: {
-    migrationsDir: './src/shared/database/migrations',
+    migrationsDir: "./src/shared/database/migrations",
   },
 };
