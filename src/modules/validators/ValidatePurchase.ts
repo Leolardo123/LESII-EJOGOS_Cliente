@@ -116,6 +116,10 @@ export class ValidatePurchase implements IValidate {
                         throw new Error('Cartão inválido.');
                     }
 
+                    if (payment.value < 10) {
+                        throw new Error('Valor mínimo para cartões de crédito é R$ 10,00.');
+                    }
+
                     paymentTotal += Number(payment.value);
 
                     return payment;
