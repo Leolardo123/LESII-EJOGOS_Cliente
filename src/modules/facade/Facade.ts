@@ -10,6 +10,7 @@ import { DAOPerson } from "@modules/repositories/DAOPerson";
 import { DAOPlaceType } from "@modules/repositories/DAOPlaceType";
 import { DAOProduct } from "@modules/repositories/DAOProducts";
 import { DAOPurchase } from "@modules/repositories/DAOPurchase";
+import { DAORefund } from "@modules/repositories/DAORefund";
 import { DAOUser } from "@modules/repositories/DAOUser";
 import { IDAO } from "@modules/repositories/interfaces/IDAO";
 import { IValidate } from "@modules/validators/IValidate";
@@ -26,6 +27,7 @@ import { ValidatePerson } from "@modules/validators/ValidatePerson";
 import { ValidatePhone } from "@modules/validators/ValidatePhone";
 import { ValidateProduct } from "@modules/validators/ValidateProduct";
 import { ValidatePurchase } from "@modules/validators/ValidatePurchase";
+import { ValidateRefund } from "@modules/validators/ValidateRefund";
 import { ValidateUser } from "@modules/validators/ValidateUser";
 import IHash from "@shared/interfaces/IHash";
 import { createConnections, FindManyOptions } from "typeorm";
@@ -48,7 +50,6 @@ export class Facade implements IFacade {
 		const validateBrand = new ValidateBrand();
 		const validateCartItem = new ValidateCartItem();
 		const validateCart = new ValidateCart(validateCartItem);
-		const validateCoupom = new ValidateCoupom();
 		const validatePerson = new ValidatePerson(
 			validateAddress,
 			validatePhone,
@@ -62,6 +63,7 @@ export class Facade implements IFacade {
 			validateAddress,
 			validateProduct,
 		);
+		const validateRefund = new ValidateRefund();
 
 		this.validators.address = validateAddress;
 		this.validators.person = validatePerson;
@@ -73,6 +75,7 @@ export class Facade implements IFacade {
 		this.validators.cartitem = validateCartItem;
 		this.validators.cart = validateCart;
 		this.validators.purchase = validatePurchase;
+		this.validators.refund = validateRefund;
 
 		console.clear();
 		console.log('[BANCO DE DADOS 🎲] Conectando com o banco de dados...');
@@ -93,6 +96,7 @@ export class Facade implements IFacade {
 				this.daos.cart = new DAOCart() as any;
 				this.daos.cartitem = new DAOCartItem() as any;
 				this.daos.purchase = new DAOPurchase() as any;
+				this.daos.refund = new DAORefund() as any;
 
 				this.isConected = true
 			})

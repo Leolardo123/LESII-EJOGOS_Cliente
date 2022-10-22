@@ -4,9 +4,12 @@ import CartItem from "./CartItem";
 import { RefundStatusEnum } from "./enum/RefundStatus";
 
 @Entity('tb_refunds')
-export default class RefundRequest extends Domain {
-    @Column()
-    quantity: number;
+export default class Refund extends Domain {
+    @Column({ type: 'text' })
+    reason: string;
+
+    @Column({ default: true })
+    restock: boolean;
 
     @Column({ enum: RefundStatusEnum, default: RefundStatusEnum.PENDING })
     status: string;
@@ -19,7 +22,7 @@ export default class RefundRequest extends Domain {
     cart_item: CartItem;
 
     constructor(
-        refund?: Partial<RefundRequest>
+        refund?: Partial<Refund>
     ) {
         super();
         Object.assign(this, refund)
