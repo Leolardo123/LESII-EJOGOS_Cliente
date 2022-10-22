@@ -1,4 +1,6 @@
 import Product from "@modules/models/products/Product";
+import path from "path";
+import fs from "fs";
 import { Connection } from "typeorm";
 import { Factory, Seeder } from "typeorm-seeding";
 
