@@ -28,7 +28,7 @@
     "class-methods-use-this": "off",
     "no-useless-constructor": "off",
     "no-shadow": "off",
-    "no-unused-vars": "on",
+    "no-unused-vars": "off",
     "unused-imports/no-unused-imports": "error",
 		"unused-imports/no-unused-vars": "error",
     "@typescript-eslint/no-shadow": ["error"],
