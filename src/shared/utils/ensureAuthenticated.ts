@@ -21,7 +21,7 @@ function ensureAuthenticated(request: Request): IRequestUser {
   const authHeader = request.headers.authorization;
 
   if (!authHeader) {
-    throw new Error("Token JWT inexistente!");
+    throw new Error("Faça login para continuar.");
   }
 
   const [, token] = authHeader.split(" ");
@@ -37,7 +37,7 @@ function ensureAuthenticated(request: Request): IRequestUser {
       person,
     };
   } catch (error) {
-    throw new Error("Token Inválido");
+    throw new Error("Falha na autenticação do usuário.");
   }
 }
 
