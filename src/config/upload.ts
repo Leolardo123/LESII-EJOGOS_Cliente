@@ -8,7 +8,7 @@ const tmpFolder = path.resolve(__dirname, '..', '..', 'tmp/uploads');
 interface IUploadConfig {
   driver: 'disk';
   tmpFolder: string;
-  uploadsFolder: string;
+  uploadsFolder: { [key: string]: string };
   multer: {
     storage: StorageEngine;
   };
@@ -20,7 +20,10 @@ interface IUploadConfig {
 export const uploadConfig = {
   driver: process.env.STORAGE_DRIVER,
   tmpFolder,
-  uploadsFolder: path.resolve(tmpFolder),
+  uploadsFolder: {
+    "any": path.resolve(tmpFolder),
+    "default": path.resolve(tmpFolder, 'default'),
+  },
   multer: {
     storage: multer.diskStorage({
       destination: tmpFolder,
