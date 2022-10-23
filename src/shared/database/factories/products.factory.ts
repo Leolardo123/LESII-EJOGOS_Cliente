@@ -9,12 +9,11 @@ const fakerRandomArray = (length: number, fker: () => string): string[] => {
 };
 
 define(Product, () => {
-  // const images: string[] = [];
-  // const folder = path.join(__dirname, "..", "..", "tmp", "uploads");
-  // fs.readdirSync(folder).forEach(file => {
-  //   console.log(file);
-  //   images.push(file);
-  // });
+  const images: string[] = [];
+  const folder = path.join(__dirname, ..."../../../../tmp/uploads/default".split("/"));
+  fs.readdirSync(folder).forEach(file => {
+    images.push(file);
+  });
 
   const product = new Product({
     name: faker.commerce.productName(),
@@ -25,7 +24,7 @@ define(Product, () => {
     publisher: faker.company.name(),
     release_date: faker.date.past().toString(),
     language: faker.random.locale(),
-    image: 'default.png',
+    image: 'default/' + faker.helpers.arrayElement(images),
     requirements: faker.commerce.productMaterial(),
     subtitle: fakerRandomArray(
       Number(faker.random.numeric(1)),
