@@ -1,11 +1,5 @@
-import Address from "@modules/models/address/Address";
-import AddressType from "@modules/models/address/AddressType";
-import PlaceType from "@modules/models/address/PlaceType";
-import Card from "@modules/models/cards/Card";
 import Cart from "@modules/models/sales/Cart";
 import CartItem from "@modules/models/sales/CartItem";
-import Coupom from "@modules/models/sales/Coupom";
-import Payment from "@modules/models/sales/Payment";
 import Refund from "@modules/models/sales/Refund";
 import Person from "@modules/models/users/Person";
 import { ensureAuthenticated } from "@shared/utils/ensureAuthenticated";
@@ -20,7 +14,7 @@ export class VHRefund extends VHAbstract {
             reason,
             restock,
             status,
-            item_id,
+            id: item_id,
         } = req.body;
         const { id } = req.params;
 

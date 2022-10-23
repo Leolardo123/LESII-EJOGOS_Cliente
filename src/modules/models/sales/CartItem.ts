@@ -31,7 +31,9 @@ export default class CartItem extends Domain {
   })
   product: Product;
 
-  @OneToOne(() => RefundRequest, (refund) => refund.cart_item, {})
+  @OneToOne(() => RefundRequest, (refund) => refund.cart_item, {
+    eager: true,
+  })
   refund: RefundRequest;
 
   constructor(cartItem?: Partial<CartItem>) {

@@ -26,7 +26,7 @@ export class ValidateCoupom implements IValidate {
             if (coupom.is_used)
                 throw new Error('Cupom já utilizado.');
 
-            if (coupom.person.id != entity.person.id)
+            if (coupom?.person?.id != entity?.person?.id)
                 throw new Error('Cupom não é válido.');
         }
     }

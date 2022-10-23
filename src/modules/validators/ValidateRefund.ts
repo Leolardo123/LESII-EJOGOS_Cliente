@@ -15,7 +15,8 @@ export class ValidateRefund implements IValidate {
         const cartItem = await daoCartItem.findOne({
             where: {
                 id: entity.cart_item?.id
-            }
+            },
+            relations: ['cart', 'cart.purchase', 'refund']
         })
 
         if (!cartItem) {
@@ -31,6 +32,16 @@ export class ValidateRefund implements IValidate {
             }
             if (!entity.reason) {
                 throw new Error('Informe o motivo da troca.');
+            }
+            if (cartItem.refund) {
+                entity.id = cartItem.refund.id;
+            }
+            if (
+                cartItem.refund &&
+                cartItem?.refund?.status != RefundStatusEnum.CANCELED &&
+                cartItem?.refund?.status != RefundStatusEnum.REFUSED
+            ) {
+                throw new Error('Item está em troca.');
             }
         }
 
