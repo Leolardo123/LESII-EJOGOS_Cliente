@@ -54,9 +54,14 @@ export class VHRefund extends VHAbstract {
         if (search) {
             whereParams.where = [
                 { reason: ILike(`%${search}%`) },
-                { id: ILike(`%${search}%`) },
             ];
+
+            if (Number(search)) {
+                whereParams.where.push({ id: Number(search) });
+            }
         }
+
+        whereParams.relations = ['cart_item', 'cart_item.product', 'cart_item.cart', 'cart_item.cart.person'];
 
         return {
             entity: new Refund(),

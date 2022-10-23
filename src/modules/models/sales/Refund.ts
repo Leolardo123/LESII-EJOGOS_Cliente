@@ -1,6 +1,7 @@
 import Domain from "@modules/models/Domain";
 import { Column, Entity, JoinColumn, OneToOne } from "typeorm";
 import CartItem from "./CartItem";
+import Coupom from "./Coupom";
 import { RefundStatusEnum } from "./enum/RefundStatus";
 
 @Entity('tb_refunds')
@@ -19,6 +20,13 @@ export default class Refund extends Domain {
         onDelete: 'CASCADE', onUpdate: 'CASCADE',
     })
     cart_item: CartItem;
+
+    @JoinColumn({ name: 'coupom_id' })
+    @OneToOne(() => Coupom, Coupom => Coupom.refund, {
+        onDelete: 'SET NULL', onUpdate: 'CASCADE',
+        cascade: true
+    })
+    coupom: Coupom;
 
     constructor(
         refund?: Partial<Refund>

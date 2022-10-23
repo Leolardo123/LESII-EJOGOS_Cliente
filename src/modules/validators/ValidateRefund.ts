@@ -11,19 +11,21 @@ export class ValidateRefund implements IValidate {
     constructor(
     ) { }
     async validate(entity: Refund): Promise<void> {
-        const daoCartItem = new DAOCartItem();
-        const cartItem = await daoCartItem.findOne({
-            where: {
-                id: entity.cart_item?.id
-            },
-            relations: ['cart', 'cart.purchase', 'refund']
-        })
 
-        if (!cartItem) {
-            throw new Error('Item não encontrado.');
-        }
 
         if (!entity.id) {
+            const daoCartItem = new DAOCartItem();
+            const cartItem = await daoCartItem.findOne({
+                where: {
+                    id: entity.cart_item?.id
+                },
+                relations: ['cart', 'cart.purchase', 'refund']
+            })
+
+            if (!cartItem) {
+                throw new Error('Item não encontrado.');
+            }
+
             if (!cartItem.cart.purchase) {
                 throw new Error('Compra não encontrada.');
             }
@@ -41,7 +43,7 @@ export class ValidateRefund implements IValidate {
                 cartItem?.refund?.status != RefundStatusEnum.CANCELED &&
                 cartItem?.refund?.status != RefundStatusEnum.REFUSED
             ) {
-                throw new Error('Item está em troca.');
+                throw new Error('Item já está em troca.');
             }
         }
 
@@ -50,7 +52,12 @@ export class ValidateRefund implements IValidate {
             const refund = await daoRefund.findOne({
                 where: {
                     id: entity.id
-                }
+                },
+                relations: [
+                    'cart_item',
+                    'cart_item.cart',
+                    'cart_item.cart.person',
+                ]
             })
 
             if (!refund) {
@@ -67,13 +74,17 @@ export class ValidateRefund implements IValidate {
             }
 
             if (entity.status === RefundStatusEnum.FINISHED) {
-                const newCoupom = new Coupom({ is_used: false, value: cartItem.price * cartItem.quantity });
+                const newCoupom = new Coupom({ is_used: false, value: refund.cart_item.price });
 
-                if (!cartItem.cart.person) {
+                if (!refund.cart_item.cart.person) {
                     throw new Error('Pessoa não encontrada, falha ao gerar cupom de troca.');
                 }
 
-                entity.cart_item.cart.person.coupons.push(newCoupom);
+
+                newCoupom.person = refund.cart_item.cart.person;
+                console.log('newCoupom', newCoupom);
+                console.log(refund.cart_item.cart.person);
+                entity.coupom = newCoupom;
             }
         }
     }

@@ -3,6 +3,7 @@ import { Column, Entity, Generated, JoinColumn, ManyToOne, OneToOne } from "type
 import Person from "../users/Person";
 import { CoupomTypeEnum } from "./enum/CoupomTypes";
 import Purchase from "./Purchase";
+import Refund from "./Refund";
 
 @Entity()
 export default class Coupom extends Domain {
@@ -30,6 +31,9 @@ export default class Coupom extends Domain {
         onDelete: 'CASCADE', onUpdate: 'CASCADE',
     })
     person: Person | null;
+
+    @OneToOne(() => Refund, refund => refund.coupom, {})
+    refund: Refund;
 
     constructor(
         coupom?: Partial<Coupom>
