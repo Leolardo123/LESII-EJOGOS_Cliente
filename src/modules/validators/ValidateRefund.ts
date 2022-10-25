@@ -39,9 +39,7 @@ export class ValidateRefund implements IValidate {
                 entity.id = cartItem.refund.id;
             }
             if (
-                cartItem.refund &&
-                cartItem?.refund?.status != RefundStatusEnum.CANCELED &&
-                cartItem?.refund?.status != RefundStatusEnum.REFUSED
+                cartItem.refund
             ) {
                 throw new Error('Item já está em troca.');
             }
