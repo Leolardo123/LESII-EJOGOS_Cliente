@@ -1,6 +1,8 @@
 
 import { IFacade } from "@modules/facade/IFacade";
+import { DAOProduct } from "@modules/repositories/DAOProducts";
 import IHash from "@shared/interfaces/IHash";
+import { ensureAuthenticated } from "@shared/utils/ensureAuthenticated";
 import { Request, Response } from "express";
 import { IViewHelper } from "./viewhelper/interface/IViewHelper";
 import { VHAddress } from "./viewhelper/VHAddress";
@@ -100,6 +102,19 @@ class Controller {
 
         return this.vhs[route].setView(req, res, result);
     }
-}
 
+    dashboard = async (req: Request, res: Response) => {
+        const userInfo = ensureAuthenticated(req);
+
+        if (userInfo.role !== 'admin') {
+            throw new Error('Você não tem permissão para acessar essa função.');
+        }
+
+        const daoProduct = new DAOProduct();
+
+        const result = await daoProduct.getDashboard();
+
+        return res.status(201).json(result);
+    }
+}
 export { Controller }

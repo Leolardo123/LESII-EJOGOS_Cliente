@@ -63,7 +63,6 @@ define(User, () => {
             ],
         })
     });
-    console.log(user.person.coupons);
     return user;
 });
 

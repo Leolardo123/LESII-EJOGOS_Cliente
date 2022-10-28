@@ -13,11 +13,13 @@ const sessionController = new SessionController();
 const formdataMiddleware = multer(uploadConfig.multer)//Usado para upload de arquivos em formdata
 
 router.get('/', (request: Request, response: Response) =>
-response.send('LES - EJOGOS - 0.0.1'),
+  response.send('LES - EJOGOS - 0.0.1'),
 );
 
 router.post('/users/auth', sessionController.create);
 router.patch('/users/auth', sessionController.refresh);
+
+router.get('/dashboard', controller.dashboard);
 
 router.get('/:route', controller.index);
 
