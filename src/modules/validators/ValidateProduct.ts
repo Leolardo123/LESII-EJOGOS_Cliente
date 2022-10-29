@@ -38,7 +38,7 @@ export class ValidateProduct implements IValidate {
             }
         }
 
-        if (typeof entity.isActive === 'boolean') {
+        if (entity.isActive === true) {
             if (entity.stock <= 0) {
                 throw new Error('Estoque deve ser maior que zero.');
             }
