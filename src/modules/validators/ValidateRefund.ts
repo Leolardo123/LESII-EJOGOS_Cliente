@@ -80,8 +80,6 @@ export class ValidateRefund implements IValidate {
 
 
                 newCoupom.person = refund.cart_item.cart.person;
-                console.log('newCoupom', newCoupom);
-                console.log(refund.cart_item.cart.person);
                 entity.coupom = newCoupom;
             }
         }
