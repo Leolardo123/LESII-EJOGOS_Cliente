@@ -115,6 +115,10 @@ export class ValidatePurchase implements IValidate {
             throw new Error("Cartão inválido.");
           }
 
+          if (!cardExists.brand) {
+            throw new Error(`Cartão com final ${cardExists.number.substring(12)} não possui bandeira válida.`);
+          }
+
           if (payment.value < 10) {
             throw new Error("Valor mínimo para cartões de crédito é R$ 10,00.");
           }

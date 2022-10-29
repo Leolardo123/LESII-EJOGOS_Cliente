@@ -20,6 +20,7 @@ export class ValidateCard implements IValidate {
             if (!entity.person) {
                 throw new Error('Pessoa é obrigatório (person).');
             }
+
         } else {
             const daoCard = new DAOCard();
 
@@ -37,10 +38,14 @@ export class ValidateCard implements IValidate {
             if (card.person.id != entity.person.id) {
                 throw new Error('Cartão não é válido.');
             }
+
+            if (!entity.number?.length) {
+                entity.number = card.number;
+            }
         }
 
-        if (entity.number) {
-            if (!/\d{16}/.test(entity.number)) {
+        if (entity.number?.length) {
+            if (!/\d{16}/.test(entity.number) || entity.number == '') {
                 throw new Error(`O número do cartão ${entity.number} deve conter 16 dígitos.`);
             }
         }
