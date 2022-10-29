@@ -60,4 +60,30 @@ export class VHBrand extends VHAbstract {
             whereParams
         }
     }
+
+    setView(req: Request, res: any, result: Brand[] | Brand | string): void {
+        if (typeof result === 'string') {
+            res.status(201).json({ message: result });
+        } else {
+            if (result instanceof Array) {
+                res.status(201).json(result.map((brand: Brand) => {
+                    return {
+                        ...brand,
+                        image_url:
+                            brand.image ?
+                                `${process.env.APP_API_URL}/files/${brand.image}` :
+                                `${process.env.APP_API_URL}/files/default.png`
+                    };
+                }));
+            } else {
+                res.status(201).json({
+                    ...result,
+                    image_url:
+                        result.image ?
+                            `${process.env.APP_API_URL}/files/${result.image}` :
+                            `${process.env.APP_API_URL}/files/default.png`
+                });
+            }
+        }
+    }
 }
