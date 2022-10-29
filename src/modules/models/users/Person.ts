@@ -75,6 +75,14 @@ class Person extends Domain {
     })
     user: User;
 
+    setView(): Partial<Person> {
+        return {
+            ...this,
+            cards: this.cards ?
+                this.cards.map(card => card.setView()) : [],
+        }
+    }
+
     constructor(
         person?: Partial<Person>
     ) {

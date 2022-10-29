@@ -27,20 +27,20 @@ export class VHBrand extends VHAbstract {
             throw new Error('Operação não autorizada.');
         }
 
-        const branddInstance = new Brand();
+        const brandInstance = new Brand();
         if (id) {
-            Object.assign(branddInstance, { id: Number(id) });
+            Object.assign(brandInstance, { id: Number(id) });
         }
-        Object.assign(branddInstance, brand);
+        Object.assign(brandInstance, brand);
 
         const files = req.files as Express.Multer.File[];
         if (files && files.length > 0) {
             const [image] = files;
-            branddInstance.image = image.filename;
+            brandInstance.image = image.filename;
         }
 
 
-        return branddInstance;
+        return brandInstance;
     }
 
     findEntity(req: Request): IGetEntity {
@@ -58,32 +58,6 @@ export class VHBrand extends VHAbstract {
         return {
             entity,
             whereParams
-        }
-    }
-
-    setView(req: Request, res: any, result: Brand[] | Brand | string): void {
-        if (typeof result === 'string') {
-            res.status(201).json({ message: result });
-        } else {
-            if (result instanceof Array) {
-                res.status(201).json(result.map((brand: Brand) => {
-                    return {
-                        ...brand,
-                        image_url:
-                            brand.image ?
-                                `${process.env.APP_API_URL}/files/${brand.image}` :
-                                `${process.env.APP_API_URL}/files/default.png`
-                    };
-                }));
-            } else {
-                res.status(201).json({
-                    ...result,
-                    image_url:
-                        result.image ?
-                            `${process.env.APP_API_URL}/files/${result.image}` :
-                            `${process.env.APP_API_URL}/files/default.png`
-                });
-            }
         }
     }
 }

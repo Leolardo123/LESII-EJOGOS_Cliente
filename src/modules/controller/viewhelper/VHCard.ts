@@ -7,7 +7,7 @@ import { VHAbstract } from "./VHAbstract";
 
 export class VHCard extends VHAbstract {
     getEntity(req: Request): Card {
-        const { 
+        const {
             brand_id,
             ...card
         } = req.body;
@@ -17,11 +17,11 @@ export class VHCard extends VHAbstract {
         const person_id = userInfo.person ? userInfo.person : null;
 
         const cardInstance = new Card({ ...card });
-        if(id){
+        if (id) {
             Object.assign(cardInstance, { id: Number(id) });
         }
 
-        if(person_id){
+        if (person_id) {
             const personInstance = new Person();
             Object.assign(personInstance, { id: Number(person_id) });
             cardInstance.person = personInstance;
@@ -29,7 +29,7 @@ export class VHCard extends VHAbstract {
             throw new Error('Cadastre os dados pessoais antes de cadastrar um cartão.');
         }
 
-        if(brand_id){
+        if (brand_id) {
             const brandInstance = new Brand({ id: brand_id });
             cardInstance.brand = brandInstance;
         }

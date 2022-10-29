@@ -1,5 +1,5 @@
 
-import { Column, Entity, OneToMany } from "typeorm";
+import { Column, DeepPartial, Entity, OneToMany } from "typeorm";
 import Domain from "../Domain";
 import CartItem from "../sales/CartItem";
 
@@ -46,6 +46,15 @@ export default class Product extends Domain {
         onDelete: 'CASCADE', onUpdate: 'CASCADE'
     })
     cart_items: CartItem[]
+
+    setView(): DeepPartial<Product> {
+        return {
+            ...this,
+            image_url: this.image ?
+                `${process.env.APP_API_URL}/files/${this.image}` :
+                `${process.env.APP_API_URL}/files/default/default.png`
+        }
+    }
 
     constructor(
         product?: Partial<Product>
