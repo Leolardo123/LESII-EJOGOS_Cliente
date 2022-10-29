@@ -1,5 +1,3 @@
-
-import { UploadFolderEnum } from "@config/upload";
 import Brand from "@modules/models/cards/Brand";
 import { Connection } from "typeorm";
 import { Factory, Seeder } from "typeorm-seeding";
@@ -14,12 +12,12 @@ export default class CreateBrands implements Seeder {
                 {
                     id: 1,
                     name: "visa",
-                    image: `/${UploadFolderEnum.BRAND}/brand.png`
+                    image: `default/brand.png`
                 },
                 {
                     id: 2,
                     name: "mastercard",
-                    image: `/${UploadFolderEnum.BRAND}/brand.png`
+                    image: `default/brand.png`
                 }
             ]).execute()
     }

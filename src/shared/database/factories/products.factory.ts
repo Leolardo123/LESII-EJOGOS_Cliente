@@ -3,7 +3,6 @@ import { define } from "typeorm-seeding";
 import { faker } from "@faker-js/faker";
 import path from "path";
 import fs from "fs";
-import { UploadFolderEnum } from "@config/upload";
 
 const fakerRandomArray = (length: number, fker: () => string): string[] => {
   return Array.from({ length }, () => fker());
@@ -13,11 +12,13 @@ define(Product, () => {
   const images: string[] = [];
   const folder = path.join(
     __dirname,
-    ..."../../../../tmp/uploads/default/product".split("/")
+    ..."../../../../tmp/uploads/default".split("/")
   );
 
   fs.readdirSync(folder).forEach(file => {
-    images.push(file);
+    if (/^\d/.test(file.replace(/\.\w*/, ""))) {
+      images.push(file);
+    }
   });
 
   const product = new Product({
@@ -29,7 +30,7 @@ define(Product, () => {
     publisher: faker.company.name(),
     release_date: faker.date.past().toString(),
     language: faker.random.locale(),
-    image: UploadFolderEnum.PRODUCT + faker.helpers.arrayElement(images),
+    image: `/default/${faker.helpers.arrayElement(images)}`,
     requirements: faker.commerce.productMaterial(),
     subtitle: fakerRandomArray(
       Number(faker.random.numeric(1)),

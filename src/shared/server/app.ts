@@ -20,7 +20,8 @@ app.use(json());
 
 app.use(json());
 
-app.use('/files/:folder?', express.static(uploadConfig.uploadsFolder.any));
+app.use('/files', express.static(uploadConfig.uploadsFolder));
+app.use('/files/default', express.static(uploadConfig.uploadsFolder));
 
 app.use(router);
 

@@ -8,7 +8,7 @@ const tmpFolder = path.resolve(__dirname, '..', '..', 'tmp/uploads');
 interface IUploadConfig {
   driver: 'disk';
   tmpFolder: string;
-  uploadsFolder: { [key: string]: string };
+  uploadsFolder: string;
   multer: {
     storage: StorageEngine;
   };
@@ -17,34 +17,12 @@ interface IUploadConfig {
   };
 }
 
-export enum UploadFolderEnum {
-  DEFAULT = 'default',
-  PRODUCT = 'default-product',
-  BRAND = 'default-brand',
-  ANY = '',
-}
-
 export const uploadConfig = {
   driver: process.env.STORAGE_DRIVER,
   tmpFolder,
-  uploadsFolder: {
-    "any": path.resolve(tmpFolder),
-    "default": path.resolve(tmpFolder, 'default'),
-    "default-product": path.resolve(tmpFolder, 'default', 'product'),
-    "default-brand": path.resolve(tmpFolder, 'default', 'brand'),
-  } as { [key: string]: string },
+  uploadsFolder: path.resolve(tmpFolder),
   multer: {
     storage: multer.diskStorage({
-      destination: (req, file, cb) => {
-        const { folder } = req.params;
-
-        const validFolder = uploadConfig.uploadsFolder[folder];
-        if (validFolder) {
-          cb(null, validFolder);
-        } else {
-          cb(null, uploadConfig.uploadsFolder.any);
-        }
-      },
       filename: (request, file, callback) => {
         const fileHash = crypto.randomBytes(10).toString('hex');
         const formattedOriginalName = file.originalname
