@@ -9,6 +9,8 @@ export class VHCard extends VHAbstract {
     getEntity(req: Request): Card {
         const {
             brand_id,
+            number,
+            security_code,
             ...card
         } = req.body;
         const { id } = req.params;
@@ -17,6 +19,15 @@ export class VHCard extends VHAbstract {
         const person_id = userInfo.person ? userInfo.person : null;
 
         const cardInstance = new Card({ ...card });
+
+        if (number) {
+            cardInstance.number = number;
+        }
+
+        if (security_code) {
+            cardInstance.security_code = security_code;
+        }
+
         if (id) {
             Object.assign(cardInstance, { id: Number(id) });
         }

@@ -1,6 +1,5 @@
 import Card from "@modules/models/cards/Card";
 import { DAOCard } from "@modules/repositories/DAOCard";
-import { DAOPerson } from "@modules/repositories/DAOPerson";
 import { IValidate } from "./IValidate";
 
 export class ValidateCard implements IValidate {
@@ -37,10 +36,6 @@ export class ValidateCard implements IValidate {
 
             if (card.person.id != entity.person.id) {
                 throw new Error('Cartão não é válido.');
-            }
-
-            if (!entity.number?.length) {
-                entity.number = card.number;
             }
         }
 
