@@ -1,4 +1,5 @@
 
+import { UploadFolderEnum } from "@config/upload";
 import Brand from "@modules/models/cards/Brand";
 import { Connection } from "typeorm";
 import { Factory, Seeder } from "typeorm-seeding";
@@ -13,12 +14,12 @@ export default class CreateBrands implements Seeder {
                 {
                     id: 1,
                     name: "visa",
-                    image: "/static/media/mastercard.66f6791b0dfb258f315e8c49adb8a42d.svg"
+                    image: `/${UploadFolderEnum.BRAND}/brand.png`
                 },
                 {
                     id: 2,
                     name: "mastercard",
-                    image: "https://www.casinotop10.com.br/wp-content/uploads/2020/05/master-card-logo-update.png"
+                    image: `/${UploadFolderEnum.BRAND}/brand.png`
                 }
             ]).execute()
     }
