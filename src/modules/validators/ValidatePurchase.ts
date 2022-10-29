@@ -104,7 +104,7 @@ export class ValidatePurchase implements IValidate {
             where: {
               id: payment.card?.id,
             },
-            relations: ["person"],
+            relations: ["person", "brand"],
           });
 
           if (!cardExists) {
@@ -203,7 +203,16 @@ export class ValidatePurchase implements IValidate {
             `Produto ${item.product.name} não está mais disponível.`
           );
         }
-        await this.validateProduct.validate(item.product);
+
+        if (item.product.stock < 0) {
+          throw new Error(
+            `Produto ${item.product.name} não possui estoque suficiente.`
+          );
+        }
+
+        if (item.product.stock == 0) {
+          item.product.isActive = false;
+        }
       });
       await Promise.all(promise);
 
