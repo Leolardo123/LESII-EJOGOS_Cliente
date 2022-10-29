@@ -45,8 +45,14 @@ export class ValidateCard implements IValidate {
         }
 
         if (entity.number?.length) {
-            if (!/\d{16}/.test(entity.number) || entity.number == '') {
-                throw new Error(`O número do cartão ${entity.number} deve conter 16 dígitos.`);
+            if (!/(?<!\d)\d{16}(?!\d)/.test(entity.number)) {
+                throw new Error(`O número do cartão deve conter 16 dígitos.`);
+            }
+        }
+
+        if (entity.security_code?.length) {
+            if (!/(?<!\d)\d{3}(?!\d)/.test(entity.security_code)) {
+                throw new Error(`O código de segurança deve conter 3 dígitos.`);
             }
         }
 
