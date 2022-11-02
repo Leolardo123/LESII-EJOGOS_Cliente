@@ -92,7 +92,7 @@ export class DAOProduct extends DAOAbstract<Product> implements DAOProduct {
         tb_carts_items items ON items.product_id = product.id
       LEFT JOIN
         tb_item_carts carts ON carts.id = items.cart_id
-      LEFT JOIN
+      INNER JOIN
         tb_purchases purchases ON purchases.cart_id = carts.id
       LEFT JOIN
         (
@@ -103,13 +103,21 @@ export class DAOProduct extends DAOAbstract<Product> implements DAOProduct {
             tb_carts_items items
           LEFT JOIN
             tb_item_carts carts ON carts.id = items.cart_id
-          LEFT JOIN
+          INNER JOIN
             tb_purchases purchases ON purchases.cart_id = carts.id
           WHERE
-            purchases.created_at BETWEEN current_date - interval '1 year' AND current_date
+            purchases.created_at 
+            BETWEEN 
+              current_date - interval '1 year' 
+            AND 
+              current_date + interval '1 day'
         ) year_data ON true
       WHERE
-        purchases.created_at BETWEEN current_date - interval '1 year' AND current_date
+        purchases.created_at 
+        BETWEEN 
+          current_date - interval '1 year' 
+        AND 
+          current_date + interval '1 day'
       GROUP BY
         product.name, 
         year_data.total_sales, 
@@ -118,6 +126,8 @@ export class DAOProduct extends DAOAbstract<Product> implements DAOProduct {
         total_product DESC
       LIMIT 10  
     `);
+
+    console.log(ranking);
 
     return { dated: dated[0], ranking };
   }
