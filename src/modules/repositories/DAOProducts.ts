@@ -46,7 +46,7 @@ export class DAOProduct extends DAOAbstract<Product> implements DAOProduct {
         (
           SELECT
             TO_CHAR(months, 'MON') AS month,
-            TO_CHAR(CURRENT_DATE, 'YYYY') AS year,
+            TO_CHAR(months, 'YYYY') AS year,
             COALESCE(SUM(items.price), 0) AS total_sales,
             COALESCE(SUM(items.quantity), 0) AS total_quantity,
             COALESCE(SUM(coupom.value), 0) AS total_coupom
@@ -65,10 +65,12 @@ export class DAOProduct extends DAOAbstract<Product> implements DAOProduct {
           LEFT JOIN
             coupom ON coupom.purchase_id = purchases.id
           GROUP BY
-            month
+            month, year, months
+          ORDER BY
+            months, month
         ) monthly ON true
         GROUP BY
-          year.date
+          year.date 
     `)
 
     const ranking = await this.repository.query(`
@@ -111,6 +113,6 @@ export class DAOProduct extends DAOAbstract<Product> implements DAOProduct {
       LIMIT 10  
     `);
 
-    return { dated, ranking };
+    return { dated: dated[0], ranking };
   }
 }
