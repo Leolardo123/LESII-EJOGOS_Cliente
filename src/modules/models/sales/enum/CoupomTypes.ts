@@ -1,4 +1,4 @@
 export enum CoupomTypeEnum {
-    //DISCOUNT = "DESCONTO",
+    DISCOUNT = "DESCONTO",
     RETURN_PRODUCT = "TROCA",
 }

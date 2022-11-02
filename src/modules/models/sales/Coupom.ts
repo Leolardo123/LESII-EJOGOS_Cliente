@@ -5,7 +5,7 @@ import { CoupomTypeEnum } from "./enum/CoupomTypes";
 import Purchase from "./Purchase";
 import Refund from "./Refund";
 
-@Entity()
+@Entity("tb_coupons")
 export default class Coupom extends Domain {
     @Generated('uuid')
     @Column()

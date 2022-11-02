@@ -24,13 +24,13 @@ export abstract class DAOAbstract<T extends Domain> implements IDAO<T> {
         take: limit,
         where: findParams.where,
         order: {
-          created_at: 'DESC'
+          id: 'DESC'
         }
       }) : await this.repository.findAndCount({
         skip: (page - 1) * limit,
         take: limit,
         order: {
-          created_at: 'DESC'
+          id: 'DESC'
         }
       })
     return { results, total, limit, page }
@@ -45,7 +45,7 @@ export abstract class DAOAbstract<T extends Domain> implements IDAO<T> {
       where,
       relations,
       order: {
-        created_at: 'DESC'
+        id: 'DESC'
       }
     })
   }
@@ -55,7 +55,7 @@ export abstract class DAOAbstract<T extends Domain> implements IDAO<T> {
       where,
       relations,
       order: {
-        created_at: 'DESC'
+        id: 'DESC'
       }
     })
   }

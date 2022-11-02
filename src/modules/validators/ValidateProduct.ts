@@ -1,3 +1,5 @@
+import ProductHistory from "@modules/models/products/ProductHistory";
+import { DAOProductHistory } from "@modules/repositories/DAOProductHistory";
 import Product from "../models/products/Product";
 import { IValidate } from "./IValidate";
 
@@ -38,6 +40,28 @@ export class ValidateProduct implements IValidate {
             }
         }
 
+        if (entity.id) {
+            if (typeof entity.isActive === 'boolean') {
+                const reasonExists = entity.history.find((history) => !history.id && history.reason);
+
+                if (!reasonExists) {
+                    throw new Error(`Dê um motivo para  a ${entity.isActive ? 'inativação' : 'ativação'} do produto.`);
+                }
+
+                reasonExists.action = entity.isActive ? 'Inativação' : 'Ativação';
+
+                const daoProductHistory = new DAOProductHistory();
+                const historyExists = await daoProductHistory.findMany({
+                    where: {
+                        product: entity.id,
+                    },
+                });
+
+                historyExists.push(reasonExists);
+                entity.history = historyExists;
+            }
+        }
+
         if (entity.isActive === true) {
             if (entity.stock <= 0) {
                 throw new Error('Estoque deve ser maior que zero.');
@@ -49,7 +73,22 @@ export class ValidateProduct implements IValidate {
         }
 
         if (entity.stock == 0) {
+            const daoProductHistory = new DAOProductHistory();
+
+            const historyExists = await daoProductHistory.findMany({
+                where: {
+                    product: entity.id,
+                },
+            });
+
             entity.isActive = false;
+            const productHistory = new ProductHistory({
+                action: 'Produto desativado automaticamente',
+                reason: 'FORA DE MERCADO',
+            });
+
+            historyExists.push(productHistory);
+            entity.history = historyExists;
         }
 
         if (entity.price < 0) {

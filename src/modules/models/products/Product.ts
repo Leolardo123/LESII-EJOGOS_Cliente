@@ -2,6 +2,7 @@
 import { Column, DeepPartial, Entity, OneToMany } from "typeorm";
 import Domain from "../Domain";
 import CartItem from "../sales/CartItem";
+import ProductHistory from "./ProductHistory";
 
 @Entity("tb_products")
 export default class Product extends Domain {
@@ -46,6 +47,11 @@ export default class Product extends Domain {
         onDelete: 'CASCADE', onUpdate: 'CASCADE'
     })
     cart_items: CartItem[]
+
+    @OneToMany(() => ProductHistory, history => history.product, {
+        cascade: true, eager: true
+    })
+    history: ProductHistory[]
 
     setView(): DeepPartial<Product> {
         return {

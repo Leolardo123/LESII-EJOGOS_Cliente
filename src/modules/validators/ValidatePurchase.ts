@@ -1,3 +1,4 @@
+import ProductHistory from "@modules/models/products/ProductHistory";
 import Coupom from "@modules/models/sales/Coupom";
 import { CoupomTypeEnum } from "@modules/models/sales/enum/CoupomTypes";
 import { PurchaseStatusEnum } from "@modules/models/sales/enum/PurchaseStatus";
@@ -212,6 +213,12 @@ export class ValidatePurchase implements IValidate {
 
         if (item.product.stock == 0) {
           item.product.isActive = false;
+          const productHistory = new ProductHistory({
+            action: 'Produto desativado automaticamente',
+            reason: 'FORA DE MERCADO',
+          });
+
+          item.product.history.push(productHistory);
         }
       });
       await Promise.all(promise);

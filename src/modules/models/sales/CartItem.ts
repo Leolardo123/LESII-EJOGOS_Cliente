@@ -1,6 +1,6 @@
 import Domain from "@modules/models/Domain";
 import Product from "@modules/models/products/Product";
-import { Column, Entity, JoinColumn, ManyToOne, OneToOne, Unique } from "typeorm";
+import { Column, DeepPartial, Entity, JoinColumn, ManyToOne, OneToOne, Unique } from "typeorm";
 import Cart from "./Cart";
 import RefundRequest from "./Refund";
 
@@ -35,6 +35,13 @@ export default class CartItem extends Domain {
     eager: true,
   })
   refund: RefundRequest;
+
+  setView(): DeepPartial<CartItem> {
+    return {
+      ...this,
+      product: this.product.setView()
+    }
+  }
 
   constructor(cartItem?: Partial<CartItem>) {
     super();

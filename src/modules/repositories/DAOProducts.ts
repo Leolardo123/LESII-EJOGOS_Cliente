@@ -34,7 +34,8 @@ export class DAOProduct extends DAOAbstract<Product> implements DAOProduct {
       SELECT
         COALESCE(SUM(monthly.total_sales), 0) AS monthly_sales,
         COALESCE(SUM(monthly.total_quantity), 0) AS monthly_quantity,
-        COALESCE(SUM(monthly.total_coupom), 0) AS monthly_coupom,
+        COALESCE(SUM(monthly.total_coupomgen), 0) AS monthly_coupomgen,
+        COALESCE(SUM(monthly.total_coupomuse), 0) AS monthly_coupomuse,
         ARRAY_AGG(TO_JSON(monthly.*)) as months
       FROM
         generate_series(
@@ -49,7 +50,8 @@ export class DAOProduct extends DAOAbstract<Product> implements DAOProduct {
             TO_CHAR(months, 'YYYY') AS year,
             COALESCE(SUM(items.price), 0) AS total_sales,
             COALESCE(SUM(items.quantity), 0) AS total_quantity,
-            COALESCE(SUM(coupom.value), 0) AS total_coupom
+            COALESCE(SUM(coupomgen.value), 0) AS total_coupomgen,
+            COALESCE(SUM(coupomuse.value), 0) AS total_coupomuse
           FROM 
             generate_series(
               current_date - interval '11 month', 
@@ -65,7 +67,9 @@ export class DAOProduct extends DAOAbstract<Product> implements DAOProduct {
           LEFT JOIN
             tb_refunds refunds ON refunds.item_id = items.id
           LEFT JOIN
-            coupom ON refunds.coupom_id = coupom.id
+            tb_coupons coupomgen ON refunds.coupom_id = coupomgen.id
+          LEFT JOIN
+            tb_coupons coupomuse ON refunds.coupom_id = coupomuse.id
           GROUP BY
             month, year, months
           ORDER BY

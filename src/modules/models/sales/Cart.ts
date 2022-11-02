@@ -1,6 +1,6 @@
 import Domain from "@modules/models/Domain";
 import Person from "@modules/models/users/Person";
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne } from "typeorm";
+import { Column, DeepPartial, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne } from "typeorm";
 import CartItem from "./CartItem";
 import Purchase from "./Purchase";
 
@@ -30,6 +30,13 @@ export default class Cart extends Domain {
         eager: true,
     })
     purchase: Purchase;
+
+    setView(): DeepPartial<Cart> {
+        return {
+            ...this,
+            items: this.items.map(item => item.setView())
+        }
+    }
 
     constructor(
         cart?: Partial<Cart>

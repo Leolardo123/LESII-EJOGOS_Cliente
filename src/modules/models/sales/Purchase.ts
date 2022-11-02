@@ -1,5 +1,5 @@
 import Domain from "@modules/models/Domain";
-import { BeforeInsert, BeforeUpdate, Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, OneToOne } from "typeorm";
+import { BeforeInsert, BeforeUpdate, Column, DeepPartial, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, OneToOne } from "typeorm";
 import Address from "../address/Address";
 import Card from "../cards/Card";
 import Cart from "./Cart";
@@ -46,6 +46,13 @@ export default class Purchase extends Domain {
         cascade: true
     })
     payments: Payment[];
+
+    setView(): DeepPartial<Purchase> {
+        return {
+            ...this,
+            cart: this.cart ? this.cart.setView() : undefined,
+        }
+    }
 
     constructor(
         purchase?: Partial<Purchase>

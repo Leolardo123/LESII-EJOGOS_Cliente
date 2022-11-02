@@ -9,7 +9,7 @@ export default class Refund extends Domain {
     @Column({ type: 'text' })
     reason: string;
 
-    @Column({ default: true })
+    @Column({ default: false })
     restock: boolean;
 
     @Column({ enum: RefundStatusEnum, default: RefundStatusEnum.PENDING })

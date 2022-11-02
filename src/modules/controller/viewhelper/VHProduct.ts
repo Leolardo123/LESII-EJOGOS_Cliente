@@ -1,4 +1,5 @@
 import Product from "@modules/models/products/Product";
+import ProductHistory from "@modules/models/products/ProductHistory";
 import { UserRolesEnum } from "@modules/models/users/enum/UserRolesEnum";
 import { ensureAuthenticated } from "@shared/utils/ensureAuthenticated";
 import { Request } from "express";
@@ -9,6 +10,7 @@ import { VHAbstract } from "./VHAbstract";
 export class VHProduct extends VHAbstract {
     getEntity(req: Request): Product {
         const {
+            reason,
             ...product
         } = req.body;
         const { id } = req.params;
@@ -29,6 +31,16 @@ export class VHProduct extends VHAbstract {
 
         if (id) {
             Object.assign(productInstance, { id: Number(id) });
+
+            if (typeof product.isActive == 'boolean') {
+                Object.assign(productInstance, { isActive: product.isActive });
+                if (reason) {
+                    const productHistory = new ProductHistory({
+                        reason
+                    });
+                    productInstance.history = [productHistory];
+                }
+            }
         }
 
         const files = req.files as Express.Multer.File[];
