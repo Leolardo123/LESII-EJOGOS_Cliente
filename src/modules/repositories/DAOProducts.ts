@@ -63,7 +63,9 @@ export class DAOProduct extends DAOAbstract<Product> implements DAOProduct {
           LEFT JOIN
             tb_carts_items items ON items.cart_id = carts.id
           LEFT JOIN
-            coupom ON coupom.purchase_id = purchases.id
+            tb_refunds refunds ON refunds.item_id = items.id
+          LEFT JOIN
+            coupom ON refunds.coupom_id = coupom.id
           GROUP BY
             month, year, months
           ORDER BY
