@@ -127,8 +127,6 @@ export class DAOProduct extends DAOAbstract<Product> implements DAOProduct {
       LIMIT 10  
     `);
 
-    console.log(ranking);
-
     return { dated: dated[0], ranking };
   }
 }
