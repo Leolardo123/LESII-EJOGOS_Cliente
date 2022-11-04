@@ -81,7 +81,7 @@ export class VHProduct extends VHAbstract {
         }
 
         if (id) {
-            whereParams.where = `"id" = ${id}`;
+            whereParams.where = { id };
         }
 
         return {
