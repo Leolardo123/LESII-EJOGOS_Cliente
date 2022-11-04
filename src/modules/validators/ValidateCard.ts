@@ -35,7 +35,7 @@ export class ValidateCard implements IValidate {
             }
 
             if (card.person.id != entity.person.id) {
-                throw new Error('Cartão não é válido.');
+                throw new Error('Não autorizado.');
             }
         }
 
