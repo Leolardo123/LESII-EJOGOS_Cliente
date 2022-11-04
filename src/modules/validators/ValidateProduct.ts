@@ -45,10 +45,10 @@ export class ValidateProduct implements IValidate {
                 const reasonExists = entity.history.find((history) => !history.id && history.reason);
 
                 if (!reasonExists) {
-                    throw new Error(`Dê um motivo para  a ${entity.isActive ? 'inativação' : 'ativação'} do produto.`);
+                    throw new Error(`Dê um motivo para a ${entity.isActive ? 'ativação' : 'inativação'} do produto.`);
                 }
 
-                reasonExists.action = entity.isActive ? 'Inativação' : 'Ativação';
+                reasonExists.action = entity.isActive ? 'Ativação' : 'Inativação';
 
                 const daoProductHistory = new DAOProductHistory();
                 const historyExists = await daoProductHistory.findMany({
@@ -83,7 +83,7 @@ export class ValidateProduct implements IValidate {
 
             entity.isActive = false;
             const productHistory = new ProductHistory({
-                action: 'Produto desativado automaticamente',
+                action: 'Auto-desativado',
                 reason: 'FORA DE MERCADO',
             });
 
