@@ -11,12 +11,10 @@ import Purchase from "../models/sales/Purchase";
 import { purchaseStatusOrder } from "./helpers/purchaseStatusOrder";
 import { IValidate } from "./IValidate";
 import { ValidateAddress } from "./ValidateAddress";
-import { ValidateProduct } from "./ValidateProduct";
 
 export class ValidatePurchase implements IValidate {
   constructor(
-    private validateAddress: ValidateAddress,
-    private validateProduct: ValidateProduct
+    private validateAddress: ValidateAddress
   ) { }
 
   async validate(entity: Purchase): Promise<void> {
@@ -28,6 +26,10 @@ export class ValidatePurchase implements IValidate {
     if (!entity?.id) {
       if (!entity.cart) {
         throw new Error("Carrinho não encontrado.");
+      }
+
+      if (!entity.coupons) {
+        entity.coupons = [];
       }
 
       const daoCart = new DAOCart();
@@ -96,6 +98,9 @@ export class ValidatePurchase implements IValidate {
       }
 
       const cartTotal = cartExists.getTotalPrice() || 0;
+      const hasRefundCoupom = entity.coupons && entity.coupons.some(
+        coupom => coupom.type == CoupomTypeEnum.RETURN_PRODUCT
+      );
 
       let paymentTotal = 0;
       if (entity.payments) {
@@ -120,7 +125,10 @@ export class ValidatePurchase implements IValidate {
             throw new Error(`Cartão com final ${cardExists.number.substring(12)} não possui bandeira válida.`);
           }
 
-          if (payment.value < 10) {
+          if (
+            payment.value < 10 &&
+            !hasRefundCoupom
+          ) {
             throw new Error("Valor mínimo para cartões de crédito é R$ 10,00.");
           }
 
@@ -129,6 +137,20 @@ export class ValidatePurchase implements IValidate {
           return payment;
         });
         await Promise.all(promise);
+      }
+
+      const discountCoupons = entity.coupons?.filter(
+        (coupon) => coupon.type === CoupomTypeEnum.DISCOUNT
+      );
+
+      if (discountCoupons && discountCoupons.length > 0) {
+        if (discountCoupons.length > 1) {
+          throw new Error("Não é possível utilizar mais de um cupom promocional por compra.");
+        }
+
+        if (!entity.payments || entity.payments.length <= 0) {
+          throw new Error("Não é possível utilizar cupom promocional sem pagamento no cartão de crédito.");
+        }
       }
 
       let coupomTotal = 0;
@@ -195,6 +217,22 @@ export class ValidatePurchase implements IValidate {
           purchase: null,
         });
         entity.coupons.push(newCoupom);
+      }
+
+      if (paymentTotal >= 200) {
+        // Se o pagamento for maior que 200, um cupom de desconto deve ser gerado
+        const quantityCoupons = Math.floor(paymentTotal / 200);
+        for (let i = 0; i < quantityCoupons; i++) {
+          const newCoupom = new Coupom({
+            created_at: new Date(),
+            is_used: false,
+            value: 10,
+            type: CoupomTypeEnum.DISCOUNT,
+            person: entity.cart?.person,
+            purchase: null,
+          });
+          entity.coupons = [...entity.coupons, newCoupom];
+        }
       }
 
       const promise = cartExists.items.map(async (item) => {

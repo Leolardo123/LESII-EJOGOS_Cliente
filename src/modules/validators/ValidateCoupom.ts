@@ -1,4 +1,5 @@
 import Coupom from "@modules/models/sales/Coupom";
+import { CoupomTypeEnum } from "@modules/models/sales/enum/CoupomTypes";
 import { DAOCoupom } from "@modules/repositories/DAOCoupom";
 import { IValidate } from "./IValidate";
 
@@ -28,6 +29,11 @@ export class ValidateCoupom implements IValidate {
 
             if (coupom?.person?.id != entity?.person?.id)
                 throw new Error('Cupom não é válido.');
+        }
+
+        if (entity.type == CoupomTypeEnum.DISCOUNT) {
+            if (entity.value > 100)
+                throw new Error('Valor do cupom deve ser menor que 100%');
         }
     }
 }
