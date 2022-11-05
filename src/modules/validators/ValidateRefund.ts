@@ -59,6 +59,7 @@ export class ValidateRefund implements IValidate {
                     'cart_item',
                     'cart_item.cart',
                     'cart_item.cart.person',
+                    'cart_item.product',
                 ]
             })
 
@@ -82,6 +83,10 @@ export class ValidateRefund implements IValidate {
                     throw new Error('Pessoa não encontrada, falha ao gerar cupom de troca.');
                 }
 
+                if (entity.restock === true) {
+                    entity.cart_item = refund.cart_item;
+                    entity.cart_item.product.stock += refund.cart_item.quantity;
+                }
 
                 newCoupom.person = refund.cart_item.cart.person;
                 entity.coupom = newCoupom;

@@ -18,6 +18,7 @@ export default class Refund extends Domain {
     @JoinColumn({ name: 'item_id' })
     @OneToOne(() => CartItem, item => item.refund, {
         onDelete: 'CASCADE', onUpdate: 'CASCADE',
+        cascade: ['update']
     })
     cart_item: CartItem;
 

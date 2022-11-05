@@ -55,7 +55,7 @@ export default class Product extends Domain {
 
     setView(): DeepPartial<Product> {
         return {
-            ...this,
+            ...this, 
             image_url: this.image ?
                 `${process.env.APP_API_URL}/files/${this.image}` :
                 `${process.env.APP_API_URL}/files/default/default.png`
