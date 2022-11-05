@@ -22,7 +22,7 @@ export class VHPerson extends VHAbstract {
         Object.assign(personInstance, person);
 
         if (person.birth_date) {
-            personInstance.birth_date = moment(person.birth_date, "DD/MM/YYYY").toDate();
+            personInstance.birth_date = moment(person.birth_date, "YYYY-MM-DD").toDate();
         }
 
         if (person.gender_id) {
