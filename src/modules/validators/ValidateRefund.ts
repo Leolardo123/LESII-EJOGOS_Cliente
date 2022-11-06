@@ -43,10 +43,8 @@ export class ValidateRefund implements IValidate {
             ) {
                 throw new Error('Item já está em troca.');
             }
-            if (entity.restock === true) {
-                entity.cart_item = cartItem;
-                entity.cart_item.product.stock += entity.cart_item.quantity;
-            }
+
+            entity.cart_item = cartItem;
         }
 
         if (entity.id) {
