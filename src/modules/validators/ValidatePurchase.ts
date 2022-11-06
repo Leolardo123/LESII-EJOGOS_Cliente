@@ -97,7 +97,7 @@ export class ValidatePurchase implements IValidate {
         throw new Error("Nenhum produto selecionado");
       }
 
-      const cartTotal = cartExists.getTotalPrice() || 0;
+      let cartTotal = cartExists.getTotalPrice() || 0;
       const hasRefundCoupom = entity.coupons && entity.coupons.some(
         coupom => coupom.type == CoupomTypeEnum.RETURN_PRODUCT
       );
@@ -139,22 +139,12 @@ export class ValidatePurchase implements IValidate {
         await Promise.all(promise);
       }
 
-      const discountCoupons = entity.coupons?.filter(
-        (coupon) => coupon.type === CoupomTypeEnum.DISCOUNT
-      );
-
-      if (discountCoupons && discountCoupons.length > 0) {
-        if (discountCoupons.length > 1) {
-          throw new Error("Não é possível utilizar mais de um cupom promocional por compra.");
-        }
-
-        if (!entity.payments || entity.payments.length <= 0) {
-          throw new Error("Não é possível utilizar cupom promocional sem pagamento no cartão de crédito.");
-        }
-      }
+      const daoCoupom = new DAOCoupom();
 
       let coupomTotal = 0;
+      let discount = 0;
       let remainingCoupomValue = 0;
+      let discountCoupons = [] as Coupom[];
       const tobeDiscounted = cartTotal - paymentTotal;
 
       if (tobeDiscounted < 0) {
@@ -168,7 +158,6 @@ export class ValidatePurchase implements IValidate {
           );
         }
 
-        const daoCoupom = new DAOCoupom();
         const promise = entity.coupons.map(async (coupon) => {
           const coupomExists = await daoCoupom.findOne({
             where: {
@@ -191,7 +180,19 @@ export class ValidatePurchase implements IValidate {
 
           coupon.is_used = true;
           coupon.person = null;
-          coupomTotal += Number(coupomExists.value);
+
+          if (coupomExists.type === CoupomTypeEnum.RETURN_PRODUCT) {
+            coupomTotal += Number(coupomExists.value);
+          }
+
+          if (coupomExists.type === CoupomTypeEnum.DISCOUNT) {
+            if (discountCoupons.length > 0) {
+              throw new Error('Apenas um cupom de desconto pode ser usado por compra')
+            }
+
+            discount += coupomExists.value / 100;
+            discountCoupons.push(coupomExists);
+          }
 
           return coupon;
         });
@@ -199,9 +200,12 @@ export class ValidatePurchase implements IValidate {
         remainingCoupomValue = coupomTotal - tobeDiscounted;
       }
 
+      if (discountCoupons.length > 0) {
+        cartTotal = cartTotal * (1 - discount);
+      }
+
       if (
-        cartTotal > paymentTotal + coupomTotal ||
-        tobeDiscounted > coupomTotal
+        cartTotal > (paymentTotal + coupomTotal)
       ) {
         throw new Error("Pagamento insuficiente para esta compra.");
       }
@@ -231,7 +235,7 @@ export class ValidatePurchase implements IValidate {
             person: entity.cart?.person,
             purchase: null,
           });
-          entity.coupons = [...entity.coupons, newCoupom];
+          entity.coupons.push(newCoupom);
         }
       }
 
