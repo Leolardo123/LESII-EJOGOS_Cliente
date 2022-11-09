@@ -54,8 +54,9 @@ export class ValidatePerson implements IValidate {
         if (entity.phone) {
             await this.validatePhone.validate(entity.phone);
         }
+
         if (entity.cellphone) {
-            if (/\((\d{2})\) (\d{5})-(\d{4})/.test(entity.cellphone)) {
+            if (!/\((\d{2})\) (\d{5})\-(\d{4})/.test(entity.cellphone)) {
                 throw new Error('Número celular inválido (Pessoa).');
             }
         }
