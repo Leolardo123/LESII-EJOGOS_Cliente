@@ -76,7 +76,7 @@ export class VHUser extends VHAbstract {
   }
 
   findEntity(req: Request): IGetEntity {
-    const { search } = req.query;
+    const { search, page, limit } = req.query;
     const { id } = req.params;
     const { role } = req.body;
 
@@ -131,6 +131,12 @@ export class VHUser extends VHAbstract {
       "person.addresses",
       "person.phone"
     ];
+
+
+    if (page || limit) {
+      whereParams.take = Number(limit) || 10;
+      whereParams.skip = (Number(page || 1) - 1) * whereParams.take;
+    }
 
     return {
       entity: new User(),

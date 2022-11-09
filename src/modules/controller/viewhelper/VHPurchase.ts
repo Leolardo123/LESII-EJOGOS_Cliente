@@ -99,7 +99,7 @@ export class VHPurchase extends VHAbstract {
     }
 
     findEntity(req: Request): IGetEntity {
-        const { search } = req.query;
+        const { search, page, limit } = req.query;
 
         let whereParams = {} as FindManyOptions<Purchase>;
         if (search) {
@@ -115,6 +115,12 @@ export class VHPurchase extends VHAbstract {
         whereParams.relations = [
             'cart'
         ]
+
+
+        if (page || limit) {
+            whereParams.take = Number(limit) || 10;
+            whereParams.skip = (Number(page || 1) - 1) * whereParams.take;
+        }
 
         return {
             entity: new Purchase(),

@@ -53,7 +53,7 @@ export class VHProduct extends VHAbstract {
     }
 
     findEntity(req: Request): IGetEntity {
-        const { search } = req.query;
+        const { search, page, limit } = req.query;
         const { id } = req.params
 
         let whereParams = {} as FindManyOptions<Product>;
@@ -82,6 +82,11 @@ export class VHProduct extends VHAbstract {
 
         if (id) {
             whereParams.where = { id };
+        }
+
+        if (page || limit) {
+            whereParams.take = Number(limit) || 10;
+            whereParams.skip = (Number(page || 1) - 1) * whereParams.take;
         }
 
         return {
