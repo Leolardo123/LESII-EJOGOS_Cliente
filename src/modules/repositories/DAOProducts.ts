@@ -115,14 +115,14 @@ export class DAOProduct extends DAOAbstract<Product> implements DAOProduct {
             BETWEEN 
               $1
             AND 
-              $2
+              $2::date + interval '1 month'
         ) year_data ON true
       WHERE
         purchases.created_at 
         BETWEEN 
           $1
         AND 
-          $2
+          $2::date + interval '1 month'
       GROUP BY
         product.name, 
         year_data.total_sales, 
