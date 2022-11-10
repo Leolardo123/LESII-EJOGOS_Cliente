@@ -2,6 +2,11 @@ import Product from "@modules/models/products/Product";
 import Cart from "@modules/models/sales/Cart";
 import { DAOAbstract } from "./abstract/DAOAbstract";
 
+interface IProductDashboard {
+  start_date?: Date,
+  end_date?: Date,
+  timespan?: '1 day' | '1 month' | '1 year'
+}
 export class DAOProduct extends DAOAbstract<Product> implements DAOProduct {
   constructor() {
     super(Product);
@@ -29,7 +34,11 @@ export class DAOProduct extends DAOAbstract<Product> implements DAOProduct {
     return result.reserved_quantity;
   }
 
-  async getDashboard() {
+  async getDashboard({
+    start_date = new Date(new Date().getFullYear(), 1, 1),
+    end_date = new Date(),
+    timespan = '1 month'
+  }: IProductDashboard): Promise<any> {
     const dated = await this.repository.query(`
       SELECT
         COALESCE(SUM(monthly.total_sales), 0) AS monthly_sales,
@@ -38,12 +47,6 @@ export class DAOProduct extends DAOAbstract<Product> implements DAOProduct {
         COALESCE(SUM(monthly.total_coupomuse), 0) AS monthly_coupomuse,
         ARRAY_AGG(TO_JSON(monthly.*)) as months
       FROM
-        generate_series(
-          current_date, 
-          current_date, 
-          '1 year'
-        ) AS year
-      LEFT JOIN
         (
           SELECT
             TO_CHAR(months, 'MON') AS month,
@@ -54,12 +57,12 @@ export class DAOProduct extends DAOAbstract<Product> implements DAOProduct {
             COALESCE(SUM(coupomuse.value), 0) AS total_coupomuse
           FROM 
             generate_series(
-              current_date - interval '11 month', 
-              current_date, 
-              '1 month'
+              $1::timestamp,
+              $2::timestamp,
+              $3
             ) months 
           LEFT JOIN
-            tb_purchases purchases ON TO_CHAR(purchases.created_at, 'MON') = TO_CHAR(months, 'MON')
+            tb_purchases purchases ON TO_CHAR(purchases.created_at, 'YYYY-MM') = TO_CHAR(months, 'YYYY-MM')
           LEFT JOIN
             tb_item_carts carts ON carts.id = purchases.cart_id
           LEFT JOIN
@@ -74,10 +77,14 @@ export class DAOProduct extends DAOAbstract<Product> implements DAOProduct {
             month, year, months
           ORDER BY
             months, month
-        ) monthly ON true
-        GROUP BY
-          year.date 
-    `)
+        ) monthly
+    `, [
+      start_date,
+      end_date,
+      timespan,
+    ]);
+
+    console.log(start_date, end_date, timespan);
 
     const ranking = await this.repository.query(`
       SELECT
@@ -108,16 +115,16 @@ export class DAOProduct extends DAOAbstract<Product> implements DAOProduct {
           WHERE
             purchases.created_at 
             BETWEEN 
-              current_date - interval '1 year' 
+              $1
             AND 
-              current_date + interval '1 day'
+              $2
         ) year_data ON true
       WHERE
         purchases.created_at 
         BETWEEN 
-          current_date - interval '1 year' 
+          $1
         AND 
-          current_date + interval '1 day'
+          $2
       GROUP BY
         product.name, 
         year_data.total_sales, 
@@ -125,8 +132,11 @@ export class DAOProduct extends DAOAbstract<Product> implements DAOProduct {
       ORDER BY
         total_product DESC
       LIMIT 10  
-    `);
+    `, [
+      start_date,
+      end_date,
+    ]);
 
-    return { dated: dated[0], ranking };
+    return { dated: dated[0], ranking, config: { start_date, end_date, timespan } };
   }
 }

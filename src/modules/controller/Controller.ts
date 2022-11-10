@@ -4,6 +4,7 @@ import { DAOProduct } from "@modules/repositories/DAOProducts";
 import IHash from "@shared/interfaces/IHash";
 import { ensureAuthenticated } from "@shared/utils/ensureAuthenticated";
 import { Request, Response } from "express";
+import moment from "moment";
 import { IViewHelper } from "./viewhelper/interface/IViewHelper";
 import { VHAddress } from "./viewhelper/VHAddress";
 import { VHAddressType } from "./viewhelper/VHAddressType";
@@ -104,6 +105,12 @@ class Controller {
     }
 
     dashboard = async (req: Request, res: Response) => {
+        const {
+            start_date,
+            end_date,
+            timespan
+        } = req.query;
+
         const userInfo = ensureAuthenticated(req);
 
         if (userInfo.role !== 'admin') {
@@ -112,7 +119,31 @@ class Controller {
 
         const daoProduct = new DAOProduct();
 
-        const result = await daoProduct.getDashboard();
+        let config = {}
+        if (start_date && end_date) {
+            let startDate = moment(start_date as string, 'YYYY-MM-DD');
+            let endDate = moment(end_date as string, 'YYYY-MM-DD');
+
+            if (
+                startDate.isValid() &&
+                endDate.isValid()
+            ) {
+                Object.assign(config, {
+                    start_date: startDate,
+                    end_date: endDate,
+                })
+            }
+        }
+
+        if (timespan) {
+            Object.assign(config, {
+                timespan: timespan as string
+            })
+        }
+
+        const result = await daoProduct.getDashboard(
+            config,
+        );
 
         return res.status(201).json(result);
     }
