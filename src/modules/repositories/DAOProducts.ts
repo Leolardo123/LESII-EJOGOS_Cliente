@@ -49,8 +49,7 @@ export class DAOProduct extends DAOAbstract<Product> implements DAOProduct {
       FROM
         (
           SELECT
-            TO_CHAR(months, 'MON') AS month,
-            TO_CHAR(months, 'YYYY') AS year,
+            TO_CHAR(months, 'YYYY-MON') AS month,
             COALESCE(SUM(items.price), 0) AS total_sales,
             COALESCE(SUM(items.quantity), 0) AS total_quantity,
             COALESCE(SUM(coupomgen.value), 0) AS total_coupomgen,
@@ -62,7 +61,8 @@ export class DAOProduct extends DAOAbstract<Product> implements DAOProduct {
               $3
             ) months 
           LEFT JOIN
-            tb_purchases purchases ON TO_CHAR(purchases.created_at, 'YYYY-MM') = TO_CHAR(months, 'YYYY-MM')
+            tb_purchases purchases ON 
+            purchases.created_at BETWEEN months AND months + $3 
           LEFT JOIN
             tb_item_carts carts ON carts.id = purchases.cart_id
           LEFT JOIN
@@ -74,17 +74,15 @@ export class DAOProduct extends DAOAbstract<Product> implements DAOProduct {
           LEFT JOIN
             tb_coupons coupomuse ON refunds.coupom_id = coupomuse.id
           GROUP BY
-            month, year, months
+            month
           ORDER BY
-            months, month
+            month
         ) monthly
     `, [
       start_date,
       end_date,
       timespan,
     ]);
-
-    console.log(start_date, end_date, timespan);
 
     const ranking = await this.repository.query(`
       SELECT
@@ -138,5 +136,70 @@ export class DAOProduct extends DAOAbstract<Product> implements DAOProduct {
     ]);
 
     return { dated: dated[0], ranking, config: { start_date, end_date, timespan } };
+  }
+
+  async getDashboardNoGroup(): Promise<any> {
+    const dated = await this.repository.query(`
+      SELECT
+        extract(epoch from purchases.created_at) * 1000 AS timestamp,
+        COALESCE(items.price, 0) AS value,
+        COALESCE(items.quantity, 0) AS quantity,
+        COALESCE(coupomgen.value, 0) AS coupomgen,
+        COALESCE(coupomuse.value, 0) AS coupomuse
+      FROM 
+        tb_purchases purchases
+      INNER JOIN
+        tb_item_carts carts ON carts.id = purchases.cart_id
+      INNER JOIN
+        tb_carts_items items ON items.cart_id = carts.id
+      LEFT JOIN
+        tb_refunds refunds ON refunds.item_id = items.id
+      LEFT JOIN
+        tb_coupons coupomgen ON refunds.coupom_id = coupomgen.id
+      LEFT JOIN
+        tb_coupons coupomuse ON refunds.coupom_id = coupomuse.id
+      GROUP BY
+        purchases.id, items.id, coupomgen.id, coupomuse.id
+      ORDER BY
+        timestamp
+    `);
+
+    const ranking = await this.repository.query(`
+      SELECT
+        product.name as product_name,
+        SUM(items.price) * 100 / year_data.total_sales as percentage_product,
+        SUM(items.quantity) * 100 / year_data.total_quantity as percentage_quantity,
+        SUM(items.price) as total_product,
+        SUM(items.quantity) as total_quantity
+      FROM
+        tb_products product
+      LEFT JOIN
+        tb_carts_items items ON items.product_id = product.id
+      LEFT JOIN
+        tb_item_carts carts ON carts.id = items.cart_id
+      INNER JOIN
+        tb_purchases purchases ON purchases.cart_id = carts.id
+      LEFT JOIN
+        (
+          SELECT
+            COALESCE(SUM(items.price), 0) AS total_sales,
+            COALESCE(SUM(items.quantity), 0) AS total_quantity
+          FROM
+            tb_carts_items items
+          LEFT JOIN
+            tb_item_carts carts ON carts.id = items.cart_id
+          INNER JOIN
+            tb_purchases purchases ON purchases.cart_id = carts.id
+        ) year_data ON true
+      GROUP BY
+        product.name, 
+        year_data.total_sales, 
+        year_data.total_quantity
+      ORDER BY
+        total_product DESC
+      LIMIT 10  
+    `);
+
+    return { dated: dated[0], ranking };
   }
 }

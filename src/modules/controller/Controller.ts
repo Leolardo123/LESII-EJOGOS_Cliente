@@ -108,14 +108,15 @@ class Controller {
         const {
             start_date,
             end_date,
-            timespan
+            timespan,
+            noGroup,
         } = req.query;
 
-        const userInfo = ensureAuthenticated(req);
+        // const userInfo = ensureAuthenticated(req);
 
-        if (userInfo.role !== 'admin') {
-            throw new Error('Você não tem permissão para acessar essa função.');
-        }
+        // if (userInfo.role !== 'admin') {
+        //     throw new Error('Você não tem permissão para acessar essa função.');
+        // }
 
         const daoProduct = new DAOProduct();
 
@@ -141,11 +142,13 @@ class Controller {
             })
         }
 
-        const result = await daoProduct.getDashboard(
-            config,
-        );
-
-        return res.status(201).json(result);
+        if (!noGroup) {
+            return res.status(201).json(await daoProduct.getDashboard(
+                config,
+            ));
+        } else {
+            return res.status(201).json(await daoProduct.getDashboardNoGroup());
+        }
     }
 }
 export { Controller }
