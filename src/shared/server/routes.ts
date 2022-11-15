@@ -23,7 +23,7 @@ router.get('/dashboard', controller.dashboard);
 
 router.get('/:route', controller.index);
 
-router.get('/:route/:id', controller.get);
+router.get('/:route/:id', controller.show);
 
 router.post('/:route', formdataMiddleware.any(), controller.create);
 
