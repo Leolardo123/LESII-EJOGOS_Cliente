@@ -1,0 +1,88 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="CFCF04A1-3E5E-D13B-6784-D2068F218C94" name="tb_item_carts">
+<createdBy>Leonardo</createdBy>
+<createdTime>2022-11-15 19:46:46 UTC</createdTime>
+<ownerDesignName>diagrama_bd</ownerDesignName>
+<engineerTo>
+<item key="78C13BA6-79D7-CB52-C45E-17D485EE3179" value="true"/>
+</engineerTo>
+<adequatelyNormalized>NO</adequatelyNormalized>
+<expectedVolumes>0</expectedVolumes>
+<fwdEngineeringStrategyName>Single Table</fwdEngineeringStrategyName>
+<growthPercent>0</growthPercent>
+<growthType>Year</growthType>
+<maxVolumes>9999999</maxVolumes>
+<minVolumes>0</minVolumes>
+<normalForm>Third</normalForm>
+<attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
+<Attribute name="id" id="BBFA1D62-7B0A-5BF7-D52B-6EB53C4B392F">
+<createdBy>Leonardo</createdBy>
+<createdTime>2022-11-15 20:42:22 UTC</createdTime>
+<ownerDesignName>diagrama_bd</ownerDesignName>
+<engineerTo>
+<item key="78C13BA6-79D7-CB52-C45E-17D485EE3179" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT027</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="isOpen" id="0BDED0F0-9273-E6E2-5A2C-3C9BBAD5C991">
+<createdBy>Leonardo</createdBy>
+<createdTime>2022-11-15 19:46:55 UTC</createdTime>
+<ownerDesignName>diagrama_bd</ownerDesignName>
+<engineerTo>
+<item key="78C13BA6-79D7-CB52-C45E-17D485EE3179" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT006</logicalDatatype>
+<dataTypeSize>1</dataTypeSize>
+<ownDataTypeParameters>1,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="2id" id="E3B1A5DB-F824-B039-4822-F2E775CEB16C">
+<createdBy>Leonardo</createdBy>
+<createdTime>2022-11-15 20:37:47 UTC</createdTime>
+<generatorID>D180AB6D-F9E4-363D-9E55-47B075516DA0</generatorID>
+<ownerDesignName>diagrama_bd</ownerDesignName>
+<engineerTo>
+<item key="78C13BA6-79D7-CB52-C45E-17D485EE3179" value="true"/>
+</engineerTo>
+<referedAttribute>AD778F23-9515-97F8-80BA-F11082FF26BF</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT027</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="id1" id="89839C99-D0D2-F00E-045E-2DEB25FA6B76">
+<createdBy>Leonardo</createdBy>
+<createdTime>2022-11-15 20:38:14 UTC</createdTime>
+<generatorID>F79B1F49-35DD-BF91-5E9C-422CD44C8C24</generatorID>
+<ownerDesignName>diagrama_bd</ownerDesignName>
+<engineerTo>
+<item key="78C13BA6-79D7-CB52-C45E-17D485EE3179" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<referedAttribute>9208CFED-2D01-05C4-6C47-A7F16A717F45</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT027</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+</attributes>
+<identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
+<identifier id="40726D88-2C20-AFFE-0EE4-541EF04AC9FC" name="tb_item_carts PK">
+<createdBy>Leonardo</createdBy>
+<createdTime>2022-11-15 20:42:27 UTC</createdTime>
+<ownerDesignName>diagrama_bd</ownerDesignName>
+<shouldEngineer>false</shouldEngineer>
+<engineerTo>
+<item key="78C13BA6-79D7-CB52-C45E-17D485EE3179" value="false"/>
+</engineerTo>
+<pk>true</pk>
+<usedAttributes>
+<attributeRef>BBFA1D62-7B0A-5BF7-D52B-6EB53C4B392F</attributeRef>
+</usedAttributes>
+</identifier>
+</identifiers>
+</Entity>

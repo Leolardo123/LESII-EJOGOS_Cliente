@@ -1,0 +1,17 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<FKIndexAssociation class="oracle.dbtools.crest.model.design.relational.FKIndexAssociation" directorySegmentName="seg_0" id="477281A2-BCC3-07D5-3493-FF7AB3FBF0B6" containerWithKeyObject="E2592719-7B98-171F-A7CC-170FF186F294" localFKIndex="74ED99C3-A4A6-E7D2-7B27-4BAB9BF70208" name="tb_coupons_tb_purchases_FK">
+<createdBy>Leonardo</createdBy>
+<createdTime>2022-11-15 21:01:23 UTC</createdTime>
+<generatorID>E0BDBBB7-7294-C0C6-8C69-0069BC2ECB96</generatorID>
+<ownerDesignName>diagrama_bd</ownerDesignName>
+<referredTableLongName>tb_purchases</referredTableLongName>
+<deleteRule>NO ACTION</deleteRule>
+<referredTableID>445D8871-A0CC-AFA0-8E32-F648CD05DD91</referredTableID>
+<keyObject>4D129F00-B7E6-ED09-FD20-2779288D0A46</keyObject>
+<referredKeyID>4D129F00-B7E6-ED09-FD20-2779288D0A46</referredKeyID>
+<mandatory>false</mandatory>
+<refColNames>id</refColNames>
+<transferable>true</transferable>
+<rely>false</rely>
+<columnDependencyConstraintGenerateInDDL>true</columnDependencyConstraintGenerateInDDL>
+</FKIndexAssociation>

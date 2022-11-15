@@ -1,0 +1,72 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="145690CF-CDB1-3D64-DA24-587367D229CD" name="tb_brands">
+<createdBy>Leonardo</createdBy>
+<createdTime>2022-11-15 19:49:15 UTC</createdTime>
+<ownerDesignName>diagrama_bd</ownerDesignName>
+<engineerTo>
+<item key="78C13BA6-79D7-CB52-C45E-17D485EE3179" value="true"/>
+</engineerTo>
+<adequatelyNormalized>NO</adequatelyNormalized>
+<expectedVolumes>0</expectedVolumes>
+<fwdEngineeringStrategyName>Single Table</fwdEngineeringStrategyName>
+<growthPercent>0</growthPercent>
+<growthType>Year</growthType>
+<maxVolumes>9999999</maxVolumes>
+<minVolumes>0</minVolumes>
+<normalForm>Third</normalForm>
+<attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
+<Attribute name="id" id="2B955873-6DE7-6F7A-17D4-05AD4CA22D1C">
+<createdBy>Leonardo</createdBy>
+<createdTime>2022-11-15 20:39:13 UTC</createdTime>
+<ownerDesignName>diagrama_bd</ownerDesignName>
+<engineerTo>
+<item key="78C13BA6-79D7-CB52-C45E-17D485EE3179" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT027</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="name" id="BCE03ADE-33ED-5C80-F626-6DA5A058B5CA">
+<createdBy>Leonardo</createdBy>
+<createdTime>2022-11-15 19:49:21 UTC</createdTime>
+<ownerDesignName>diagrama_bd</ownerDesignName>
+<engineerTo>
+<item key="78C13BA6-79D7-CB52-C45E-17D485EE3179" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>255</dataTypeSize>
+<ownDataTypeParameters>255,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="image" id="24686E65-89E2-7091-B580-2E8407450B2D">
+<createdBy>Leonardo</createdBy>
+<createdTime>2022-11-15 19:49:34 UTC</createdTime>
+<ownerDesignName>diagrama_bd</ownerDesignName>
+<engineerTo>
+<item key="78C13BA6-79D7-CB52-C45E-17D485EE3179" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>255</dataTypeSize>
+<ownDataTypeParameters>255,,</ownDataTypeParameters>
+</Attribute>
+</attributes>
+<identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
+<identifier id="6D68E893-4383-3571-CDAA-3671AD1A53D9" name="tb_brands PK">
+<createdBy>Leonardo</createdBy>
+<createdTime>2022-11-15 20:39:18 UTC</createdTime>
+<ownerDesignName>diagrama_bd</ownerDesignName>
+<shouldEngineer>false</shouldEngineer>
+<engineerTo>
+<item key="78C13BA6-79D7-CB52-C45E-17D485EE3179" value="false"/>
+</engineerTo>
+<pk>true</pk>
+<usedAttributes>
+<attributeRef>2B955873-6DE7-6F7A-17D4-05AD4CA22D1C</attributeRef>
+</usedAttributes>
+</identifier>
+</identifiers>
+</Entity>

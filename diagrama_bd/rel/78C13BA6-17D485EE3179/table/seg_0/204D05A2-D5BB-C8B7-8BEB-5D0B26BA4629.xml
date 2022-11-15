@@ -1,0 +1,88 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="204D05A2-D5BB-C8B7-8BEB-5D0B26BA4629" name="tb_product_history">
+<createdBy>Leonardo</createdBy>
+<createdTime>2022-11-15 21:01:23 UTC</createdTime>
+<generatorID>3D252AD6-6625-C50A-D2A4-206E6B534778</generatorID>
+<ownerDesignName>diagrama_bd</ownerDesignName>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="id" id="C90C42BA-10A6-E406-040B-962352C6A6EE">
+<createdBy>Leonardo</createdBy>
+<createdTime>2022-11-15 21:01:23 UTC</createdTime>
+<generatorID>146A69A0-274C-8B74-88E8-1E37706B7587</generatorID>
+<ownerDesignName>diagrama_bd</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT027</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="action" id="EBE2DCED-DAFF-7D9C-DB33-0BE33F5774B8">
+<createdBy>Leonardo</createdBy>
+<createdTime>2022-11-15 21:01:23 UTC</createdTime>
+<generatorID>4644A196-46F6-2572-ECB2-967D99E0742F</generatorID>
+<ownerDesignName>diagrama_bd</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>255</dataTypeSize>
+<ownDataTypeParameters>255,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="reason" id="FB6A9DED-75F8-6B3C-1337-A782F07B9E92">
+<createdBy>Leonardo</createdBy>
+<createdTime>2022-11-15 21:01:23 UTC</createdTime>
+<generatorID>FAE94269-D0C6-F892-99FD-F1775551C240</generatorID>
+<ownerDesignName>diagrama_bd</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>255</dataTypeSize>
+<ownDataTypeParameters>255,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="tb_products_id" id="55FCC776-453C-4311-425B-2FCC159E7381">
+<createdBy>Leonardo</createdBy>
+<createdTime>2022-11-15 21:01:23 UTC</createdTime>
+<generatorID>33B21EEA-1611-84C0-ECA3-6E573B5AE024</generatorID>
+<ownerDesignName>diagrama_bd</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT027</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="E2511327-16D8-D154-D8FA-E426BCC6C1F4" referredColumn="3058035F-3021-78EE-F75C-74B53720E2CD"/>
+</associations>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="886D0FF0-BA20-F6A9-8D2E-FCFC31C2123C" name="tb_product_history_PK">
+<createdBy>Leonardo</createdBy>
+<createdTime>2022-11-15 21:01:23 UTC</createdTime>
+<generatorID>C1EF5896-2035-ACDA-9B4D-13A863F06A72</generatorID>
+<ownerDesignName>diagrama_bd</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="C90C42BA-10A6-E406-040B-962352C6A6EE"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="BFF003FF-ED73-1FEB-1BDC-41F4593616B5" name="tb_product_history_tb_products_FK">
+<createdBy>Leonardo</createdBy>
+<createdTime>2022-11-15 21:01:23 UTC</createdTime>
+<generatorID>E6844AEC-42B0-C07F-3B9B-066EA5C58D3A</generatorID>
+<ownerDesignName>diagrama_bd</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="55FCC776-453C-4311-425B-2FCC159E7381"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

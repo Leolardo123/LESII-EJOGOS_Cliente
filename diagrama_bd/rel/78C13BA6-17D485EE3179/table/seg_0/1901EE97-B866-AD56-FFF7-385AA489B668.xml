@@ -1,0 +1,153 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="1901EE97-B866-AD56-FFF7-385AA489B668" name="tb_cart_items">
+<createdBy>Leonardo</createdBy>
+<createdTime>2022-11-15 21:01:23 UTC</createdTime>
+<generatorID>61461A2E-D6D9-B24B-2BE6-54DB5EC99841</generatorID>
+<ownerDesignName>diagrama_bd</ownerDesignName>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="id" id="4B625798-0309-1F6B-B186-361BAA2FB024">
+<createdBy>Leonardo</createdBy>
+<createdTime>2022-11-15 21:01:23 UTC</createdTime>
+<generatorID>4C689BD2-E122-C902-A7A6-F4445669EF69</generatorID>
+<ownerDesignName>diagrama_bd</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT027</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="quantity" id="8435F7E4-7410-8C72-9709-31CC38BF1B8D">
+<createdBy>Leonardo</createdBy>
+<createdTime>2022-11-15 21:01:23 UTC</createdTime>
+<generatorID>DF0630B0-C829-443F-0568-D2848D3F4B4E</generatorID>
+<ownerDesignName>diagrama_bd</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>255</dataTypePrecision>
+<dataTypeScale>1</dataTypeScale>
+<ownDataTypeParameters>,255,1</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="price" id="B3CD2409-8E26-51A5-8A0C-D980609867CA">
+<createdBy>Leonardo</createdBy>
+<createdTime>2022-11-15 21:01:23 UTC</createdTime>
+<generatorID>2C9D2C02-12AB-95CD-E58D-DC83729BE0F0</generatorID>
+<ownerDesignName>diagrama_bd</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>255</dataTypeSize>
+<ownDataTypeParameters>255,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="tb_refunds_id" id="17E178CF-F0DB-C1D8-D9F4-7054482ABF56">
+<createdBy>Leonardo</createdBy>
+<createdTime>2022-11-15 21:01:23 UTC</createdTime>
+<generatorID>B2C22165-4188-4B96-E91A-70D70E0EEAA5</generatorID>
+<ownerDesignName>diagrama_bd</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT027</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="9C71A474-B1CD-41B3-BF0E-D2803DEB2236" referredColumn="5A3D163B-FD3D-97FD-33D3-240C711C228B"/>
+</associations>
+</Column>
+<Column name="tb_item_carts_id" id="04738339-5780-1050-2E6E-D661BF1C5C3E">
+<createdBy>Leonardo</createdBy>
+<createdTime>2022-11-15 21:01:23 UTC</createdTime>
+<generatorID>3893DEE5-969F-9E3B-FB0F-7C5BE2D7F8C6</generatorID>
+<ownerDesignName>diagrama_bd</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT027</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="F77BCE91-947C-8F7E-B702-2EB817916FE2" referredColumn="3C19474C-A3DB-582C-006D-12B859A153E8"/>
+</associations>
+</Column>
+<Column name="tb_products_id" id="B0D962E5-C676-9706-7DED-ACC4FABC1198">
+<createdBy>Leonardo</createdBy>
+<createdTime>2022-11-15 21:01:23 UTC</createdTime>
+<generatorID>B87DE22E-9D00-E649-039E-992EDF3E861D</generatorID>
+<ownerDesignName>diagrama_bd</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT027</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="82BC9C51-0A92-ACB1-FE43-8D9F9F40CB65" referredColumn="3058035F-3021-78EE-F75C-74B53720E2CD"/>
+</associations>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="89086B43-E326-7150-6CEC-1273E9C59C8D" name="tb_cart_items_PK">
+<createdBy>Leonardo</createdBy>
+<createdTime>2022-11-15 21:01:23 UTC</createdTime>
+<generatorID>B5B02574-A67B-E4F8-E15B-E9F6BFAB8588</generatorID>
+<ownerDesignName>diagrama_bd</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="4B625798-0309-1F6B-B186-361BAA2FB024"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="1FB8550C-0951-B170-5296-3BD60EE51B65" name="tb_cart_items__IDX">
+<createdBy>Leonardo</createdBy>
+<createdTime>2022-11-15 21:01:23 UTC</createdTime>
+<ownerDesignName>diagrama_bd</ownerDesignName>
+<indexState>Unique Plain Index</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<relationGeneratorID>82454BFF-C418-0F07-98DE-CB07C5C80CD1</relationGeneratorID>
+<indexColumnUsage>
+<colUsage columnID="17E178CF-F0DB-C1D8-D9F4-7054482ABF56"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="16BCEDA5-7CBF-833D-9F8B-C372890F839A" name="tb_cart_items_tb_products_FK">
+<createdBy>Leonardo</createdBy>
+<createdTime>2022-11-15 21:01:23 UTC</createdTime>
+<generatorID>EBB51BEB-D5E9-E816-79F4-B2785EAB6147</generatorID>
+<ownerDesignName>diagrama_bd</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="B0D962E5-C676-9706-7DED-ACC4FABC1198"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="66058E85-AB17-F6A3-CC2A-EEE1AF48EE2F" name="tb_cart_items_tb_item_carts_FK">
+<createdBy>Leonardo</createdBy>
+<createdTime>2022-11-15 21:01:23 UTC</createdTime>
+<generatorID>2087BC8D-A162-970E-0FCE-51ED91CE2E8D</generatorID>
+<ownerDesignName>diagrama_bd</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="04738339-5780-1050-2E6E-D661BF1C5C3E"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="EB8AA93D-9BF0-5767-FD05-E286CC9BF76C" name="tb_cart_items_tb_refunds_FK">
+<createdBy>Leonardo</createdBy>
+<createdTime>2022-11-15 21:01:23 UTC</createdTime>
+<generatorID>82454BFF-C418-0F07-98DE-CB07C5C80CD1</generatorID>
+<ownerDesignName>diagrama_bd</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="17E178CF-F0DB-C1D8-D9F4-7054482ABF56"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

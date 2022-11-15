@@ -1,0 +1,17 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<FKIndexAssociation class="oracle.dbtools.crest.model.design.relational.FKIndexAssociation" directorySegmentName="seg_0" id="0C51F088-25B5-6534-0E97-4FC662A82C3F" containerWithKeyObject="E2592719-7B98-171F-A7CC-170FF186F294" localFKIndex="729E0040-84B0-9650-B2A9-9D2112CE2448" name="tb_coupons_tb_refunds_FK">
+<createdBy>Leonardo</createdBy>
+<createdTime>2022-11-15 21:01:23 UTC</createdTime>
+<generatorID>4B8BB206-7974-E19F-1BF8-355297A6BA5E</generatorID>
+<ownerDesignName>diagrama_bd</ownerDesignName>
+<referredTableLongName>tb_refunds</referredTableLongName>
+<deleteRule>NO ACTION</deleteRule>
+<referredTableID>7DECF277-5B3C-2C6E-3764-3B943FE52D31</referredTableID>
+<keyObject>9FD5F20B-5AC7-8531-25FC-0170B66F5913</keyObject>
+<referredKeyID>9FD5F20B-5AC7-8531-25FC-0170B66F5913</referredKeyID>
+<mandatory>true</mandatory>
+<refColNames>id</refColNames>
+<transferable>true</transferable>
+<rely>false</rely>
+<columnDependencyConstraintGenerateInDDL>true</columnDependencyConstraintGenerateInDDL>
+</FKIndexAssociation>

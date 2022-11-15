@@ -1,0 +1,99 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="CE51F7FB-A799-E1B5-B008-59E8D26530A0" name="tb_addresses_types">
+<createdBy>Leonardo</createdBy>
+<createdTime>2022-11-15 21:01:23 UTC</createdTime>
+<generatorID>2C880E83-A041-0C9A-049B-132F211A8529</generatorID>
+<ownerDesignName>diagrama_bd</ownerDesignName>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="id" id="50AD1069-96C7-80BA-7A40-2503D68E9019">
+<createdBy>Leonardo</createdBy>
+<createdTime>2022-11-15 21:01:23 UTC</createdTime>
+<generatorID>E20850F5-E2AB-83E0-BA9B-5C002FEEB352</generatorID>
+<ownerDesignName>diagrama_bd</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT027</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="tb_addresses_id" id="621D94CE-9B42-2225-9169-B4DDBC61BBB9">
+<createdBy>Leonardo</createdBy>
+<createdTime>2022-11-15 21:01:23 UTC</createdTime>
+<generatorID>BD3183BC-6CE1-F572-F113-FA2B22F77568</generatorID>
+<ownerDesignName>diagrama_bd</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT027</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="3D61C3BA-4307-BC6B-51BB-C6DE21A5DD35" referredColumn="B7B69893-0D4A-32E3-AA9B-F7B2B27E27F5"/>
+</associations>
+</Column>
+<Column name="name" id="B5E27732-3047-15D0-A1E1-3659A6F1E21B">
+<createdBy>Leonardo</createdBy>
+<createdTime>2022-11-15 21:01:23 UTC</createdTime>
+<generatorID>3ED5D4D1-46D0-AB03-11CB-EED2BA880251</generatorID>
+<ownerDesignName>diagrama_bd</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="description" id="C997AA8A-4818-B4B2-D955-0DB659192B88">
+<createdBy>Leonardo</createdBy>
+<createdTime>2022-11-15 21:01:23 UTC</createdTime>
+<generatorID>CBDCBFA4-EEC6-CC06-90DA-5CC96B5309AC</generatorID>
+<ownerDesignName>diagrama_bd</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>255</dataTypeSize>
+<ownDataTypeParameters>255,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="94363151-3728-AEC9-ACF4-50BE08D2D25C" name="tb_addresses_types_PK">
+<createdBy>Leonardo</createdBy>
+<createdTime>2022-11-15 21:01:23 UTC</createdTime>
+<generatorID>99A4DE9B-4DCE-ABE2-5D73-FE5982C011C3</generatorID>
+<ownerDesignName>diagrama_bd</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="621D94CE-9B42-2225-9169-B4DDBC61BBB9"/>
+<colUsage columnID="50AD1069-96C7-80BA-7A40-2503D68E9019"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="3874AEAB-03B3-2525-7DEA-D49C9FADB89C" name="tb_addresses_types__IDX">
+<createdBy>Leonardo</createdBy>
+<createdTime>2022-11-15 21:01:23 UTC</createdTime>
+<ownerDesignName>diagrama_bd</ownerDesignName>
+<indexState>Unique Plain Index</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<relationGeneratorID>3450E0C5-5AC8-6D40-C417-05FC87C36DCA</relationGeneratorID>
+<indexColumnUsage>
+<colUsage columnID="621D94CE-9B42-2225-9169-B4DDBC61BBB9"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="A6E035B7-4DB1-C4EF-7DAB-FC7A8E83DE7C" name="tb_addresses_types_tb_addresses_FK">
+<createdBy>Leonardo</createdBy>
+<createdTime>2022-11-15 21:01:23 UTC</createdTime>
+<generatorID>3450E0C5-5AC8-6D40-C417-05FC87C36DCA</generatorID>
+<ownerDesignName>diagrama_bd</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="621D94CE-9B42-2225-9169-B4DDBC61BBB9"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

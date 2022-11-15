@@ -1,0 +1,164 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="8D093840-2BA4-DBA9-05C5-D6946AA7765F" name="tb_cards">
+<createdBy>Leonardo</createdBy>
+<createdTime>2022-11-15 21:01:23 UTC</createdTime>
+<generatorID>630732D4-5559-CE20-C85C-7AB448FAAF3B</generatorID>
+<ownerDesignName>diagrama_bd</ownerDesignName>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="id" id="0DBE58A6-4534-EC20-7ADD-4D68595ACF7B">
+<createdBy>Leonardo</createdBy>
+<createdTime>2022-11-15 21:01:23 UTC</createdTime>
+<generatorID>96107A1C-DEDA-165C-71CE-82D4D0445FD1</generatorID>
+<ownerDesignName>diagrama_bd</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT027</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="owner_name" id="D1A691D1-D9D8-A940-D402-A32DD26EB618">
+<createdBy>Leonardo</createdBy>
+<createdTime>2022-11-15 21:01:23 UTC</createdTime>
+<generatorID>6B3FF69A-692E-0569-D82E-9B16C975785A</generatorID>
+<ownerDesignName>diagrama_bd</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>255</dataTypeSize>
+<ownDataTypeParameters>255,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="number" id="82AAC5A3-D223-434D-F96F-4003AA177E1C">
+<createdBy>Leonardo</createdBy>
+<createdTime>2022-11-15 21:01:23 UTC</createdTime>
+<generatorID>E7DDC7E1-77E9-A277-68CE-DEF528E1300F</generatorID>
+<ownerDesignName>diagrama_bd</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>255</dataTypeSize>
+<ownDataTypeParameters>255,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="security_code" id="EEC76021-A617-7ABC-071D-EB51CD8B4E71">
+<createdBy>Leonardo</createdBy>
+<createdTime>2022-11-15 21:01:23 UTC</createdTime>
+<generatorID>E7240752-832A-B3CF-2756-3D8DD52E3F8E</generatorID>
+<ownerDesignName>diagrama_bd</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>255</dataTypeSize>
+<ownDataTypeParameters>255,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="tb_persons_id" id="52696C6B-2621-40A6-83FC-E3B25BBC7442">
+<createdBy>Leonardo</createdBy>
+<createdTime>2022-11-15 21:01:23 UTC</createdTime>
+<generatorID>81DB52D1-F5AC-661F-68F2-81E6FA9E81B5</generatorID>
+<ownerDesignName>diagrama_bd</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT027</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="9AEB0150-E928-9701-4D64-361FF391CDF6" referredColumn="24EFA706-5E11-6FBB-4BBE-0927F07103C8"/>
+</associations>
+</Column>
+<Column name="tb_brands_id" id="780F8DDA-6192-6E06-079B-2B07AB348D20">
+<createdBy>Leonardo</createdBy>
+<createdTime>2022-11-15 21:01:23 UTC</createdTime>
+<generatorID>D8B52623-B60A-9D1C-9BF1-C9ED3EC3F28B</generatorID>
+<ownerDesignName>diagrama_bd</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT027</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="FCCAEAE3-E880-A46A-1634-2D4820611EE6" referredColumn="8D4DE53B-D1AE-6304-FD3B-59E5BB61A5E2"/>
+</associations>
+</Column>
+<Column name="tb_purchase_payments_id" id="A89608DB-AD11-412B-B98E-AF7D89CC2F0E">
+<createdBy>Leonardo</createdBy>
+<createdTime>2022-11-15 21:01:23 UTC</createdTime>
+<generatorID>987733F9-1D2C-11D1-A8E1-E69D5D514C83</generatorID>
+<ownerDesignName>diagrama_bd</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT027</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="9D5F3740-4CF6-31DD-1971-903F67636916" referredColumn="66681BD8-CCD0-76E0-FE93-05EB55152FA2"/>
+</associations>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="057613C8-613A-CE73-52EE-303D7137AF26" name="tb_cards_PK">
+<createdBy>Leonardo</createdBy>
+<createdTime>2022-11-15 21:01:23 UTC</createdTime>
+<generatorID>7BA466A5-93BF-9059-35EA-6FDA26DD2415</generatorID>
+<ownerDesignName>diagrama_bd</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="0DBE58A6-4534-EC20-7ADD-4D68595ACF7B"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="61B2FF22-17EF-B3A8-4EFA-5025EC31D603" name="tb_cards__IDX">
+<createdBy>Leonardo</createdBy>
+<createdTime>2022-11-15 21:01:23 UTC</createdTime>
+<ownerDesignName>diagrama_bd</ownerDesignName>
+<indexState>Unique Plain Index</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<relationGeneratorID>7C2B56FC-B457-B3D8-8CB8-6EC7D827933D</relationGeneratorID>
+<indexColumnUsage>
+<colUsage columnID="A89608DB-AD11-412B-B98E-AF7D89CC2F0E"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="C43766DB-C5EF-6B2C-C353-F970B28BC5B6" name="tb_cards_tb_brands_FK">
+<createdBy>Leonardo</createdBy>
+<createdTime>2022-11-15 21:01:23 UTC</createdTime>
+<generatorID>566188BB-DB78-8ECA-AE81-8CEB2779E56E</generatorID>
+<ownerDesignName>diagrama_bd</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="780F8DDA-6192-6E06-079B-2B07AB348D20"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="05DFE159-FDC9-5D6D-2051-B60B0FE11FCD" name="tb_cards_tb_purchase_payments_FK">
+<createdBy>Leonardo</createdBy>
+<createdTime>2022-11-15 21:01:23 UTC</createdTime>
+<generatorID>7C2B56FC-B457-B3D8-8CB8-6EC7D827933D</generatorID>
+<ownerDesignName>diagrama_bd</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="A89608DB-AD11-412B-B98E-AF7D89CC2F0E"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="AD8A9245-7CCD-7846-C604-6D9F9A3F7281" name="tb_cards_tb_persons_FK">
+<createdBy>Leonardo</createdBy>
+<createdTime>2022-11-15 21:01:23 UTC</createdTime>
+<generatorID>AD83C4C4-A0B6-8038-CECD-71A46905765B</generatorID>
+<ownerDesignName>diagrama_bd</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="52696C6B-2621-40A6-83FC-E3B25BBC7442"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

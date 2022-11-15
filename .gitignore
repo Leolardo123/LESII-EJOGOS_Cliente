@@ -7,3 +7,7 @@ build/
 temp/
 .env
 coverage
+**/*.localz
+**/*.local
+**/*.git
+**/*.DS_Store

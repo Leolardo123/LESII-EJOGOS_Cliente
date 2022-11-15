@@ -1,0 +1,235 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="4F682427-7A2F-5A31-8FD4-558FAA0F38F2" name="tb_addresses">
+<createdBy>Leonardo</createdBy>
+<createdTime>2022-11-15 19:34:27 UTC</createdTime>
+<ownerDesignName>diagrama_bd</ownerDesignName>
+<engineerTo>
+<item key="78C13BA6-79D7-CB52-C45E-17D485EE3179" value="true"/>
+</engineerTo>
+<adequatelyNormalized>NO</adequatelyNormalized>
+<expectedVolumes>0</expectedVolumes>
+<fwdEngineeringStrategyName>Single Table</fwdEngineeringStrategyName>
+<growthPercent>0</growthPercent>
+<growthType>Year</growthType>
+<maxVolumes>9999999</maxVolumes>
+<minVolumes>0</minVolumes>
+<normalForm>Third</normalForm>
+<attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
+<Attribute name="id" id="C404284C-5879-000C-C558-41E78B270CAD">
+<createdBy>Leonardo</createdBy>
+<createdTime>2022-11-15 20:33:28 UTC</createdTime>
+<ownerDesignName>diagrama_bd</ownerDesignName>
+<engineerTo>
+<item key="78C13BA6-79D7-CB52-C45E-17D485EE3179" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT027</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="name" id="5E35FFD4-7FAC-F354-301F-BB5740CA2A69">
+<createdBy>Leonardo</createdBy>
+<createdTime>2022-11-15 19:34:38 UTC</createdTime>
+<ownerDesignName>diagrama_bd</ownerDesignName>
+<engineerTo>
+<item key="78C13BA6-79D7-CB52-C45E-17D485EE3179" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>255</dataTypeSize>
+<ownDataTypeParameters>255,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="cep" id="C5A9C3FC-929F-E40E-C9D9-C32ED087A1E0">
+<createdBy>Leonardo</createdBy>
+<createdTime>2022-11-15 19:35:04 UTC</createdTime>
+<ownerDesignName>diagrama_bd</ownerDesignName>
+<engineerTo>
+<item key="78C13BA6-79D7-CB52-C45E-17D485EE3179" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>255</dataTypeSize>
+<ownDataTypeParameters>255,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="number" id="F8081056-8498-07B2-E7C6-44B1F174E6D0">
+<createdBy>Leonardo</createdBy>
+<createdTime>2022-11-15 19:35:14 UTC</createdTime>
+<ownerDesignName>diagrama_bd</ownerDesignName>
+<engineerTo>
+<item key="78C13BA6-79D7-CB52-C45E-17D485EE3179" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>256</dataTypePrecision>
+<dataTypeScale>1</dataTypeScale>
+<ownDataTypeParameters>,256,1</ownDataTypeParameters>
+</Attribute>
+<Attribute name="city" id="A216A66B-2783-CAB5-8563-8D04C9FCC06B">
+<createdBy>Leonardo</createdBy>
+<createdTime>2022-11-15 19:35:48 UTC</createdTime>
+<ownerDesignName>diagrama_bd</ownerDesignName>
+<engineerTo>
+<item key="78C13BA6-79D7-CB52-C45E-17D485EE3179" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>255</dataTypeSize>
+<ownDataTypeParameters>255,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="state" id="ACB46AD3-4E77-70F3-0293-B0EFFD51BAAF">
+<createdBy>Leonardo</createdBy>
+<createdTime>2022-11-15 19:35:57 UTC</createdTime>
+<ownerDesignName>diagrama_bd</ownerDesignName>
+<engineerTo>
+<item key="78C13BA6-79D7-CB52-C45E-17D485EE3179" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>255</dataTypeSize>
+<ownDataTypeParameters>255,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="country" id="4FC00B82-BF31-ECC5-0ACE-358095C5578C">
+<createdBy>Leonardo</createdBy>
+<createdTime>2022-11-15 19:36:08 UTC</createdTime>
+<ownerDesignName>diagrama_bd</ownerDesignName>
+<engineerTo>
+<item key="78C13BA6-79D7-CB52-C45E-17D485EE3179" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>255</dataTypeSize>
+<ownDataTypeParameters>255,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="neighborhood" id="4E4366BB-B838-4117-1E01-90C82B7A820E">
+<createdBy>Leonardo</createdBy>
+<createdTime>2022-11-15 19:37:03 UTC</createdTime>
+<ownerDesignName>diagrama_bd</ownerDesignName>
+<engineerTo>
+<item key="78C13BA6-79D7-CB52-C45E-17D485EE3179" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>255</dataTypeSize>
+<ownDataTypeParameters>255,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="place" id="727663B9-EAC7-57B0-3CDF-606A89BACD3A">
+<createdBy>Leonardo</createdBy>
+<createdTime>2022-11-15 19:37:22 UTC</createdTime>
+<ownerDesignName>diagrama_bd</ownerDesignName>
+<engineerTo>
+<item key="78C13BA6-79D7-CB52-C45E-17D485EE3179" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>255</dataTypeSize>
+<ownDataTypeParameters>255,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="complement" id="43E58E1D-3169-5902-CDFA-12CF3B0D49B3">
+<createdBy>Leonardo</createdBy>
+<createdTime>2022-11-15 19:36:35 UTC</createdTime>
+<ownerDesignName>diagrama_bd</ownerDesignName>
+<engineerTo>
+<item key="78C13BA6-79D7-CB52-C45E-17D485EE3179" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>255</dataTypeSize>
+<ownDataTypeParameters>255,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="id1" id="122EF784-BE53-8EA8-8D47-84D0B7CA91CA">
+<createdBy>Leonardo</createdBy>
+<createdTime>2022-11-15 20:35:24 UTC</createdTime>
+<generatorID>3450E0C5-5AC8-6D40-C417-05FC87C36DCA</generatorID>
+<ownerDesignName>diagrama_bd</ownerDesignName>
+<engineerTo>
+<item key="78C13BA6-79D7-CB52-C45E-17D485EE3179" value="true"/>
+</engineerTo>
+<referedAttribute>BD3183BC-6CE1-F572-F113-FA2B22F77568</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT027</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="id3" id="A560DAB4-8FFE-2173-C24F-CB550708F405">
+<createdBy>Leonardo</createdBy>
+<createdTime>2022-11-15 20:35:33 UTC</createdTime>
+<generatorID>3450E0C5-5AC8-6D40-C417-05FC87C36DCA</generatorID>
+<ownerDesignName>diagrama_bd</ownerDesignName>
+<engineerTo>
+<item key="78C13BA6-79D7-CB52-C45E-17D485EE3179" value="true"/>
+</engineerTo>
+<referedAttribute>E20850F5-E2AB-83E0-BA9B-5C002FEEB352</referedAttribute>
+<use>1</use>
+<logicalDatatype>LOGDT027</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="id11" id="302AE8C6-55F6-67A4-68F0-FD41668CF0CD">
+<createdBy>Leonardo</createdBy>
+<createdTime>2022-11-15 20:35:51 UTC</createdTime>
+<generatorID>6661D049-ED22-0D00-F697-2A214EC404D1</generatorID>
+<ownerDesignName>diagrama_bd</ownerDesignName>
+<engineerTo>
+<item key="78C13BA6-79D7-CB52-C45E-17D485EE3179" value="true"/>
+</engineerTo>
+<referedAttribute>79E142A1-F4F8-6E35-E551-D65440701DE4</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT027</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="id2" id="33A439C1-DFCE-3DB2-11CA-95E03C96C8C5">
+<createdBy>Leonardo</createdBy>
+<createdTime>2022-11-15 20:36:10 UTC</createdTime>
+<generatorID>6661D049-ED22-0D00-F697-2A214EC404D1</generatorID>
+<ownerDesignName>diagrama_bd</ownerDesignName>
+<engineerTo>
+<item key="78C13BA6-79D7-CB52-C45E-17D485EE3179" value="true"/>
+</engineerTo>
+<referedAttribute>02A80A39-7E60-EF46-1711-7AC5DF1BA53D</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT027</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="id4" id="87C1C102-33FE-36B9-3CF2-BCBA14C2A4F7">
+<createdBy>Leonardo</createdBy>
+<createdTime>2022-11-15 20:38:14 UTC</createdTime>
+<generatorID>5CC72DE3-3075-D762-B9C7-7D9E82A65AE9</generatorID>
+<ownerDesignName>diagrama_bd</ownerDesignName>
+<engineerTo>
+<item key="78C13BA6-79D7-CB52-C45E-17D485EE3179" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<referedAttribute>9208CFED-2D01-05C4-6C47-A7F16A717F45</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT027</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+</attributes>
+<identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
+<identifier id="0F1FBE8F-225A-D79B-95F6-F8FFD319AD70" name="tb_addresses PK">
+<createdBy>Leonardo</createdBy>
+<createdTime>2022-11-15 20:33:31 UTC</createdTime>
+<ownerDesignName>diagrama_bd</ownerDesignName>
+<shouldEngineer>false</shouldEngineer>
+<engineerTo>
+<item key="78C13BA6-79D7-CB52-C45E-17D485EE3179" value="false"/>
+</engineerTo>
+<pk>true</pk>
+<usedAttributes>
+<attributeRef>C404284C-5879-000C-C558-41E78B270CAD</attributeRef>
+</usedAttributes>
+</identifier>
+</identifiers>
+</Entity>
