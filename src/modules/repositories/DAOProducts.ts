@@ -144,8 +144,7 @@ export class DAOProduct extends DAOAbstract<Product> implements DAOProduct {
         extract(epoch from purchases.created_at) * 1000 AS timestamp,
         COALESCE(items.price, 0) AS value,
         COALESCE(items.quantity, 0) AS quantity,
-        COALESCE(coupomgen.value, 0) AS coupomgen,
-        COALESCE(coupomuse.value, 0) AS coupomuse
+        COALESCE(coupomgen.value, 0) AS coupomgen
       FROM 
         tb_purchases purchases
       INNER JOIN
@@ -157,7 +156,7 @@ export class DAOProduct extends DAOAbstract<Product> implements DAOProduct {
       LEFT JOIN
         tb_coupons coupomgen ON refunds.coupom_id = coupomgen.id
       LEFT JOIN
-        tb_coupons coupomuse ON refunds.coupom_id = coupomuse.id
+        tb_coupons coupomuse ON purchases.id = coupomuse.purchase_id
       GROUP BY
         purchases.id, items.id, coupomgen.id, coupomuse.id
       ORDER BY
@@ -200,6 +199,6 @@ export class DAOProduct extends DAOAbstract<Product> implements DAOProduct {
       LIMIT 10  
     `);
 
-    return { dated: dated[0], ranking };
+    return { dated: dated, ranking };
   }
 }
