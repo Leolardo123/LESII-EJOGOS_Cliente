@@ -15,7 +15,7 @@ export default class Payment extends Domain {
     card: Card;
 
     @JoinColumn({ name: 'purchase_id' })
-    @ManyToMany(() => Purchase, purchase => purchase.payments, {
+    @ManyToOne(() => Purchase, purchase => purchase.payments, {
         onDelete: 'CASCADE', onUpdate: 'CASCADE',
     })
     purchase: Purchase;
