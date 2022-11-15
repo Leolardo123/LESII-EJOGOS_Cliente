@@ -32,6 +32,7 @@ import { ValidateUser } from "@modules/validators/ValidateUser";
 import IHash from "@shared/interfaces/IHash";
 import { createConnections, FindManyOptions } from "typeorm";
 import { IFacade } from "./IFacade";
+import { IGetEntity } from "@modules/controller/viewhelper/interface/IViewHelper";
 
 
 export class Facade implements IFacade {
@@ -61,7 +62,6 @@ export class Facade implements IFacade {
 		);
 		const validatePurchase = new ValidatePurchase(
 			validateAddress,
-			validateProduct,
 		);
 		const validateRefund = new ValidateRefund();
 
@@ -177,10 +177,10 @@ export class Facade implements IFacade {
 		return 'Removido com sucesso';
 	}
 
-	async findOne(
-		entity: Domain,
-		whereParams: FindManyOptions<Domain>,
-	): Promise<Domain | undefined | null> {
+	async findOne({
+		entity,
+		whereParams,
+	}: IGetEntity): Promise<Domain | undefined | null> {
 		if (!this.isConected) {
 			throw new Error('O Sistema ainda está inicializando...')
 		}
@@ -197,10 +197,10 @@ export class Facade implements IFacade {
 		return await daoInstance.findOne(whereParams);
 	}
 
-	async findMany(
-		entity: Domain,
-		whereParams: FindManyOptions<Domain>,
-	): Promise<Domain[]> {
+	async findMany({
+		entity,
+		whereParams,
+	}: IGetEntity): Promise<Domain[]> {
 		if (!this.isConected) {
 			throw new Error('O Sistema ainda está inicializando...')
 		}

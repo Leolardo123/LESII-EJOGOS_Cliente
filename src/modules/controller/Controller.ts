@@ -78,7 +78,7 @@ class Controller {
         return this.vhs[route].setView(req, res, msg);
     }
 
-    get = async (req: Request, res: Response) => {
+    show = async (req: Request, res: Response) => {
         const { route } = req.params
 
         if (!this.vhs[route]) {
@@ -86,7 +86,7 @@ class Controller {
         }
 
         const { entity, whereParams } = this.vhs[route].findEntity(req);
-        const result = await this.facade.findOne(entity, whereParams);
+        const result = await this.facade.findOne({ entity, whereParams });
 
         return this.vhs[route].setView(req, res, result);
     }
@@ -99,7 +99,7 @@ class Controller {
         }
 
         const { entity, whereParams } = this.vhs[route].findEntity(req);
-        const result = await this.facade.findMany(entity, whereParams);
+        const result = await this.facade.findMany({ entity, whereParams });
 
         return this.vhs[route].setView(req, res, result);
     }
