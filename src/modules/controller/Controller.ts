@@ -105,8 +105,8 @@ class Controller {
             const result = await this.facade.index({
                 entity,
                 whereParams,
-                page: Number(page),
-                limit: Number(limit)
+                page: Number(page) || 1,
+                limit: Number(limit) || 0
             });
 
             return this.vhs[route].setView(req, res, result);
