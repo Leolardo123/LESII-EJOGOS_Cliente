@@ -45,7 +45,7 @@ interface IResDashboard {
 }
 
 interface IResDashboardNoGroup {
-  dated: IDashboardDatedNoGroup,
+  total: IDashboardDatedNoGroup,
   ranking: IDashBoardRanking[],
 }
 
@@ -181,29 +181,47 @@ export class DAOProduct extends DAOAbstract<Product> implements DAOProduct {
   }
 
   async getDashboardNoGroup(): Promise<IResDashboardNoGroup> {
-    const dated = await this.repository.query(`
+    const total = await this.repository.query(`
       SELECT
-        extract(epoch from purchases.created_at) * 1000 AS timestamp,
-        COALESCE(items.price, 0) AS value,
-        COALESCE(items.quantity, 0) AS quantity,
-        COALESCE(coupomgen.value, 0) AS coupomgen
+        COALESCE(SUM(items.price), 0) AS total_sales,
+        COALESCE(SUM(items.quantity), 0) AS total_quantity,
+        COALESCE(SUM(coupomgen.value), 0) AS total_coupomgen,
+        COALESCE(SUM(coupomuse.value), 0) AS total_coupomuse
       FROM 
-        tb_purchases purchases
-      INNER JOIN
+        tb_purchases purchases  
+      LEFT JOIN
         tb_item_carts carts ON carts.id = purchases.cart_id
-      INNER JOIN
+      LEFT JOIN
         tb_carts_items items ON items.cart_id = carts.id
       LEFT JOIN
         tb_refunds refunds ON refunds.item_id = items.id
       LEFT JOIN
         tb_coupons coupomgen ON refunds.coupom_id = coupomgen.id
       LEFT JOIN
-        tb_coupons coupomuse ON purchases.id = coupomuse.purchase_id
-      GROUP BY
-        purchases.id, items.id, coupomgen.id, coupomuse.id
-      ORDER BY
-        timestamp
+        tb_coupons coupomuse ON refunds.coupom_id = coupomuse.id
     `);
+
+    const items = await this.repository.query(`
+      SELECT
+        extract(epoch from purchases.created_at) * 1000 AS timestamp,
+        COALESCE(items.price, 0) AS value,
+        COALESCE(items.quantity, 0) AS quantity,
+        COALESCE(coupomgen.value, 0) AS coupomgen
+      FROM 
+        tb_purchases purchases  
+      LEFT JOIN
+        tb_item_carts carts ON carts.id = purchases.cart_id
+      LEFT JOIN
+        tb_carts_items items ON items.cart_id = carts.id
+      LEFT JOIN
+        tb_refunds refunds ON refunds.item_id = items.id
+      LEFT JOIN
+        tb_coupons coupomgen ON refunds.coupom_id = coupomgen.id
+      LEFT JOIN
+        tb_coupons coupomuse ON refunds.coupom_id = coupomuse.id
+      `);
+
+    Object.assign(total[0], { items });
 
     const ranking = await this.repository.query(`
       SELECT
@@ -241,6 +259,7 @@ export class DAOProduct extends DAOAbstract<Product> implements DAOProduct {
       LIMIT 10  
     `);
 
-    return { dated: dated, ranking };
+    console.log(total[0])
+    return { total: total[0], ranking };
   }
 }
