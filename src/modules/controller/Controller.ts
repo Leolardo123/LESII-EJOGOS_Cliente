@@ -99,9 +99,22 @@ class Controller {
         }
 
         const { entity, whereParams } = this.vhs[route].findEntity(req);
-        const result = await this.facade.findMany({ entity, whereParams });
 
-        return this.vhs[route].setView(req, res, result);
+        if (req.query.page || req.query.limit) {
+            const { page, limit } = req.query;
+            const result = await this.facade.index({
+                entity,
+                whereParams,
+                page: Number(page),
+                limit: Number(limit)
+            });
+
+            return this.vhs[route].setView(req, res, result);
+        } else {
+            const result = await this.facade.findMany({ entity, whereParams });
+            return this.vhs[route].setView(req, res, result);
+        }
+
     }
 
     dashboard = async (req: Request, res: Response) => {

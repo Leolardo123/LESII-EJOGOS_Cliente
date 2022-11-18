@@ -33,6 +33,7 @@ import IHash from "@shared/interfaces/IHash";
 import { createConnections, FindManyOptions } from "typeorm";
 import { IFacade } from "./IFacade";
 import { IGetEntity } from "@modules/controller/viewhelper/interface/IViewHelper";
+import IPaginatedResponse from "@shared/interfaces/IPaginatedResponse";
 
 
 export class Facade implements IFacade {
@@ -215,5 +216,31 @@ export class Facade implements IFacade {
 
 		const daoInstance = this.daos[entityName];
 		return await daoInstance.findMany(whereParams);
+	}
+
+	async index({
+		entity,
+		whereParams,
+		page,
+		limit,
+	}: IGetEntity): Promise<IPaginatedResponse<Domain>> {
+		if (!this.isConected) {
+			throw new Error('O Sistema ainda está inicializando...')
+		}
+
+		const entityName = entity.constructor.name.toLowerCase();
+
+		if (
+			!this.daos[entityName]
+		) {
+			throw new Error('Tipo de pedido não encontrado');
+		}
+
+		const daoInstance = this.daos[entityName];
+		return await daoInstance.index({
+			page,
+			limit,
+			where: whereParams.where
+		});
 	}
 }

@@ -16,23 +16,16 @@ export abstract class DAOAbstract<T extends Domain> implements IDAO<T> {
   public async index({
     page = 1,
     limit = 10,
-    findParams,
+    where = {},
   }: IFilterPaginated<T>): Promise<IPaginatedResponse<T>> {
-    const [results, total] = findParams?.where ?
-      await this.repository.findAndCount({
-        skip: (page - 1) * limit,
-        take: limit,
-        where: findParams.where,
-        order: {
-          id: 'DESC'
-        }
-      }) : await this.repository.findAndCount({
-        skip: (page - 1) * limit,
-        take: limit,
-        order: {
-          id: 'DESC'
-        }
-      })
+    const [results, total] = await this.repository.findAndCount({
+      skip: (page - 1) * limit,
+      take: limit,
+      where: where,
+      order: {
+        id: 'DESC'
+      }
+    })
     return { results, total, limit, page }
   }
 

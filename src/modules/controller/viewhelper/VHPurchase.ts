@@ -116,12 +116,6 @@ export class VHPurchase extends VHAbstract {
             'cart'
         ]
 
-
-        if (page || limit) {
-            whereParams.take = Number(limit) || 10;
-            whereParams.skip = (Number(page || 1) - 1) * whereParams.take;
-        }
-
         return {
             entity: new Purchase(),
             whereParams,

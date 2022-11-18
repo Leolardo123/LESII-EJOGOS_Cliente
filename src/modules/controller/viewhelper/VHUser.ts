@@ -132,12 +132,6 @@ export class VHUser extends VHAbstract {
       "person.phone"
     ];
 
-
-    if (page || limit) {
-      whereParams.take = Number(limit) || 10;
-      whereParams.skip = (Number(page || 1) - 1) * whereParams.take;
-    }
-
     return {
       entity: new User(),
       whereParams,

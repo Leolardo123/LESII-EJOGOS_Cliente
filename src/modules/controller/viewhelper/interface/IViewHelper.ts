@@ -5,6 +5,8 @@ import { FindOneOptions } from "typeorm";
 export interface IGetEntity {
     entity: Domain,
     whereParams: FindOneOptions,
+    page?: number,
+    limit?: number,
 }
 export interface IViewHelper {
     getEntity(req: Request): Domain;

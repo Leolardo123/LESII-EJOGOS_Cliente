@@ -63,12 +63,6 @@ export class VHRefund extends VHAbstract {
 
         whereParams.relations = ['cart_item', 'cart_item.product', 'cart_item.cart', 'cart_item.cart.person'];
 
-
-        if (page || limit) {
-            whereParams.take = Number(limit) || 10;
-            whereParams.skip = (Number(page || 1) - 1) * whereParams.take;
-        }
-
         return {
             entity: new Refund(),
             whereParams,

@@ -5,7 +5,7 @@ import { FindOneOptions } from "typeorm";
 import { DeepPartial } from "typeorm/common/DeepPartial";
 
 export interface IDAO<T extends Domain> {
-  index({ page, limit, findParams }: IFilterPaginated<T>): Promise<IPaginatedResponse<T>>;
+  index({ page, limit, where }: IFilterPaginated<T>): Promise<IPaginatedResponse<T>>;
   create(entity: DeepPartial<T>): T;
   findOne({ where, relations }: FindOneOptions<T>): Promise<T | undefined | null>;
   findMany({ where, relations }: FindOneOptions<T>): Promise<T[]>;

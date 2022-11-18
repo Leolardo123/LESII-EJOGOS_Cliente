@@ -84,14 +84,9 @@ export class VHProduct extends VHAbstract {
             whereParams.where = { id };
         }
 
-        if (page || limit) {
-            whereParams.take = Number(limit) || 10;
-            whereParams.skip = (Number(page || 1) - 1) * whereParams.take;
-        }
-
         return {
             entity: new Product(),
-            whereParams
+            whereParams,
         }
     }
 }

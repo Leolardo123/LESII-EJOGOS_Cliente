@@ -1,4 +1,5 @@
 import Domain from "@modules/models/Domain";
+import IPaginatedResponse from "@shared/interfaces/IPaginatedResponse";
 import { Request } from "express";
 import { IGetEntity } from "./interface/IViewHelper";
 
@@ -12,17 +13,21 @@ export abstract class VHAbstract {
         }
     }
 
-    setView(req: Request, res: any, result: Domain[] | Domain | string): void {
+    setView(req: Request, res: any, result: IPaginatedResponse<Domain> | Domain[] | Domain | string): void {
         if (typeof result === 'string') {
-            res.status(201).json({ message: result });
-        } else {
-            if (result instanceof Array) {
-                res.status(201).json(result.map((domain: Domain) => {
-                    return domain.setView();
-                }));
-            } else {
-                res.status(201).json(result.setView());
-            }
+            return res.status(201).json({ message: result });
         }
+
+        if (result instanceof Array) {
+            return res.status(201).json(result.map((domain: Domain) => {
+                return domain.setView();
+            }));
+        }
+
+        if (result instanceof Domain) {
+            return res.status(201).json(result.setView());
+        }
+
+        return res.status(201).json(result);
     }
 }
