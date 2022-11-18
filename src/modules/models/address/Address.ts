@@ -56,7 +56,7 @@ class Address extends Domain {
     delivery: Purchase[];
 
     @ManyToMany(() => Person, person => person.addresses, {
-       onDelete: 'CASCADE', onUpdate: 'CASCADE',
+        onDelete: 'CASCADE', onUpdate: 'CASCADE',
     })
     person: Person[];
 

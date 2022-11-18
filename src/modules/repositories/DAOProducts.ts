@@ -7,6 +7,48 @@ interface IProductDashboard {
   end_date?: Date,
   timespan?: '1 day' | '1 month' | '1 year'
 }
+
+interface IDashboardMonth {
+  total_sales: number,
+  total_quantity: number,
+  total_coupomgen: number,
+  total_coupomuse: number,
+}
+
+interface IDashboardDated {
+  monthly_sales: number,
+  monthly_quantity: number,
+  monthly_coupomgen: number,
+  monthly_coupomuse: number,
+  months: IDashboardMonth[],
+}
+
+interface IDashboardDatedNoGroup {
+  timestamp: number,
+  value: number,
+  quantity: number,
+  coupomgen: number,
+}
+
+interface IDashBoardRanking {
+  product_name: string,
+  percentage_product: number,
+  percentage_quantity: number,
+  total_product: number,
+  total_quantity: number
+}
+
+interface IResDashboard {
+  dated: IDashboardDated,
+  ranking: IDashBoardRanking[],
+  config: IProductDashboard,
+}
+
+interface IResDashboardNoGroup {
+  dated: IDashboardDatedNoGroup,
+  ranking: IDashBoardRanking[],
+}
+
 export class DAOProduct extends DAOAbstract<Product> implements DAOProduct {
   constructor() {
     super(Product);
@@ -38,7 +80,7 @@ export class DAOProduct extends DAOAbstract<Product> implements DAOProduct {
     start_date = new Date(new Date().getFullYear(), 1, 1),
     end_date = new Date(),
     timespan = '1 month'
-  }: IProductDashboard): Promise<any> {
+  }: IProductDashboard): Promise<IResDashboard> {
     const dated = await this.repository.query(`
       SELECT
         COALESCE(SUM(monthly.total_sales), 0) AS monthly_sales,
@@ -138,7 +180,7 @@ export class DAOProduct extends DAOAbstract<Product> implements DAOProduct {
     return { dated: dated[0], ranking, config: { start_date, end_date, timespan } };
   }
 
-  async getDashboardNoGroup(): Promise<any> {
+  async getDashboardNoGroup(): Promise<IResDashboardNoGroup> {
     const dated = await this.repository.query(`
       SELECT
         extract(epoch from purchases.created_at) * 1000 AS timestamp,
