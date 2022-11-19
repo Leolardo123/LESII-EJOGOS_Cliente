@@ -23,11 +23,19 @@ interface IDashboardDated {
   months: IDashboardMonth[],
 }
 
-interface IDashboardDatedNoGroup {
+interface IDashboardNoGroupItem {
   timestamp: number,
   value: number,
   quantity: number,
   coupomgen: number,
+}
+
+interface IDashboardDatedNoGroup {
+  items: IDashboardNoGroupItem[],
+  total_sales: number,
+  total_quantity: number,
+  total_coupomgen: number,
+  total_coupomuse: number
 }
 
 interface IDashBoardRanking {
@@ -259,7 +267,6 @@ export class DAOProduct extends DAOAbstract<Product> implements DAOProduct {
       LIMIT 10  
     `);
 
-    console.log(total[0])
     return { total: total[0], ranking };
   }
 }
