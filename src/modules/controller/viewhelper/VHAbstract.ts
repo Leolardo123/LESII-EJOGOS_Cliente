@@ -28,6 +28,11 @@ export abstract class VHAbstract {
             return res.status(201).json(result.setView());
         }
 
-        return res.status(201).json(result);
+        return res.status(201).json({
+            ...result,
+            results: result.results.map((domain: Domain) => {
+                return domain.setView();
+            })
+        });
     }
 }
