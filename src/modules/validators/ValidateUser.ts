@@ -1,4 +1,5 @@
 import { DAOUser } from "@modules/repositories/DAOUser";
+import { hashSync } from "bcrypt";
 import User from "../models/users/User";
 import { IValidate } from "./IValidate";
 import { ValidatePassword } from "./ValidatePassword";
@@ -70,6 +71,7 @@ export class ValidateUser implements IValidate {
 
         if (entity.password) {
             await this.validatePassword.validate(entity);
+            entity.password = hashSync(entity.password, 10);
         }
     }
 }

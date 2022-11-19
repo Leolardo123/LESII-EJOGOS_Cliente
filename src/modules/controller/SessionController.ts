@@ -1,6 +1,7 @@
 import { jwt_config } from "@config/auth";
 import { DAOUser } from "@modules/repositories/DAOUser";
 import { ensureAuthenticated } from "@shared/utils/ensureAuthenticated";
+import { compareSync } from "bcrypt";
 import { Request, Response } from "express";
 import { sign } from "jsonwebtoken";
 
@@ -18,7 +19,7 @@ class SessionController {
             ]
         });
 
-        if (!userExists || password != userExists.password) {
+        if (!userExists || !compareSync(password, userExists.password)) {
             throw new Error('Email ou senha incorretos.');
         }
 
