@@ -98,66 +98,14 @@ export class ValidatePurchase implements IValidate {
       }
 
       let cartTotal = cartExists.getTotalPrice() || 0;
-      const hasRefundCoupom = entity.coupons && entity.coupons.some(
-        coupom => coupom.type == CoupomTypeEnum.RETURN_PRODUCT
-      );
-
-      let paymentTotal = 0;
-      if (entity.payments) {
-        const daoCard = new DAOCard();
-        const promise = entity.payments.map(async (payment) => {
-          const cardExists = await daoCard.findOne({
-            where: {
-              id: payment.card?.id,
-            },
-            relations: ["person", "brand"],
-          });
-
-          if (!cardExists) {
-            throw new Error("Cartão não encontrado.");
-          }
-
-          if (!cardExists.person || !cardExists.person?.id) {
-            throw new Error("Cartão inválido.");
-          }
-
-          if (!cardExists.brand) {
-            throw new Error(`Cartão com final ${cardExists.number.substring(12)} não possui bandeira válida.`);
-          }
-
-          if (
-            payment.value < 10 &&
-            !hasRefundCoupom
-          ) {
-            throw new Error("Valor mínimo para cartões de crédito é R$ 10,00.");
-          }
-
-          paymentTotal += Number(payment.value);
-
-          return payment;
-        });
-        await Promise.all(promise);
-      }
-
       const daoCoupom = new DAOCoupom();
 
       let coupomTotal = 0;
       let discount = 0;
       let remainingCoupomValue = 0;
       let discountCoupons = [] as Coupom[];
-      const tobeDiscounted = cartTotal - paymentTotal;
-
-      if (tobeDiscounted < 0) {
-        throw new Error("Valor do pagamento maior que o valor do carrinho.");
-      }
 
       if (entity.coupons && entity.coupons.length > 0) {
-        if (tobeDiscounted == 0) {
-          throw new Error(
-            "Não é possível utilizar cupons pois o total dos cartões completam preço total."
-          );
-        }
-
         const promise = entity.coupons.map(async (coupon) => {
           const coupomExists = await daoCoupom.findOne({
             where: {
@@ -197,17 +145,57 @@ export class ValidatePurchase implements IValidate {
           return coupon;
         });
         entity.coupons = await Promise.all(promise);
-        remainingCoupomValue = coupomTotal - tobeDiscounted;
+        cartTotal = Math.floor(cartTotal * (1 - discount));
+        cartTotal -= coupomTotal;
+
+        if (cartTotal < 0) {
+          remainingCoupomValue = Math.abs(cartTotal);
+          cartTotal = 0;
+        }
       }
 
-      if (discountCoupons.length > 0) {
-        cartTotal = cartTotal * (1 - discount);
-      }
+      let paymentTotal = 0;
+      if (entity.payments) {
+        const daoCard = new DAOCard();
+        const promise = entity.payments.map(async (payment) => {
+          const cardExists = await daoCard.findOne({
+            where: {
+              id: payment.card?.id,
+            },
+            relations: ["person", "brand"],
+          });
 
-      if (
-        cartTotal > (paymentTotal + coupomTotal)
-      ) {
-        throw new Error("Pagamento insuficiente para esta compra.");
+          if (!cardExists) {
+            throw new Error("Cartão não encontrado.");
+          }
+
+          if (!cardExists.person || !cardExists.person?.id) {
+            throw new Error("Cartão inválido.");
+          }
+
+          if (!cardExists.brand) {
+            throw new Error(`Cartão com final ${cardExists.number.substring(12)} não possui bandeira válida.`);
+          }
+
+          if (
+            payment.value < (10 - coupomTotal)
+          ) {
+            throw new Error("Valor mínimo para cartões de crédito é R$ 10,00.");
+          }
+
+          paymentTotal += Number(payment.value);
+
+          return payment;
+        });
+        await Promise.all(promise);
+
+        if (paymentTotal > cartTotal) {
+          throw new Error("Valor total dos cartões é maior que o valor total do carrinho.");
+        }
+
+        if (paymentTotal < cartTotal) {
+          throw new Error("Pagamento insuficiente para esta compra.");
+        }
       }
 
       if (remainingCoupomValue > 0) {
