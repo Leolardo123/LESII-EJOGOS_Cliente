@@ -240,7 +240,7 @@ export class Facade implements IFacade {
 		return await daoInstance.index({
 			page,
 			limit,
-			where: whereParams.where
+			where: whereParams
 		});
 	}
 }

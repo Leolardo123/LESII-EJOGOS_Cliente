@@ -1,9 +1,7 @@
 import Domain from "@modules/models/Domain";
-import { FindConditions } from "typeorm";
-import { IFilter } from "./IFilter";
-
+import { FindOneOptions } from "typeorm";
 export interface IFilterPaginated<T extends Domain> {
     page?: number,
     limit?: number,
-    where?: FindConditions<T>,
+    where?: FindOneOptions<T>,
 }

@@ -19,9 +19,9 @@ export abstract class DAOAbstract<T extends Domain> implements IDAO<T> {
     where = {},
   }: IFilterPaginated<T>): Promise<IPaginatedResponse<T>> {
     const [results, total] = await this.repository.findAndCount({
+      ...where,
       skip: (page - 1) * limit,
       take: limit,
-      where: where,
       order: {
         id: 'DESC'
       }
