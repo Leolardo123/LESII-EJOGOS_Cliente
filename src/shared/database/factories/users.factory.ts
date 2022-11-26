@@ -24,7 +24,7 @@ define(User, () => {
             name: faker.name.firstName() + " " + faker.name.lastName(),
             gender: new Gender({ id: Math.random() > 0.5 ? 1 : 2 }),
             birth_date: faker.date.past(),
-            cellphone: faker.phone.phoneNumber(),
+            cellphone: faker.phone.number(),
             phone: new Phone({ number: faker.phone.number(), ddd: 11 }),
             addresses: [
                 new Address({
