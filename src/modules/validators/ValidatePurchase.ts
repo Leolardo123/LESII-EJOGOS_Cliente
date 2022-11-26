@@ -196,6 +196,12 @@ export class ValidatePurchase implements IValidate {
         if (paymentTotal < cartTotal) {
           throw new Error("Pagamento insuficiente para esta compra.");
         }
+
+        cartTotal -= paymentTotal;
+      }
+
+      if (cartTotal != 0) {
+        throw new Error("Pagamento insuficiente para esta compra.");
       }
 
       if (remainingCoupomValue > 0) {
