@@ -112,6 +112,14 @@ export class VHPurchase extends VHAbstract {
             }
         }
 
+        const user = ensureAuthenticated(req);
+
+        if (user.role != 'admin') {
+            whereParams.where = [
+                { cart: { person: { id: user.person } } }
+            ]
+        }
+
         whereParams.relations = [
             'cart'
         ]
