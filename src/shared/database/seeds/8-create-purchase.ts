@@ -6,30 +6,40 @@ import Product from "@modules/models/products/Product";
 import Cart from "@modules/models/sales/Cart";
 import CartItem from "@modules/models/sales/CartItem";
 import Purchase from "@modules/models/sales/Purchase";
+import Person from "@modules/models/users/Person";
 import { Connection } from "typeorm";
 import { Factory, Seeder } from "typeorm-seeding";
 
 export default class CreatePurchases implements Seeder {
     public async run(factory: Factory, connection: Connection): Promise<void> {
-        const products = await connection.getRepository(Product).find();
+        let products = await connection.getRepository(Product).find();
+        let persons = await connection.getRepository(Person).find();
 
-        const purchases = Array.from({ length: 10 }, () => {
-            const nonRepeatedProducts = faker.helpers.shuffle(products).slice();
-            return createPurchase(nonRepeatedProducts);
+        if (products.length === 0) {
+            throw new Error("No products found");
+        }
+
+        if (persons.length === 0) {
+            throw new Error("No persons found");
+        }
+
+        const purchases = Array.from({ length: 50 }, () => {
+            const person = faker.helpers.arrayElement(persons);
+            return createPurchase(products, person);
         });
 
         await connection.getRepository(Purchase).save(purchases);
     }
 }
 
-function createPurchase(products: Product[]): Purchase {
+function createPurchase(products: Product[], person: Person): Purchase {
     const purchase = new Purchase({
         cart: new Cart({
-            person_id: 1,
+            person: person,
             isOpen: false,
-            items: createManyItems(1, products),
+            items: createManyItems(3, products),
         }),
-        created_at: faker.date.past(2),
+        created_at: faker.date.past(3),
         delivery_address: new Address({
             cep: faker.address.zipCode(),
             place: faker.address.streetName(),
@@ -69,12 +79,13 @@ function createPurchase(products: Product[]): Purchase {
 }
 
 function createManyItems(length: number, products: Product[]): CartItem[] {
-    return Array.from({ length }, () => {
-        const product = products.pop();
+    if (length > products.length) {
+        throw new Error("Not enough products for the amount of items");
+    }
 
-        if (!product) {
-            throw new Error("No more products to create items from");
-        }
+    return Array.from({ length }, () => {
+        const product = faker.helpers.arrayElement(products);
+        products = products.filter(p => p.id !== product.id);
 
         return createItem(product)
     });
