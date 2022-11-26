@@ -100,6 +100,7 @@ export class DAOProduct extends DAOAbstract<Product> implements DAOProduct {
         (
           SELECT
             TO_CHAR(months, 'YYYY-MON') AS month,
+            extract(epoch from months) * 1000 AS timestamp,
             COALESCE(SUM(items.price), 0) AS total_sales,
             COALESCE(SUM(items.quantity), 0) AS total_quantity,
             COALESCE(SUM(coupomgen.value), 0) AS total_coupomgen,
@@ -124,7 +125,7 @@ export class DAOProduct extends DAOAbstract<Product> implements DAOProduct {
           LEFT JOIN
             tb_coupons coupomuse ON refunds.coupom_id = coupomuse.id
           GROUP BY
-            month
+            month, months.months
           ORDER BY
             month
         ) monthly

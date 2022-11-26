@@ -155,7 +155,7 @@ class Controller {
             })
         }
 
-        if (!noGroup) {
+        if (noGroup === 'false') {
             return res.status(201).json(await daoProduct.getDashboard(
                 config,
             ));
