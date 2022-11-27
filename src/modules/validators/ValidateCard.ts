@@ -46,6 +46,9 @@ export class ValidateCard implements IValidate {
         }
 
         if (entity.security_code?.length) {
+            if (/\D/.test(entity.security_code)) {
+                throw new Error(`O código de segurança deve conter apenas números.`);
+            }
             if (!/(?<!\d)\d{3}(?!\d)/.test(entity.security_code)) {
                 throw new Error(`O código de segurança deve conter 3 dígitos.`);
             }
