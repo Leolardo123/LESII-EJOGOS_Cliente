@@ -66,7 +66,7 @@ export class VHUser extends VHAbstract {
       }
       personInstance.birth_date = moment(
         person.birth_date,
-        "DD/MM/YYYY"
+        "YYYY-MM-DD"
       ).toDate();
       personInstance.addresses = addressesInstances;
       userInstance.person = personInstance;
