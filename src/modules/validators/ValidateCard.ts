@@ -40,6 +40,9 @@ export class ValidateCard implements IValidate {
         }
 
         if (entity.number?.length) {
+            if (/\D/.test(entity.number)) {
+                throw new Error(`O número do cartão deve conter apenas números.`);
+            }
             if (!/(?<!\d)\d{16}(?!\d)/.test(entity.number)) {
                 throw new Error(`O número do cartão deve conter 16 dígitos.`);
             }
