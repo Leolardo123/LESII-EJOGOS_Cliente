@@ -64,7 +64,13 @@ export class VHCart extends VHAbstract {
     }
 
     findEntity(req: Request): IGetEntity {
+        const { isOpen } = req.query;
         const entity = this.getEntity(req);
+
+        if (isOpen) {
+            entity.isOpen = isOpen == 'true' ? true : false;
+        }
+
         return {
             entity,
             whereParams: {
