@@ -21430,7 +21430,7 @@
         ["xpath=//div[@id='root']/main/div/div[2]/div/form/fieldset/input", "xpath:idRelative"],
         ["xpath=//form/fieldset/input", "xpath:position"]
       ],
-      "value": "leonardo@gmail.com"
+      "value": "jefferson_akira@hotmail.com"
     }, {
       "id": "e144f0b4-247c-4a06-b03c-44afb74e3377",
       "comment": "",
@@ -21471,19 +21471,6 @@
       ],
       "value": ""
     }, {
-      "id": "d68cb7e8-8856-4db2-8819-72ffb19998d6",
-      "comment": "",
-      "command": "doubleClick",
-      "target": "id=password",
-      "targets": [
-        ["id=password", "id"],
-        ["css=#password", "css:finder"],
-        ["xpath=//input[@id='password']", "xpath:attributes"],
-        ["xpath=//div[@id='root']/main/div/div[2]/div/form/fieldset[2]/input", "xpath:idRelative"],
-        ["xpath=//fieldset[2]/input", "xpath:position"]
-      ],
-      "value": ""
-    }, {
       "id": "8483d383-4318-42c5-8053-ade96a289f4f",
       "comment": "",
       "command": "type",
@@ -21496,6 +21483,32 @@
         ["xpath=//fieldset[2]/input", "xpath:position"]
       ],
       "value": "Admin@123"
+    }, {
+      "id": "530d5ca3-285e-451f-bb53-6bc7e240fc3b",
+      "comment": "",
+      "command": "click",
+      "target": "id=password",
+      "targets": [
+        ["id=password", "id"],
+        ["css=#password", "css:finder"],
+        ["xpath=//input[@id='password']", "xpath:attributes"],
+        ["xpath=//div[@id='root']/main/div/div[2]/div/form/fieldset[2]/input", "xpath:idRelative"],
+        ["xpath=//fieldset[2]/input", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "d68cb7e8-8856-4db2-8819-72ffb19998d6",
+      "comment": "",
+      "command": "doubleClick",
+      "target": "id=password",
+      "targets": [
+        ["id=password", "id"],
+        ["css=#password", "css:finder"],
+        ["xpath=//input[@id='password']", "xpath:attributes"],
+        ["xpath=//div[@id='root']/main/div/div[2]/div/form/fieldset[2]/input", "xpath:idRelative"],
+        ["xpath=//fieldset[2]/input", "xpath:position"]
+      ],
+      "value": ""
     }, {
       "id": "7d4f42ad-f969-4d40-be3d-7e093a9b4b35",
       "comment": "",
@@ -21510,16 +21523,16 @@
       ],
       "value": ""
     }, {
-      "id": "530d5ca3-285e-451f-bb53-6bc7e240fc3b",
+      "id": "3ad52986-ef0a-4875-abe0-5053ccc12db6",
       "comment": "",
       "command": "click",
-      "target": "id=password",
+      "target": "css=button",
       "targets": [
-        ["id=password", "id"],
-        ["css=#password", "css:finder"],
-        ["xpath=//input[@id='password']", "xpath:attributes"],
-        ["xpath=//div[@id='root']/main/div/div[2]/div/form/fieldset[2]/input", "xpath:idRelative"],
-        ["xpath=//fieldset[2]/input", "xpath:position"]
+        ["css=button", "css:finder"],
+        ["xpath=//button[@type='submit']", "xpath:attributes"],
+        ["xpath=//div[@id='root']/main/div/div[2]/div/form/button", "xpath:idRelative"],
+        ["xpath=//button", "xpath:position"],
+        ["xpath=//button[contains(.,'Entrar')]", "xpath:innerText"]
       ],
       "value": ""
     }]
