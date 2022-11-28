@@ -261,7 +261,7 @@ export class ValidatePurchase implements IValidate {
 
       entity.cart.id = cartExists.id;
       entity.cart.items = cartExists.items;
-      entity.total_price = cartTotal;
+      entity.total_price = cartExists.getTotalPrice();
       entity.cart.isOpen = false;
     } else {
       const daoPurchase = new DAOPurchase();
