@@ -9,13 +9,13 @@ import PlaceType from "@modules/models/address/PlaceType";
 import Person from "@modules/models/users/Person";
 import Coupom from "@modules/models/sales/Coupom";
 import { CoupomTypeEnum } from "@modules/models/sales/enum/CoupomTypes";
-import { SimpleConsoleLogger } from "typeorm";
+import { hashSync } from "bcrypt";
 
 define(User, () => {
     const coupons = createManyCoupons(10)
     const user = new User({
         email: faker.internet.email(),
-        password: 'Admin@123',
+        password: hashSync('Admin@123', 8),
         role: 'usuario',
         isActive: true,
         person: new Person({
