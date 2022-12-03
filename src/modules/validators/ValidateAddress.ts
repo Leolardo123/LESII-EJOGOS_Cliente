@@ -36,7 +36,8 @@ export class ValidateAddress implements IValidate {
             const daoAddress = new DAOAddress();
 
             const addressExists = await daoAddress.findOne({
-                where: { id: entity.id }
+                where: { id: entity.id },
+                relations: ['person']
             });
 
             if (!addressExists) {
