@@ -2,7 +2,7 @@
   "id": "cf4cd854-adf3-4fad-9106-d5563bfc397a",
   "version": "2.0",
   "name": "LGAMES TESTES",
-  "url": "http://localhost:3000/admin-bandeiras",
+  "url": "http://localhost:3000/",
   "tests": [{
     "id": "75ae42ac-c238-4027-b941-8a74d78013ac",
     "name": "signup - falta o numero",
@@ -25698,60 +25698,38 @@
       "targets": [],
       "value": ""
     }, {
+      "id": "5ac1e4d6-9a5e-416b-abae-47fb817d864d",
+      "comment": "",
+      "command": "click",
+      "target": "linkText=Detalhes",
+      "targets": [
+        ["linkText=Detalhes", "linkText"],
+        ["css=.col-12:nth-child(1) .buy", "css:finder"],
+        ["xpath=//a[contains(text(),'Detalhes')]", "xpath:link"],
+        ["xpath=//div[@id='root']/main/section[2]/div/div/div[2]/a", "xpath:idRelative"],
+        ["xpath=//a[contains(@href, '/produto-detalhes?id=773')]", "xpath:href"],
+        ["xpath=//div[2]/a", "xpath:position"],
+        ["xpath=//a[contains(.,'Detalhes')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "72c96ec4-a63a-49d0-b690-c8af48a3b367",
+      "comment": "",
+      "command": "click",
+      "target": "css=.buy",
+      "targets": [
+        ["css=.buy", "css:finder"],
+        ["xpath=//div[@id='root']/main/div/div/div[2]/button", "xpath:idRelative"],
+        ["xpath=//button", "xpath:position"],
+        ["xpath=//button[contains(.,'Adicionar ao Carrinho')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
       "id": "42f08ee4-73cd-4d4f-b2a6-06a09d9c25e1",
       "comment": "",
       "command": "setWindowSize",
       "target": "945x1012",
       "targets": [],
-      "value": ""
-    }, {
-      "id": "53de05dd-c757-473f-b055-7db030d2485b",
-      "comment": "",
-      "command": "click",
-      "target": "css=.col-12:nth-child(40) .buy",
-      "targets": [
-        ["css=.col-12:nth-child(40) .buy", "css:finder"],
-        ["xpath=(//a[contains(text(),'Detalhes')])[40]", "xpath:link"],
-        ["xpath=//div[@id='root']/main/section[2]/div[40]/div/div[2]/a", "xpath:idRelative"],
-        ["xpath=(//a[contains(@href, '/produto-detalhes?id=1')])[11]", "xpath:href"],
-        ["xpath=//div[40]/div/div[2]/a", "xpath:position"]
-      ],
-      "value": ""
-    }, {
-      "id": "78d62530-df6a-449d-9fc1-cb23936490d3",
-      "comment": "",
-      "command": "click",
-      "target": "css=.buy",
-      "targets": [
-        ["css=.buy", "css:finder"],
-        ["xpath=//div[@id='root']/main/div/div/div[2]/button", "xpath:idRelative"],
-        ["xpath=//button", "xpath:position"],
-        ["xpath=//button[contains(.,'Adicionar ao Carrinho')]", "xpath:innerText"]
-      ],
-      "value": ""
-    }, {
-      "id": "df634b50-4d44-4c5e-bf63-22afdb18d143",
-      "comment": "",
-      "command": "mouseOver",
-      "target": "css=.buy",
-      "targets": [
-        ["css=.buy", "css:finder"],
-        ["xpath=//div[@id='root']/main/div/div/div[2]/button", "xpath:idRelative"],
-        ["xpath=//button", "xpath:position"],
-        ["xpath=//button[contains(.,'Adicionar ao Carrinho')]", "xpath:innerText"]
-      ],
-      "value": ""
-    }, {
-      "id": "1839f62e-574b-4547-ae5a-17c1838107f0",
-      "comment": "",
-      "command": "mouseOut",
-      "target": "css=.buy",
-      "targets": [
-        ["css=.buy", "css:finder"],
-        ["xpath=//div[@id='root']/main/div/div/div[2]/button", "xpath:idRelative"],
-        ["xpath=//div[2]/button", "xpath:position"],
-        ["xpath=//button[contains(.,'Adicionar ao Carrinho')]", "xpath:innerText"]
-      ],
       "value": ""
     }, {
       "id": "195c909f-80b0-40e6-84ad-67aa13af5076",
@@ -25817,19 +25795,26 @@
       ],
       "value": ""
     }, {
-      "id": "f2ff55e6-a4cb-431d-a786-11f71a6917ff",
+      "id": "01b72178-77d3-49fc-801f-ca1cec315821",
       "comment": "",
-      "command": "click",
-      "target": "css=.payment-quantity > input",
+      "command": "storeText",
+      "target": "css=.col-md-6 strong",
       "targets": [
-        ["css=.payment-quantity > input", "css:finder"],
-        ["xpath=(//input[@value=''])[2]", "xpath:attributes"],
-        ["xpath=//div[@id='root']/main/div/div/div/div/div[2]/div/div/div/div/div/div/div[2]/div/div/input", "xpath:idRelative"],
-        ["xpath=//div/input", "xpath:position"]
+        ["css=.col-md-6 strong", "css:finder"],
+        ["xpath=//div[@id='root']/main/div/div/div/div/div/div/div[2]/div/div/p[2]/strong", "xpath:idRelative"],
+        ["xpath=//p[2]/strong", "xpath:position"],
+        ["xpath=//strong[contains(.,'R$ 886')]", "xpath:innerText"]
       ],
-      "value": ""
+      "value": "cartTotal"
     }, {
-      "id": "7fa6bfc9-4ed6-4040-9bd2-53feab141c87",
+      "id": "350941b7-c97b-459b-8773-5611d6990030",
+      "comment": "",
+      "command": "executeScript",
+      "target": "var str = ${cartTotal}; return str.split(\" \")[1];",
+      "targets": [],
+      "value": "cartTotalParse"
+    }, {
+      "id": "1ef6bd43-53ad-4eb0-b6db-d8dc8ed07392",
       "comment": "",
       "command": "type",
       "target": "css=.payment-quantity > input",
@@ -25839,7 +25824,7 @@
         ["xpath=//div[@id='root']/main/div/div/div/div/div[2]/div/div/div/div/div/div/div[2]/div/div/input", "xpath:idRelative"],
         ["xpath=//div/input", "xpath:position"]
       ],
-      "value": "70"
+      "value": "${cartTotalParse}"
     }, {
       "id": "109c0c31-e441-4a13-8a90-7d8bc6c16f42",
       "comment": "",
