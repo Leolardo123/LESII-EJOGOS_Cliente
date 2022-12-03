@@ -3351,7 +3351,7 @@
         ["xpath=//div[@id='root']/main/div/form/div/div[2]/fieldset[2]/input", "xpath:idRelative"],
         ["xpath=//fieldset[2]/input", "xpath:position"]
       ],
-      "value": "Admin123!!"
+      "value": "Admin"
     }, {
       "id": "4788b40c-7a89-41cb-9c4d-48b30d9f0ad0",
       "comment": "",
